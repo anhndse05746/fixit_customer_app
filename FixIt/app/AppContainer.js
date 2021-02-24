@@ -10,7 +10,7 @@ import {
   ROOT_INSIDE,
   ROOT_LOADING,
   ROOT_OUTSIDE,
-} from './store/actions/app';
+} from './store/appState';
 import AuthLoadingView from './screens/views/AuthLoadingView';
 import DrawerInside from './screens/stacks/DrawerStack';
 import OutsideStackNavigator from './screens/stacks/OutsideStack';
