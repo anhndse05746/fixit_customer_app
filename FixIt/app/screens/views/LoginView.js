@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Text,
   View,
@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import PTButton from '../commonComponent/Button';
 import { calcScale } from '../../utils/dimension';
-import { loadUsers } from '../../store/user'
+import { loadUsers, LOGGED_IN } from '../../store/user'
 
 const LoginView = ({ navigation }) => {
   const [username, setUsername] = React.useState();
@@ -25,17 +25,20 @@ const LoginView = ({ navigation }) => {
   const [secure, setSecure] = React.useState();
 
   const dispatch = useDispatch();
-  const data = useSelector(state => state.user)
+  let data = useSelector(state => state.user);
+  let { message } = data
 
-  const login = async (username, password) => {
+  const login = (username, password) => {
+    //call api & check user to login 
     dispatch(loadUsers(username, password))
-    const user = {
-      username: username,
-      password: password,
-    };
-    Keyboard.dismiss();
-    navigation.navigate('DrawerInside');
+    Keyboard.dismiss()
   };
+
+  useEffect(() => {
+    if (message === LOGGED_IN) {
+      navigation.navigate('DrawerInside');
+    }
+  }, [message])
 
   return (
     <KeyboardAvoidingView
@@ -53,7 +56,7 @@ const LoginView = ({ navigation }) => {
           <View style={styles.innerContainer}>
             <Text style={styles.textBold}>Chào mừng bạn!</Text>
             <Text style={styles.textRegular}>Đăng nhập để tiếp tục</Text>
-
+            {message !== LOGGED_IN && <Text style={styles.textRegular}>{message}</Text>}
             <Input
               containerStyle={styles.input}
               inputContainerStyle={{ borderBottomWidth: 0 }}

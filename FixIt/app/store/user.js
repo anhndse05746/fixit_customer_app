@@ -13,6 +13,7 @@ const user = createSlice({
     },
     reducers: {
         usersRequested: (users, action) => {
+            users.message = ''
             users.loading = true
         },
         usersReceived: (users, action) => {
@@ -20,14 +21,19 @@ const user = createSlice({
             users.phoneNumber = action.payload.phone
             users.name = action.payload.name
             users.roleId = action.payload.roleId
+            users.message = LOGGED_IN
             users.loading = false
         },
         usersRequestedFailed: (users, action) => {
+            console.log(action)
+            users.message = "Phone number or password are incorrect"
             users.loading = false
-            user.message = action.payload.message
+            return;
         }
     }
 })
+
+export const LOGGED_IN = 'logged in'
 
 export default user.reducer
 export const { usersRequested, usersReceived, usersRequestedFailed } = user.actions
@@ -43,4 +49,3 @@ export const loadUsers = (username, password) => apiCallBegan({
     onSuccess: usersReceived.type,
     onError: usersRequestedFailed.type
 })
-

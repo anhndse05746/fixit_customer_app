@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import { apiCallBegan, apiCallFailed, apiCallSuccess } from '../apiActions'
+import { BASE_URL } from '../../config/apiConfig'
 
 const api = ({ dispatch }) => next => async action => {
 
@@ -8,7 +9,7 @@ const api = ({ dispatch }) => next => async action => {
 
     //Extract data for request
     const { url, method, headers, data, onStart, onSuccess, onError } = action.payload
-    console.log(`api middleware: ${data}`)
+    //console.log(`api middleware: ${data}`)
 
     if (onStart) dispatch({ type: onStart })
 
@@ -16,7 +17,7 @@ const api = ({ dispatch }) => next => async action => {
 
     try {
         const response = await axios.request({
-            baseURL: 'https://fixit-backend-test.herokuapp.com/',
+            baseURL: BASE_URL,
             url,
             method,
             headers,
@@ -27,8 +28,7 @@ const api = ({ dispatch }) => next => async action => {
         dispatch(apiCallSuccess(response.data.results))
 
         //specific
-        if (onSuccess)
-            dispatch({ type: onSuccess, payload: response.data.results })
+        if (onSuccess) dispatch({ type: onSuccess, payload: response.data.results })
 
 
     } catch (error) {
