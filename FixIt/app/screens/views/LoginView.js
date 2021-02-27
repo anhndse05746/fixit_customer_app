@@ -1,44 +1,43 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   Text,
   View,
   StyleSheet,
   Image,
   KeyboardAvoidingView,
-  TextInput,
   Keyboard,
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import CommonStyles from './Styles';
-import { Input } from 'react-native-elements';
-import { useDispatch, useSelector } from 'react-redux'
+import {Input} from 'react-native-elements';
+import {useDispatch, useSelector} from 'react-redux';
 
 import PTButton from '../commonComponent/Button';
-import { calcScale } from '../../utils/dimension';
-import { loadUsers, LOGGED_IN } from '../../store/user'
+import {calcScale} from '../../utils/dimension';
+import {loadUsers, LOGGED_IN} from '../../store/user';
 
-const LoginView = ({ navigation }) => {
+const LoginView = ({navigation}) => {
   const [username, setUsername] = React.useState();
   const [password, setPassword] = React.useState();
-  const [secure, setSecure] = React.useState();
+  const [secure, setSecure] = React.useState(true);
 
   const dispatch = useDispatch();
-  let data = useSelector(state => state.user);
-  let { message } = data
+  let data = useSelector((state) => state.user);
+  let {message} = data;
 
   const login = (username, password) => {
-    //call api & check user to login 
-    dispatch(loadUsers(username, password))
-    Keyboard.dismiss()
+    //call api & check user to login
+    dispatch(loadUsers(username, password));
+    Keyboard.dismiss();
   };
 
   useEffect(() => {
     if (message === LOGGED_IN) {
       navigation.navigate('DrawerInside');
     }
-  }, [message])
+  }, [message]);
 
   return (
     <KeyboardAvoidingView
@@ -56,19 +55,21 @@ const LoginView = ({ navigation }) => {
           <View style={styles.innerContainer}>
             <Text style={styles.textBold}>Chào mừng bạn!</Text>
             <Text style={styles.textRegular}>Đăng nhập để tiếp tục</Text>
-            {message !== LOGGED_IN && <Text style={styles.textRegular}>{message}</Text>}
+            {message !== LOGGED_IN && (
+              <Text style={styles.textRegular}>{message}</Text>
+            )}
             <Input
               containerStyle={styles.input}
-              inputContainerStyle={{ borderBottomWidth: 0 }}
+              inputContainerStyle={{borderBottomWidth: 0}}
               placeholder="Username"
-              onChangeText={username => setUsername(username)}
+              onChangeText={(username) => setUsername(username)}
               keyboardType="phone-pad"
             />
             <Input
               containerStyle={styles.input}
-              inputContainerStyle={{ borderBottomWidth: 0 }}
+              inputContainerStyle={{borderBottomWidth: 0}}
               placeholder="Password"
-              onChangeText={password => setPassword(password)}
+              onChangeText={(password) => setPassword(password)}
               secureTextEntry={secure}
               rightIcon={
                 password != '' ? (
@@ -84,7 +85,7 @@ const LoginView = ({ navigation }) => {
             <TouchableOpacity>
               <Text style={styles.forgotPassword}>Quên mật khẩu?</Text>
             </TouchableOpacity>
-            <View style={{ alignItems: 'center' }}>
+            <View style={{alignItems: 'center'}}>
               <PTButton
                 title="Đăng nhập"
                 onPress={() => login(username, password)}
@@ -100,7 +101,7 @@ const LoginView = ({ navigation }) => {
                 <Text
                   style={[
                     styles.textRegular,
-                    { textDecorationLine: 'underline' },
+                    {textDecorationLine: 'underline'},
                   ]}>
                   Đăng kí ngay
                 </Text>
@@ -121,9 +122,9 @@ const LoginView = ({ navigation }) => {
               <Image
                 source={require('../../assets/images/google-logo.png')}
                 resizeMode="contain"
-                style={{ height: calcScale(40), flex: 0.15 }}
+                style={{height: calcScale(40), flex: 0.15}}
               />
-              <Text style={[styles.textRegular, { color: '#000', flex: 0.75 }]}>
+              <Text style={[styles.textRegular, {color: '#000', flex: 0.75}]}>
                 Đăng nhập với Google
               </Text>
             </TouchableOpacity>
@@ -132,17 +133,17 @@ const LoginView = ({ navigation }) => {
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
-}
+};
 
 export default LoginView;
 
 const styles = StyleSheet.create({
   container: {
-    ...CommonStyles.container,
+    flex: 1,
   },
   backgroundContainer: {
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     backgroundColor: 'rgb(242, 85, 44)',
   },
   logoContainer: {

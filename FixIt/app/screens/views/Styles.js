@@ -49,7 +49,7 @@ export default StyleSheet.create({
       },
       android: {
         includeFontPadding: false,
-        fontFamily: 'sans-serif',
+        fontFamily: 'Montserrat',
         fontWeight: 'normal',
       },
     }),
@@ -64,7 +64,7 @@ export default StyleSheet.create({
       },
       android: {
         includeFontPadding: false,
-        fontFamily: 'sans-serif-medium',
+        fontFamily: 'Montserrat',
         fontWeight: 'normal',
       },
     }),
@@ -79,7 +79,7 @@ export default StyleSheet.create({
       },
       android: {
         includeFontPadding: false,
-        fontFamily: 'sans-serif',
+        fontFamily: 'Montserrat',
         fontWeight: 'bold',
       },
     }),
@@ -94,7 +94,7 @@ export default StyleSheet.create({
       },
       android: {
         includeFontPadding: false,
-        fontFamily: 'sans-serif',
+        fontFamily: 'Montserrat',
         fontWeight: 'bold',
       },
     }),

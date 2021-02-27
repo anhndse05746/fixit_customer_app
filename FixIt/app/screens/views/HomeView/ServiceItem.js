@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {calcScale} from '../../../utils/dimension';
+import {calcScale, width} from '../../../utils/dimension';
 import CommonStyles from '../Styles';
 
 const useComponentSize = () => {
@@ -23,9 +23,7 @@ const ServiceItem = ({navigation, item}) => {
       key={data.id.toString()}
       style={{...styles.serviceBox, backgroundColor: data.backgroundColor}}
       onLayout={onLayout}
-      onPress={() =>
-        navigation.navigate('ServiceListView', {data: primaryServices})
-      }>
+      onPress={() => navigation.navigate('ServiceListView', {data: item})}>
       <Image
         source={data.image}
         style={{
@@ -43,8 +41,8 @@ const styles = StyleSheet.create({
   serviceBox: {
     marginBottom: calcScale(15),
     borderRadius: calcScale(15),
-    width: calcScale(200),
-    height: calcScale(200),
+    width: calcScale(width / 2),
+    height: calcScale(width / 2),
     alignItems: 'center',
     justifyContent: 'space-around',
     overflow: 'hidden',

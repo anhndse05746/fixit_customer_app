@@ -6,6 +6,7 @@ import {calcScale} from '../../../utils/dimension';
 import HeaderBar from './HeaderBar';
 import CommonStyles from '../Styles';
 import ServiceItem from './ServiceItem';
+import {useNavigation} from '@react-navigation/native';
 
 const primaryServices = [
   {
@@ -46,42 +47,34 @@ const primaryServices = [
   },
 ];
 
-export default class HomeView extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+const HomeView = () => {
+  const navigation = useNavigation();
+  return (
+    <SafeAreaView style={styles.container}>
+      <HeaderBar navigation={navigation} />
+      <View style={styles.innerContainer}>
+        <Text style={[styles.textBold, {paddingTop: calcScale(80)}]}>
+          Hi, user-full-name!
+        </Text>
+        <Text style={styles.textRegular}>
+          Hôm nay bạn cần sửa chữa gì không?
+        </Text>
+        <FlatList
+          data={primaryServices}
+          style={styles.serviceContainer}
+          renderItem={(item) => (
+            <ServiceItem navigation={navigation} item={item} />
+          )}
+          numColumns={2}
+          columnWrapperStyle={{flex: 1, justifyContent: 'space-around'}}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
 
-  componentDidMount() {}
-
-  componentWillUnmount() {}
-
-  render() {
-    return (
-      <SafeAreaView style={styles.container}>
-        <HeaderBar navigation={this.props.navigation} />
-        <View style={styles.innerContainer}>
-          <Text style={[styles.textBold, {paddingTop: calcScale(80)}]}>
-            Hi, user-full-name!
-          </Text>
-          <Text style={styles.textRegular}>
-            Hôm nay bạn cần sửa chữa gì không?
-          </Text>
-          <FlatList
-            data={primaryServices}
-            style={styles.serviceContainer}
-            renderItem={(item) => (
-              <ServiceItem navigation={this.props.navigation} item={item} />
-            )}
-            numColumns={2}
-            columnWrapperStyle={{flex: 1, justifyContent: 'space-around'}}
-            keyExtractor={(item) => item.id}
-          />
-        </View>
-      </SafeAreaView>
-    );
-  }
-}
+export default HomeView;
 
 const styles = StyleSheet.create({
   container: {

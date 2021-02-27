@@ -1,110 +1,175 @@
 import React from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Avatar} from 'react-native-paper';
+import {Avatar} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import {calcScale} from '../../utils/dimension';
 import commonStyles from './Styles';
 
-export default class MyProfileView extends React.Component {
-  constructor(props) {
-    super(props);
+const MyProfileView = () => {
+  const [isHasAvatar, setIsHasAvatar] = React.useState(false);
 
-    this.state = {
-      isHasAvatar: false,
-    };
-  }
-
-  componentDidMount() {}
-
-  componentWillUnmount() {}
-
-  logOut = () => {
-    this.props.navigation.navigate('OutsideStack');
+  const logOut = () => {
+    // navigation.navigate('OutsideStack');
   };
 
-  render() {
-    const hasAvatar = this.state.isHasAvatar;
-    let avatar;
-    if (avatar) {
-      avatar = <Avatar.Image size={calcScale(70)} />;
-    } else {
-      avatar = <Avatar.Text size={calcScale(70)} label="U" />;
-    }
-
-    return (
-      <View style={{flex: 1}}>
-        <ScrollView>
-          <SafeAreaView
-            style={styles.container}
-            forceInset={{top: 'always', horizontal: 'never'}}>
-            <View style={styles.containHeader}>
-              <View style={styles.row}>
-                {avatar}
-                <View style={styles.userContact}>
-                  <Text style={styles.textBold}>User Name</Text>
-                  <Text
-                    style={[styles.textRegular, {paddingTop: calcScale(5)}]}>
-                    @user.mail
-                  </Text>
-                  <Text style={styles.textRegular}>User Apartment</Text>
-                </View>
-              </View>
-            </View>
+  return (
+    <View style={{flex: 1}}>
+      <SafeAreaView
+        style={styles.container}
+        forceInset={{top: 'always', horizontal: 'never'}}>
+        <View style={styles.containHeader}>
+          <View
+            style={{
+              alignItems: 'center',
+            }}>
+            {isHasAvatar ? (
+              <Avatar rounded size={calcScale(150)} />
+            ) : (
+              <Avatar
+                rounded
+                size={calcScale(150)}
+                containerStyle={{
+                  borderColor: 'rgb(242, 85, 44)',
+                  borderWidth: calcScale(2),
+                }}
+                icon={{
+                  name: 'user',
+                  color: 'rgb(242, 85, 44)',
+                  type: 'font-awesome',
+                }}
+              />
+            )}
             <View>
-              <TouchableOpacity>
-                <View style={[styles.row, {paddingLeft: calcScale(20)}]}>
-                  <Icon name="users" size={calcScale(20)} color="#000" />
-                  <Text style={styles.textMedium}>User Group</Text>
-                </View>
-              </TouchableOpacity>
+              <Text
+                style={[
+                  styles.textBold,
+                  {paddingTop: calcScale(10), textAlign: 'center'},
+                ]}>
+                Username
+              </Text>
+              <Text
+                style={[
+                  styles.textRegular,
+                  {
+                    paddingTop: calcScale(3),
+                    textAlign: 'center',
+                    fontSize: calcScale(20),
+                  },
+                ]}>
+                user info
+              </Text>
             </View>
-          </SafeAreaView>
-        </ScrollView>
-        <View elevation={6} style={{backgroundColor: '#ffffff'}}>
-          <TouchableOpacity onPress={this.logOut}>
+          </View>
+        </View>
+        <View>
+          <TouchableOpacity style={styles.button}>
             <View style={[styles.row, {paddingLeft: calcScale(20)}]}>
-              <Icon name="sign-out-alt" size={calcScale(20)} color="#000" />
-              <Text style={styles.textMedium}>Log out</Text>
+              <Icon name="lock" size={calcScale(24)} color="rgb(242, 85, 44)" />
+              <Text
+                style={[
+                  styles.textMedium,
+                  {paddingLeft: calcScale(20), fontSize: calcScale(20)},
+                ]}>
+                Đổi mật khẩu
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <View style={[styles.row, {paddingLeft: calcScale(20)}]}>
+              <Icon
+                name="gratipay"
+                size={calcScale(24)}
+                color="rgb(242, 85, 44)"
+              />
+              <Text
+                style={[
+                  styles.textMedium,
+                  {paddingLeft: calcScale(20), fontSize: calcScale(20)},
+                ]}>
+                Các thợ đã thích
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <View style={[styles.row, {paddingLeft: calcScale(20)}]}>
+              <Icon
+                name="info-circle"
+                size={calcScale(24)}
+                color="rgb(242, 85, 44)"
+              />
+              <Text
+                style={[
+                  styles.textMedium,
+                  {paddingLeft: calcScale(20), fontSize: calcScale(20)},
+                ]}>
+                Về FixIt
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
-      </View>
-    );
-  }
-}
+        <View style={styles.footer}>
+          <TouchableOpacity onPress={() => logOut()}>
+            <Text style={styles.headmanText}>Log out</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </View>
+  );
+};
+
+export default MyProfileView;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
   containHeader: {
-    paddingVertical: calcScale(30),
-    paddingLeft: calcScale(20),
-    backgroundColor: '#cee6f2',
+    paddingTop: calcScale(30),
+    paddingBottom: calcScale(10),
+    opacity: 0.7,
   },
   row: {
-    ...commonStyles.row,
-  },
-  userContact: {
-    paddingLeft: calcScale(15),
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   textBold: {
     ...commonStyles.textBold,
-    fontSize: calcScale(20),
+    fontSize: calcScale(30),
   },
   textRegular: {
     ...commonStyles.textRegular,
   },
-  textMedium: {
-    ...commonStyles.textMedium,
-    margin: calcScale(16),
+  headmanText: {
+    ...commonStyles.textBold,
+    fontSize: calcScale(20),
+    color: '#fff',
+  },
+  button: {
+    width: '100%',
+    height: calcScale(60),
+    justifyContent: 'center',
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    height: calcScale(60),
+    backgroundColor: 'rgb(242, 85, 44)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
