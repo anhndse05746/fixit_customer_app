@@ -19,9 +19,10 @@ import {calcScale} from '../../utils/dimension';
 import {loadUsers, LOGGED_IN} from '../../store/user';
 
 const LoginView = ({navigation}) => {
-  const [username, setUsername] = React.useState();
-  const [password, setPassword] = React.useState();
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [secure, setSecure] = React.useState(true);
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const dispatch = useDispatch();
   let data = useSelector((state) => state.user);
@@ -29,8 +30,14 @@ const LoginView = ({navigation}) => {
 
   const login = (username, password) => {
     //call api & check user to login
-    dispatch(loadUsers(username, password));
-    Keyboard.dismiss();
+    if (username === '') {
+      setErrorMessage('Username không thể để trống');
+    } else if (password === '') {
+      setErrorMessage('Password không thể để trống');
+    } else {
+      dispatch(loadUsers(username, password));
+      Keyboard.dismiss();
+    }
   };
 
   useEffect(() => {
@@ -58,12 +65,15 @@ const LoginView = ({navigation}) => {
             {message !== LOGGED_IN && (
               <Text style={styles.textRegular}>{message}</Text>
             )}
+            {errorMessage !== '' ? (
+              <Text style={styles.textRegular}>{errorMessage}</Text>
+            ) : null}
             <Input
               containerStyle={styles.input}
               inputContainerStyle={{borderBottomWidth: 0}}
               placeholder="Username"
               onChangeText={(username) => setUsername(username)}
-              keyboardType="phone-pad"
+              keyboardType="number-pad"
             />
             <Input
               containerStyle={styles.input}

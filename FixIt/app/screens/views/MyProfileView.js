@@ -1,126 +1,95 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {Avatar} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-
-import {calcScale} from '../../utils/dimension';
-import commonStyles from './Styles';
+import {SafeAreaView} from 'react-native';
+import {View} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
+import {width, calcScale} from '../../utils/dimension';
+import CommonStyles from './Styles';
+import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {Avatar, Header, Input} from 'react-native-elements';
 
 const MyProfileView = () => {
-  const [isHasAvatar, setIsHasAvatar] = React.useState(false);
+  let data = useSelector((state) => state.user);
+  const navigation = useNavigation();
 
-  const logOut = () => {
-    // navigation.navigate('OutsideStack');
+  const [notEdit, setNotEdit] = React.useState(true);
+  const [headerText, setHeaderText] = React.useState('Sửa');
+  const [isHasAvatar, setIsHasAvatar] = React.useState(false);
+  const [name, setName] = React.useState('');
+  const [phone, setPhone] = React.useState('');
+
+  const edit = () => {
+    setNotEdit(!notEdit);
+    if (notEdit === true) {
+      setHeaderText('Lưu');
+    } else {
+      setHeaderText('Sửa');
+    }
   };
 
   return (
-    <View style={{flex: 1}}>
-      <SafeAreaView
-        style={styles.container}
-        forceInset={{top: 'always', horizontal: 'never'}}>
-        <View style={styles.containHeader}>
-          <View
-            style={{
-              alignItems: 'center',
-            }}>
-            {isHasAvatar ? (
-              <Avatar rounded size={calcScale(150)} />
-            ) : (
-              <Avatar
-                rounded
-                size={calcScale(150)}
-                containerStyle={{
-                  borderColor: 'rgb(242, 85, 44)',
-                  borderWidth: calcScale(2),
-                }}
-                icon={{
-                  name: 'user',
-                  color: 'rgb(242, 85, 44)',
-                  type: 'font-awesome',
-                }}
-              />
-            )}
-            <View>
-              <Text
-                style={[
-                  styles.textBold,
-                  {paddingTop: calcScale(10), textAlign: 'center'},
-                ]}>
-                Username
-              </Text>
-              <Text
-                style={[
-                  styles.textRegular,
-                  {
-                    paddingTop: calcScale(3),
-                    textAlign: 'center',
-                    fontSize: calcScale(20),
-                  },
-                ]}>
-                user info
-              </Text>
-            </View>
-          </View>
+    <SafeAreaView style={styles.container}>
+      <Header
+        rightComponent={{
+          text: headerText,
+          color: '#000',
+          onPress: () => edit(),
+        }}
+        backgroundColor="#fff"
+      />
+      <View style={styles.coverColor}></View>
+      <View style={styles.innerContainer}>
+        <View style={styles.avatarContainer}>
+          {isHasAvatar ? (
+            <Avatar rounded size={calcScale(150)} />
+          ) : (
+            <Avatar
+              rounded
+              size={calcScale(150)}
+              containerStyle={{
+                borderColor: 'rgb(242, 85, 44)',
+                borderWidth: calcScale(2),
+                backgroundColor: '#fff',
+              }}
+              icon={{
+                name: 'user',
+                color: 'rgb(242, 85, 44)',
+                type: 'font-awesome',
+              }}
+            />
+          )}
         </View>
-        <View>
-          <TouchableOpacity style={styles.button}>
-            <View style={[styles.row, {paddingLeft: calcScale(20)}]}>
-              <Icon name="lock" size={calcScale(24)} color="rgb(242, 85, 44)" />
-              <Text
-                style={[
-                  styles.textMedium,
-                  {paddingLeft: calcScale(20), fontSize: calcScale(20)},
-                ]}>
-                Đổi mật khẩu
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <View style={[styles.row, {paddingLeft: calcScale(20)}]}>
-              <Icon
-                name="gratipay"
-                size={calcScale(24)}
-                color="rgb(242, 85, 44)"
-              />
-              <Text
-                style={[
-                  styles.textMedium,
-                  {paddingLeft: calcScale(20), fontSize: calcScale(20)},
-                ]}>
-                Các thợ đã thích
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <View style={[styles.row, {paddingLeft: calcScale(20)}]}>
-              <Icon
-                name="info-circle"
-                size={calcScale(24)}
-                color="rgb(242, 85, 44)"
-              />
-              <Text
-                style={[
-                  styles.textMedium,
-                  {paddingLeft: calcScale(20), fontSize: calcScale(20)},
-                ]}>
-                Về FixIt
-              </Text>
-            </View>
-          </TouchableOpacity>
+        <View style={styles.userInfoContainer}>
+          <Text style={[styles.textBold, {textAlign: 'center'}]}>
+            {data.name}
+          </Text>
+          <Text style={[styles.textRegular, {textAlign: 'center'}]}>
+            Khách hàng
+          </Text>
         </View>
-        <View style={styles.footer}>
-          <TouchableOpacity onPress={() => logOut()}>
-            <Text style={styles.headmanText}>Log out</Text>
-          </TouchableOpacity>
+        <View style={styles.userInfoContainer}>
+          <Input
+            containerStyle={[styles.input, {width: calcScale(width)}]}
+            inputContainerStyle={{borderBottomWidth: 0}}
+            placeholder="Name"
+            onChangeText={(name) => setName(name)}
+            value={data.name}
+            disabled={notEdit}
+          />
+          <Input
+            containerStyle={[
+              styles.input,
+              {width: calcScale(width), marginTop: calcScale(15)},
+            ]}
+            inputContainerStyle={{borderBottomWidth: 0}}
+            placeholder="phone"
+            onChangeText={(phone) => setPhone(phone)}
+            value={data.phoneNumber}
+            disabled={notEdit}
+          />
         </View>
-      </SafeAreaView>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -129,47 +98,45 @@ export default MyProfileView;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
-  absolute: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  },
-  containHeader: {
-    paddingTop: calcScale(30),
-    paddingBottom: calcScale(10),
-    opacity: 0.7,
-  },
-  row: {
-    flexDirection: 'row',
+  innerContainer: {
+    justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: calcScale(20),
+  },
+  coverColor: {
+    height: calcScale(150),
+    backgroundColor: 'rgb(242, 85, 44)',
+    zIndex: 0,
+  },
+  avatarContainer: {
+    marginTop: calcScale(-75),
+    zIndex: 1,
+  },
+  userInfoContainer: {
+    paddingTop: calcScale(20),
   },
   textBold: {
-    ...commonStyles.textBold,
+    ...CommonStyles.textBold,
     fontSize: calcScale(30),
+    color: '#000',
+    textAlign: 'left',
+    paddingLeft: calcScale(10),
   },
   textRegular: {
-    ...commonStyles.textRegular,
-  },
-  headmanText: {
-    ...commonStyles.textBold,
+    ...CommonStyles.textRegular,
     fontSize: calcScale(20),
-    color: '#fff',
+    color: '#000',
+    textAlign: 'left',
+    paddingLeft: calcScale(10),
   },
-  button: {
-    width: '100%',
-    height: calcScale(60),
-    justifyContent: 'center',
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    height: calcScale(60),
-    backgroundColor: 'rgb(242, 85, 44)',
-    alignItems: 'center',
-    justifyContent: 'center',
+  input: {
+    borderStyle: 'solid',
+    borderColor: '#000',
+    borderWidth: 0.5,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    height: calcScale(50),
   },
 });

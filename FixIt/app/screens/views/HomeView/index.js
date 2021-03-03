@@ -7,6 +7,7 @@ import HeaderBar from './HeaderBar';
 import CommonStyles from '../Styles';
 import ServiceItem from './ServiceItem';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 const primaryServices = [
   {
@@ -48,13 +49,14 @@ const primaryServices = [
 ];
 
 const HomeView = () => {
+  let data = useSelector((state) => state.user);
   const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       <HeaderBar navigation={navigation} />
       <View style={styles.innerContainer}>
         <Text style={[styles.textBold, {paddingTop: calcScale(80)}]}>
-          Hi, user-full-name!
+          Hi, {data.name}!
         </Text>
         <Text style={styles.textRegular}>
           Hôm nay bạn cần sửa chữa gì không?

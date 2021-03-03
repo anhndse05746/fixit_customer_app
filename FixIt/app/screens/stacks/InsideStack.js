@@ -5,10 +5,10 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import HomeView from '../views/HomeView';
 import ServiceListView from '../views/ServiceView/ServiceListView';
-import MyProfileView from '../views/MyProfileView';
 import AnnoucementView from '../views/AnnouncementView';
 import MyRequestView from '../views/MyRequestView';
 import {calcScale} from '../../utils/dimension';
+import MyProfileView from '../views/MyProfileView';
 
 const InsideTabBottom = createBottomTabNavigator();
 
@@ -42,7 +42,7 @@ const InsideTabBottomNavigator = () => {
         name="AnnoucementView"
         component={AnnoucementView}
       />
-      <InsideTabBottom.Screen name="LoginView" component={MyProfileView} />
+      <InsideTabBottom.Screen name="MyProfileView" component={MyProfileView} />
     </InsideTabBottom.Navigator>
   );
 };
