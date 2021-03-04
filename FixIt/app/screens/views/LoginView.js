@@ -107,7 +107,8 @@ const LoginView = ({navigation}) => {
           <View style={styles.footerContainer}>
             <View style={styles.row}>
               <Text style={styles.textRegular}>Bạn chưa có tài khoản? </Text>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('RegisterView')}>
                 <Text
                   style={[
                     styles.textRegular,

@@ -17,6 +17,7 @@ const MyProfileView = () => {
   const [isHasAvatar, setIsHasAvatar] = React.useState(false);
   const [name, setName] = React.useState('');
   const [phone, setPhone] = React.useState('');
+  const [email, setEmail] = React.useState('');
 
   const edit = () => {
     setNotEdit(!notEdit);
@@ -82,10 +83,23 @@ const MyProfileView = () => {
               {width: calcScale(width), marginTop: calcScale(15)},
             ]}
             inputContainerStyle={{borderBottomWidth: 0}}
-            placeholder="phone"
+            placeholder="Phone"
             onChangeText={(phone) => setPhone(phone)}
             value={data.phoneNumber}
             disabled={notEdit}
+            keyboardType="number-pad"
+          />
+          <Input
+            containerStyle={[
+              styles.input,
+              {width: calcScale(width), marginTop: calcScale(15)},
+            ]}
+            inputContainerStyle={{borderBottomWidth: 0}}
+            placeholder="Email"
+            onChangeText={(email) => setEmail(email)}
+            value={email}
+            disabled={notEdit}
+            keyboardType="email-address"
           />
         </View>
       </View>
