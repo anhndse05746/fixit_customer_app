@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Text,
   View,
@@ -11,59 +11,103 @@ import {
 } from 'react-native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import { useDispatch, useSelector } from 'react-redux';
+import firebase from '../../../config/firebaseConfig'
+import { SliderComponent, Button, TextInput } from 'react-native';
 
 import { calcScale } from '../../../utils/dimension';
 import CommonStyles from '../Styles';
 import PTButton from '../../commonComponent/Button';
 import { registerUser } from '../../../store/register'
 
+
 const OTPView = ({ route, navigation }) => {
-  const [code, setCode] = React.useState();
-  const { OTPMessage } = useSelector(state => state.register)
   const dispatch = useDispatch();
+
+  //user
   const user = {
     phone: route.params.phone,
     name: route.params.name,
     email: route.params.email,
     password: route.params.password,
   }
+  const formatedPhoneNumber = '+84' + user.phone.slice(1)
 
-  const confirm = () => {
-    dispatch(registerUser(user.phone, user.password, user.name, user.email))
+  //otp states
+  const { auth } = firebase()
+  const [confirm, setConfirm] = React.useState(null)
+  const [code, setCode] = React.useState('');
+
+  //send otp
+  const signInWithPhoneNumber = async (phoneNumber) => {
+    const confirmation = await auth().signInWithPhoneNumber(phoneNumber)
+    setConfirm(confirmation)
   }
 
+  //confirm
+  const confirmOTP = async () => {
+    try {
+      await confirm.confirm(code)
+      alert('sign in successfully')
+    } catch (error) {
+      console.log(error)
+      alert(JSON.stringify(error))
+    }
+  }
+  //dispatch(registerUser(user.phone, user.password, user.name, user.email))
+
+  // useEffect(() => {
+  //   signInWithPhoneNumber(formatedPhoneNumber)
+  // }, [])
+
+  if (!confirm) {
+    return (
+      <Button onPress={() => signInWithPhoneNumber(formatedPhoneNumber)} title="phone number sign in">
+        Phone Number Sign In
+      </Button>
+    )
+  }
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
-      <Text style={[styles.textRegular, { marginTop: calcScale(30) }]}>
-        Mã OTP đã được gửi đến số điện thoại của bạn.
-      </Text>
-      <OTPInputView
-        style={{ width: '80%', height: 100 }}
-        pinCount={6}
-        // code={code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
-        // onCodeChanged = {(code) => setCode(code)}
-        autoFocusOnLoad
-        codeInputFieldStyle={styles.styleBase}
-        codeInputHighlightStyle={styles.styleHighLighted}
-        onCodeFilled={(code) => {
-          console.log(`Code is ${code}, you are good to go!`);
-        }}
-      />
-      <TouchableOpacity onPress={() => { }}>
-        <Text style={[styles.textRegular, { textDecorationLine: 'underline' }]}>
-          Gửi lại mã OTP.
-        </Text>
-      </TouchableOpacity>
-      <PTButton
-        title="Xác nhận"
-        onPress={() => confirm()}
-        style={styles.button}
-        color="#fff"
-      />
-    </KeyboardAvoidingView>
-  );
+    <View>
+      <Text>Enter OTP</Text>
+      <TextInput value={code} onChangeText={text => setCode(text)}></TextInput>
+      <Button onPress={() => confirmOTP()} title="confirm OTP">
+        Confirm OTP
+        </Button>
+    </View>
+  )
+
+  // return (
+  //   <KeyboardAvoidingView
+  //     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  //     style={styles.container}>
+  //     <Text style={[styles.textRegular, { marginTop: calcScale(30) }]}>
+  //       Mã OTP đã được gửi đến số điện thoại của bạn.
+  //     </Text>
+  //     <OTPInputView
+  //       style={{ width: '80%', height: 100 }}
+  //       pinCount={6}
+  //       // code={code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
+  //       // onCodeChanged = {(code) => setCode(code)}
+  //       autoFocusOnLoad
+  //       codeInputFieldStyle={styles.styleBase}
+  //       codeInputHighlightStyle={styles.styleHighLighted}
+  //       onCodeFilled={(code) => {
+  //         console.log(`Code is ${code}, you are good to go!`);
+  //       }}
+  //     />
+  //     <TouchableOpacity onPress={() => signInWithPhoneNumber(formatedPhoneNumber)}>
+  //       <Text style={[styles.textRegular, { textDecorationLine: 'underline' }]}>
+  //         Gửi lại mã OTP.
+  //       </Text>
+  //     </TouchableOpacity>
+  //     <PTButton
+  //       title="Xác nhận"
+  //       onPress={() => confirmOTP()}
+  //       style={styles.button}
+  //       color="#fff"
+  //     />
+  //   </KeyboardAvoidingView>
+  // );
 };
 
 export default OTPView;

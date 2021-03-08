@@ -8,8 +8,7 @@ const register = createSlice({
     initialState: {
         loading: false,
         isRegistered: true,
-        message: '',
-        OTPMessage: ''
+        message: ''
     },
     reducers: {
         registerRequested: (register, action) => {
