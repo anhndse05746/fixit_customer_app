@@ -10,13 +10,28 @@ import {
   ScrollView,
 } from 'react-native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { calcScale } from '../../../utils/dimension';
 import CommonStyles from '../Styles';
 import PTButton from '../../commonComponent/Button';
+import { registerUser } from '../../../store/register'
 
 const OTPView = ({ route, navigation }) => {
   const [code, setCode] = React.useState();
-  console.log(route.params);
+  const { OTPMessage } = useSelector(state => state.register)
+  const dispatch = useDispatch();
+  const user = {
+    phone: route.params.phone,
+    name: route.params.name,
+    email: route.params.email,
+    password: route.params.password,
+  }
+
+  const confirm = () => {
+    dispatch(registerUser(user.phone, user.password, user.name, user.email))
+  }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -43,7 +58,7 @@ const OTPView = ({ route, navigation }) => {
       </TouchableOpacity>
       <PTButton
         title="Xác nhận"
-        onPress={() => { }}
+        onPress={() => confirm()}
         style={styles.button}
         color="#fff"
       />

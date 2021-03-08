@@ -7,38 +7,47 @@ const register = createSlice({
     name: 'register',
     initialState: {
         loading: false,
-        message: ''
+        isRegistered: true,
+        message: '',
+        OTPMessage: ''
     },
     reducers: {
-        registerRequested: (users, action) => {
-            users.message = ''
-            users.loading = true
+        registerRequested: (register, action) => {
+            register.message = ''
+            register.isRegistered = true
+            register.loading = true
         },
-        registered: (users, action) => {
+        registeredSuccessful: (register, action) => {
             console.log(action)
-            users.loading = false
+            register.loading = false
         },
-        registerFailed: (users, action) => {
+        registerFailed: (register, action) => {
             console.log(action)
-            users.message = ""
-            users.loading = false
+            register.message = ""
+            register.loading = false
             return;
         },
-        checkRegistered: (users, action) => {
+        checkRegistered: (register, action) => {
             console.log(action)
-            users.loading = false
+            if (action.payload === "Phone number is registed") {
+                register.isRegistered = true
+                register.message = "Số điện thoại đã được sử dụng"
+            }
+            else {
+                register.isRegistered = false
+            }
+            register.loading = false
         },
-        checkRegisteredFailed: (users, action) => {
+        checkRegisteredFail: (register, action) => {
             console.log(action)
-            users.message = ""
-            users.loading = false
+            register.loading = false
             return;
         },
     }
 })
 
 export default register.reducer
-export const { registerRequested, registered, registerFailed, checkRegistered, checkRegisteredFailed } = register.actions
+export const { registerRequested, registeredSuccessful, registerFailed, checkRegistered, checkRegisteredFail } = register.actions
 
 export const registerUser = (phoneNumber, password, name, email) => apiCallBegan({
     url: '/register',
@@ -51,12 +60,12 @@ export const registerUser = (phoneNumber, password, name, email) => apiCallBegan
     },
     method: 'POST',
     onStart: registerRequested.type,
-    onSuccess: registered.type,
+    onSuccess: registeredSuccessful.type,
     onError: registerFailed.type
 })
 
-export const registeredUser = (phoneNumber) => apiCallBegan({
-    url: '/register',
+export const checkRegisteredUser = (phoneNumber) => apiCallBegan({
+    url: '/checkRegistered',
     data: {
         phone_number: phoneNumber,
         role_id: constants.ROLE_CUSTOMER
@@ -64,5 +73,5 @@ export const registeredUser = (phoneNumber) => apiCallBegan({
     method: 'POST',
     onStart: registerRequested.type,
     onSuccess: checkRegistered.type,
-    onError: checkRegisteredFailed.type
+    onError: checkRegisteredFail.type
 })

@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import CommonStyles from '../Styles';
 import PTButton from '../../commonComponent/Button';
 import { calcScale } from '../../../utils/dimension';
-//import {} from '../../../store/register'
+import { checkRegisteredUser } from '../../../store/register'
 
 const RegisterView = ({ navigation }) => {
   const [fullName, setFullName] = React.useState('');
@@ -27,6 +27,24 @@ const RegisterView = ({ navigation }) => {
   const [secure, setSecure] = React.useState(true);
   const [resecure, setResecure] = React.useState(true);
   const [checked, setChecked] = React.useState(false);
+
+  const { isRegistered, message } = useSelector(state => state.register)
+  const dispatch = useDispatch();
+
+  const checkRegistered = (phone) => {
+    dispatch(checkRegisteredUser(phone))
+  }
+  useEffect(() => {
+    const user = {
+      phone: phone,
+      name: fullName,
+      email: email,
+      password: password,
+    }
+    if (isRegistered == false) {
+      navigation.navigate('OTPView', user)
+    }
+  }, [isRegistered]);
 
   return (
     <KeyboardAvoidingView
@@ -40,6 +58,13 @@ const RegisterView = ({ navigation }) => {
               { marginTop: calcScale(15), fontSize: calcScale(22) },
             ]}>
             Vui lòng điền những thông tin sau
+          </Text>
+          <Text
+            style={[
+              styles.textRegular,
+              { marginTop: calcScale(15), fontSize: calcScale(22) },
+            ]}>
+            {message}
           </Text>
           <View style={styles.formContainer}>
             <View style={styles.column}>
@@ -65,7 +90,7 @@ const RegisterView = ({ navigation }) => {
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Email <Text style={{ color: 'red' }}>*</Text>
+                Email
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -181,7 +206,7 @@ const RegisterView = ({ navigation }) => {
             <PTButton
               title="Tiếp tục"
               onPress={() => {
-                navigation.navigate('OTPView', { phone: 'phone' });
+                checkRegistered(phone);
               }}
               style={styles.button}
               color="#fff"
