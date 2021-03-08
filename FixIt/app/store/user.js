@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import { apiCallBegan } from './apiActions'
+import constants from '../utils/constants'
 
 const user = createSlice({
     name: 'user',
@@ -16,7 +17,7 @@ const user = createSlice({
             users.message = ''
             users.loading = true
         },
-        usersReceived: (users, action) => {
+        usersLoggedIn: (users, action) => {
             console.log(action)
             users.phoneNumber = action.payload.phone
             users.name = action.payload.name
@@ -24,28 +25,39 @@ const user = createSlice({
             users.message = LOGGED_IN
             users.loading = false
         },
-        usersRequestedFailed: (users, action) => {
+        usersLoginFailed: (users, action) => {
             console.log(action)
-            users.message = "Phone number or password are incorrect"
+            users.message = "Sai tên tài khoản hoặc mật khẩu"
             users.loading = false
             return;
-        }
+        },
+        usersUpdated: (users, action) => {
+            console.log(action)
+            users.loading = false
+        },
+        usersUpdateFailed: (users, action) => {
+            console.log(action)
+            users.message = ""
+            users.loading = false
+            return;
+        },
     }
 })
 
 export const LOGGED_IN = 'logged in'
 
 export default user.reducer
-export const { usersRequested, usersReceived, usersRequestedFailed } = user.actions
+export const { usersRequested, usersLoggedIn, usersLoginFailed } = user.actions
 
 export const loadUsers = (username, password) => apiCallBegan({
     url: '/login',
     data: {
         phoneNumber: username,
-        password: password
+        password: password,
+        role_id: constants.ROLE_CUSTOMER
     },
     method: 'POST',
     onStart: usersRequested.type,
-    onSuccess: usersReceived.type,
-    onError: usersRequestedFailed.type
+    onSuccess: usersLoggedIn.type,
+    onError: usersLoginFailed.type
 })

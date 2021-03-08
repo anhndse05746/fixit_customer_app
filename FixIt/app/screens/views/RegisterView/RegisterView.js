@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   Text,
   View,
@@ -9,15 +9,16 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import { CheckBox, Input } from 'react-native-elements';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import CommonStyles from '../Styles';
-import {CheckBox, Input} from 'react-native-elements';
-import {useDispatch, useSelector} from 'react-redux';
-
 import PTButton from '../../commonComponent/Button';
-import {calcScale} from '../../../utils/dimension';
+import { calcScale } from '../../../utils/dimension';
+//import {} from '../../../store/register'
 
-const RegisterView = ({navigation}) => {
+const RegisterView = ({ navigation }) => {
   const [fullName, setFullName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [phone, setPhone] = React.useState('');
@@ -36,14 +37,14 @@ const RegisterView = ({navigation}) => {
           <Text
             style={[
               styles.textRegular,
-              {marginTop: calcScale(15), fontSize: calcScale(22)},
+              { marginTop: calcScale(15), fontSize: calcScale(22) },
             ]}>
             Vui lòng điền những thông tin sau
           </Text>
           <View style={styles.formContainer}>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Họ và tên <Text style={{color: 'red'}}>*</Text>
+                Họ và tên <Text style={{ color: 'red' }}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -64,7 +65,7 @@ const RegisterView = ({navigation}) => {
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Email <Text style={{color: 'red'}}>*</Text>
+                Email <Text style={{ color: 'red' }}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -86,7 +87,7 @@ const RegisterView = ({navigation}) => {
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Phone number <Text style={{color: 'red'}}>*</Text>
+                Phone number <Text style={{ color: 'red' }}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -108,7 +109,7 @@ const RegisterView = ({navigation}) => {
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Mật khẩu <Text style={{color: 'red'}}>*</Text>
+                Mật khẩu <Text style={{ color: 'red' }}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -123,7 +124,7 @@ const RegisterView = ({navigation}) => {
                         size={calcScale(15)}
                         color="grey"
                         onPress={() => setSecure(!secure)}
-                        style={{marginRight: calcScale(5)}}
+                        style={{ marginRight: calcScale(5) }}
                       />
                       <Icon
                         name="times-circle"
@@ -139,7 +140,7 @@ const RegisterView = ({navigation}) => {
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Nhập lại mật khẩu <Text style={{color: 'red'}}>*</Text>
+                Nhập lại mật khẩu <Text style={{ color: 'red' }}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -154,7 +155,7 @@ const RegisterView = ({navigation}) => {
                         size={calcScale(15)}
                         color="grey"
                         onPress={() => setResecure(!resecure)}
-                        style={{marginRight: calcScale(5)}}
+                        style={{ marginRight: calcScale(5) }}
                       />
                       <Icon
                         name="times-circle"
@@ -174,13 +175,13 @@ const RegisterView = ({navigation}) => {
             checked={checked}
             onPress={() => setChecked(!checked)}
             containerStyle={styles.checkBox}
-            textStyle={{fontSize: calcScale(17)}}
+            textStyle={{ fontSize: calcScale(17) }}
           />
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             <PTButton
               title="Tiếp tục"
               onPress={() => {
-                navigation.navigate('OTPView');
+                navigation.navigate('OTPView', { phone: 'phone' });
               }}
               style={styles.button}
               color="#fff"

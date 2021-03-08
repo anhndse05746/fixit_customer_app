@@ -10,21 +10,22 @@ import {
   ScrollView,
 } from 'react-native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import {calcScale} from '../../../utils/dimension';
+import { calcScale } from '../../../utils/dimension';
 import CommonStyles from '../Styles';
 import PTButton from '../../commonComponent/Button';
 
-const OTPView = ({navigation}) => {
+const OTPView = ({ route, navigation }) => {
   const [code, setCode] = React.useState();
+  console.log(route.params);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
-      <Text style={[styles.textRegular, {marginTop: calcScale(30)}]}>
+      <Text style={[styles.textRegular, { marginTop: calcScale(30) }]}>
         Mã OTP đã được gửi đến số điện thoại của bạn.
       </Text>
       <OTPInputView
-        style={{width: '80%', height: 100}}
+        style={{ width: '80%', height: 100 }}
         pinCount={6}
         // code={code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
         // onCodeChanged = {(code) => setCode(code)}
@@ -35,14 +36,14 @@ const OTPView = ({navigation}) => {
           console.log(`Code is ${code}, you are good to go!`);
         }}
       />
-      <TouchableOpacity onPress={() => {}}>
-        <Text style={[styles.textRegular, {textDecorationLine: 'underline'}]}>
+      <TouchableOpacity onPress={() => { }}>
+        <Text style={[styles.textRegular, { textDecorationLine: 'underline' }]}>
           Gửi lại mã OTP.
         </Text>
       </TouchableOpacity>
       <PTButton
         title="Xác nhận"
-        onPress={() => {}}
+        onPress={() => { }}
         style={styles.button}
         color="#fff"
       />
