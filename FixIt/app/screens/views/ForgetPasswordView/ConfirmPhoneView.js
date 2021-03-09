@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   Text,
   StyleSheet,
@@ -6,62 +6,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import {useDispatch, useSelector} from 'react-redux';
-import firebase from '../../../config/firebaseConfig';
 
 import {calcScale} from '../../../utils/dimension';
 import CommonStyles from '../Styles';
 import PTButton from '../../commonComponent/Button';
-import {registerUser} from '../../../store/register';
-import constants from '../../../utils/constants';
 
-const OTPView = ({route, navigation}) => {
-  const dispatch = useDispatch();
-  const {message} = useSelector((state) => state.register);
-  //user
-  const user = {
-    phone: route.params.phone,
-    name: route.params.name,
-    email: route.params.email,
-    password: route.params.password,
-  };
-  const formatedPhoneNumber = '+84' + user.phone.slice(1);
-
-  //otp states
-  const {auth} = firebase();
-  const [confirm, setConfirm] = React.useState(null);
+const ConfirmPhoneView = ({route, navigation}) => {
   const [code, setCode] = React.useState('');
-
-  //send otp
-  const signInWithPhoneNumber = async (phoneNumber) => {
-    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-    setConfirm(confirmation);
-  };
-
-  //confirm
-  const confirmOTP = async () => {
-    try {
-      await confirm.confirm(code);
-      dispatch(registerUser(user.phone, user.password, user.name, user.email));
-    } catch (error) {
-      console.log(error);
-      alert(JSON.stringify(error));
-    }
-  };
-  //dispatch(registerUser(user.phone, user.password, user.name, user.email))
-
-  useEffect(() => {
-    signInWithPhoneNumber(formatedPhoneNumber);
-  }, []);
-
-  useEffect(() => {
-    if (message === constants.REGISTER_SUCCESSFULLY) {
-      alert(constants.REGISTER_SUCCESSFULLY);
-      navigation.navigate('LoginView');
-    } else if (message !== '') {
-      alert(message);
-    }
-  }, [message]);
 
   return (
     <KeyboardAvoidingView
@@ -80,15 +31,14 @@ const OTPView = ({route, navigation}) => {
         codeInputHighlightStyle={styles.styleHighLighted}
         onCodeFilled={(code) => setCode(code)}
       />
-      <TouchableOpacity
-        onPress={() => signInWithPhoneNumber(formatedPhoneNumber)}>
+      <TouchableOpacity onPress={() => {}}>
         <Text style={[styles.textRegular, {textDecorationLine: 'underline'}]}>
           Gửi lại mã OTP.
         </Text>
       </TouchableOpacity>
       <PTButton
-        title="Xác nhận"
-        onPress={() => confirmOTP()}
+        title="Tiếp tục"
+        onPress={() => navigation.navigate('ResetPasswordView')}
         style={styles.button}
         color="#fff"
       />
@@ -96,7 +46,7 @@ const OTPView = ({route, navigation}) => {
   );
 };
 
-export default OTPView;
+export default ConfirmPhoneView;
 
 const styles = StyleSheet.create({
   container: {
