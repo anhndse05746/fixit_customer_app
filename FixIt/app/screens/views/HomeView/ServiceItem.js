@@ -1,29 +1,30 @@
 import React from 'react';
-import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {calcScale, width} from '../../../utils/dimension';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+
+import { calcScale, width } from '../../../utils/dimension';
 import CommonStyles from '../Styles';
 
 const useComponentSize = () => {
-  const [size, setSize] = React.useState({width: 0, height: 0});
+  const [size, setSize] = React.useState({ width: 0, height: 0 });
 
   const onLayout = React.useCallback((event) => {
-    const {width, height} = event.nativeEvent.layout;
-    setSize({width, height});
+    const { width, height } = event.nativeEvent.layout;
+    setSize({ width, height });
   }, []);
 
   return [size, onLayout];
 };
 
-const ServiceItem = ({navigation, item}) => {
+const ServiceItem = ({ navigation, item }) => {
   const [size, onLayout] = useComponentSize();
   const data = item.item;
   console.log(JSON.stringify(data));
   return (
     <TouchableOpacity
       key={data.id.toString()}
-      style={{...styles.serviceBox, backgroundColor: data.backgroundColor}}
+      style={{ ...styles.serviceBox, backgroundColor: data.backgroundColor }}
       onLayout={onLayout}
-      onPress={() => navigation.navigate('ServiceListView', {data: item})}>
+      onPress={() => navigation.navigate('ServiceListView', { data: item })}>
       <Image
         source={data.image}
         style={{

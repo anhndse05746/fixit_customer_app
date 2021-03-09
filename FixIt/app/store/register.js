@@ -14,15 +14,16 @@ const register = createSlice({
         registerRequested: (register, action) => {
             register.message = ''
             register.isRegistered = true
-            register.loading = true
+            register.sendOTP = true
         },
         registeredSuccessful: (register, action) => {
             console.log(action)
+            register.message = constants.REGISTER_SUCCESSFULLY
             register.loading = false
         },
         registerFailed: (register, action) => {
             console.log(action)
-            register.message = ""
+            register.message = action.payload
             register.loading = false
             return;
         },
@@ -30,7 +31,7 @@ const register = createSlice({
             console.log(action)
             if (action.payload === "Phone number is registed") {
                 register.isRegistered = true
-                register.message = "Số điện thoại đã được sử dụng"
+                register.message = constants.PHONE_NUMBER_REGISTERED
             }
             else {
                 register.isRegistered = false
