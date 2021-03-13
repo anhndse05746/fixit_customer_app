@@ -173,7 +173,7 @@ const ChangePasswordView = ({route, navigation}) => {
             <PTButton
               title="Xác nhận"
               onPress={() => {
-                dispatch(resetPassword(phone, password));
+                validateThenNavigate();
               }}
               style={styles.button}
               color="#fff"

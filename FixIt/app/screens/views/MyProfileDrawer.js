@@ -13,7 +13,7 @@ import {useSelector} from 'react-redux';
 import {calcScale} from '../../utils/dimension';
 import commonStyles from './Styles';
 
-const MyProfileDrawer = () => {
+const MyProfileDrawer = ({navigation}) => {
   const [isHasAvatar, setIsHasAvatar] = React.useState(false);
 
   let data = useSelector((state) => state.user);
@@ -72,7 +72,9 @@ const MyProfileDrawer = () => {
           </View>
         </View>
         <View>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('ChangePasswordView')}>
             <View style={[styles.row, {paddingLeft: calcScale(20)}]}>
               <Icon name="lock" size={calcScale(24)} color="rgb(242, 85, 44)" />
               <Text

@@ -59,7 +59,6 @@ const HomeStackNavigator = () => {
         component={HomeView}
       />
       <HomeStack.Screen name="ServiceListView" component={ServiceListView} />
-      <HomeStack.Screen name="ChangePassword" component={ChangePasswordView} />
     </HomeStack.Navigator>
   );
 };
