@@ -12,27 +12,24 @@ import {Input} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import CommonStyles from '../Styles';
-import PTButton from '../../commonComponent/Button';
-import {calcScale} from '../../../utils/dimension';
-import {resetPassword} from '../../../store/resetPassword';
+import CommonStyles from './Styles';
+import PTButton from '../commonComponent/Button';
+import {calcScale} from '../../utils/dimension';
 
-const ResetPasswordView = ({route, navigation}) => {
+const ChangePasswordView = ({route, navigation}) => {
+  const [oldPassword, setOldPassword] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [repassword, setRepassword] = React.useState('');
+  const [oldSecure, setOldSecure] = React.useState(true);
   const [secure, setSecure] = React.useState(true);
   const [resecure, setResecure] = React.useState(true);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [matchedPassword, setMatchedPassword] = React.useState(false);
 
-  //phone
-  const phone = route.params.phone;
-
-  const dispatch = useDispatch();
-  const {isReset, message} = useSelector((state) => state.resetPassword);
-
   const validateThenNavigate = () => {
-    if (password === '') {
+    if (oldPassword === '') {
+      setErrorMessage(' không được để trống');
+    } else if (password === '') {
       setErrorMessage(' không được để trống');
     } else if (repassword === '') {
       setErrorMessage(' không được để trống');
@@ -42,19 +39,12 @@ const ResetPasswordView = ({route, navigation}) => {
       password !== repassword
     ) {
       setMatchedPassword(true);
-      setErrorMessage(' Không trùng với Password');
+      setErrorMessage(' không trùng với Password');
     } else {
       setErrorMessage('');
-      navigation.navigate('LoginView');
+      navigation.navigate('HomeView');
     }
   };
-
-  useEffect(() => {
-    if (isReset == true) {
-      alert(message);
-      validateThenNavigate();
-    }
-  }, [isReset]);
 
   return (
     <KeyboardAvoidingView
@@ -70,6 +60,42 @@ const ResetPasswordView = ({route, navigation}) => {
             Vui lòng điền những thông tin sau
           </Text>
           <View style={styles.formContainer}>
+            <View style={styles.column}>
+              <Text style={styles.textRegular}>
+                Mật khẩu cũ<Text style={{color: 'red'}}>*</Text>
+              </Text>
+              <Input
+                containerStyle={styles.input}
+                placeholder="nguyenvana123"
+                onChangeText={(password) => setOldPassword(password)}
+                secureTextEntry={oldSecure}
+                rightIcon={
+                  oldPassword != '' ? (
+                    <View style={styles.row}>
+                      <Icon
+                        name={oldSecure ? 'eye-slash' : 'eye'}
+                        size={calcScale(15)}
+                        color="grey"
+                        onPress={() => setOldSecure(!oldSecure)}
+                        style={{marginRight: calcScale(5)}}
+                      />
+                      <Icon
+                        name="times-circle"
+                        size={calcScale(15)}
+                        color="grey"
+                        onPress={() => setOldPassword('')}
+                      />
+                    </View>
+                  ) : null
+                }
+                value={oldPassword}
+                errorMessage={
+                  errorMessage !== '' && oldPassword === ''
+                    ? 'Password cũ' + errorMessage
+                    : ''
+                }
+              />
+            </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
                 Mật khẩu mới<Text style={{color: 'red'}}>*</Text>
@@ -137,7 +163,7 @@ const ResetPasswordView = ({route, navigation}) => {
                 value={repassword}
                 errorMessage={
                   (errorMessage !== '' && repassword === '') || matchedPassword
-                    ? 'Re-enter password' + errorMessage
+                    ? 'Nhập lại password' + errorMessage
                     : ''
                 }
               />
@@ -159,7 +185,7 @@ const ResetPasswordView = ({route, navigation}) => {
   );
 };
 
-export default ResetPasswordView;
+export default ChangePasswordView;
 
 const styles = StyleSheet.create({
   container: {

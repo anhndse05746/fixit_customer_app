@@ -9,6 +9,7 @@ import AnnoucementView from '../views/AnnouncementView';
 import MyRequestView from '../views/MyRequestView';
 import {calcScale} from '../../utils/dimension';
 import MyProfileView from '../views/MyProfileView';
+import ChangePasswordView from '../views/ChangePasswordView';
 
 const InsideTabBottom = createBottomTabNavigator();
 
@@ -58,6 +59,7 @@ const HomeStackNavigator = () => {
         component={HomeView}
       />
       <HomeStack.Screen name="ServiceListView" component={ServiceListView} />
+      <HomeStack.Screen name="ChangePassword" component={ChangePasswordView} />
     </HomeStack.Navigator>
   );
 };

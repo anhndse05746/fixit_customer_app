@@ -1,32 +1,39 @@
 import React from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
-import { calcScale, width } from '../../../utils/dimension';
+import {calcScale, width} from '../../../utils/dimension';
 import CommonStyles from '../Styles';
 
 const useComponentSize = () => {
-  const [size, setSize] = React.useState({ width: 0, height: 0 });
+  const [size, setSize] = React.useState({width: 0, height: 0});
 
   const onLayout = React.useCallback((event) => {
-    const { width, height } = event.nativeEvent.layout;
-    setSize({ width, height });
+    const {width, height} = event.nativeEvent.layout;
+    setSize({width, height});
   }, []);
 
   return [size, onLayout];
 };
 
-const ServiceItem = ({ navigation, item }) => {
+const ServiceItem = ({navigation, item}) => {
   const [size, onLayout] = useComponentSize();
   const data = item.item;
-  console.log(JSON.stringify(data));
+  const colors = ['#f2552c', '#ffd15c', '#00a66f', '#098eb3'];
+  console.log('item: ' + JSON.stringify(data));
   return (
     <TouchableOpacity
       key={data.id.toString()}
-      style={{ ...styles.serviceBox, backgroundColor: data.backgroundColor }}
+      style={{
+        ...styles.serviceBox,
+        backgroundColor: colors[Math.floor(Math.random() * colors.length)],
+      }}
       onLayout={onLayout}
-      onPress={() => navigation.navigate('ServiceListView', { data: item })}>
+      onPress={() => navigation.navigate('ServiceListView', {data: item})}>
       <Image
-        source={data.image}
+        // source={data.image}
+        source={{
+          uri: data.image,
+        }}
         style={{
           height: calcScale(size.width / 2),
           width: calcScale(size.width / 2),
@@ -57,7 +64,7 @@ const styles = StyleSheet.create({
     ...CommonStyles.textBold,
     fontSize: calcScale(20),
     marginBottom: calcScale(10),
-    color: '#fff',
+    color: '#000',
   },
 });
 

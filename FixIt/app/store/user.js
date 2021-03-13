@@ -10,6 +10,7 @@ const user = createSlice({
         name: '',
         roleId: '',
         loading: false,
+        token: '',
         message: ''
     },
     reducers: {
@@ -22,6 +23,7 @@ const user = createSlice({
             users.phoneNumber = action.payload.phone
             users.name = action.payload.name
             users.roleId = action.payload.roleId
+            users.token = action.payload.token
             users.message = LOGGED_IN
             users.loading = false
         },

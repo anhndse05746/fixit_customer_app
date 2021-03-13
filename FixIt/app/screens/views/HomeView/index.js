@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {FlatList, SafeAreaView} from 'react-native';
 import {View} from 'react-native';
 import {StyleSheet, Text} from 'react-native';
@@ -7,50 +7,64 @@ import HeaderBar from './HeaderBar';
 import CommonStyles from '../Styles';
 import ServiceItem from './ServiceItem';
 import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
-const primaryServices = [
-  {
-    image: require('../../../assets/images/freezing.png'),
-    id: '1',
-    name: 'Sửa điện lạnh',
-    url: '',
-    parentId: 0,
-    description: 'Sửa tủ lạnh, điều hòa, máy giặt,...',
-    backgroundColor: '#f2552c',
-  },
-  {
-    image: require('../../../assets/images/laptop.png'),
-    id: '2',
-    name: 'Sửa điện tử',
-    url: '',
-    parentId: 0,
-    description: 'Sửa laptop, điện thoại...',
-    backgroundColor: '#ffd15c',
-  },
-  {
-    image: require('../../../assets/images/house.png'),
-    id: '3',
-    name: 'Sửa đồ gia dụng',
-    url: '',
-    parentId: 0,
-    description: 'Sửa tủ, giường...',
-    backgroundColor: '#00a66f',
-  },
-  {
-    image: require('../../../assets/images/lightbulb.png'),
-    id: '4',
-    name: 'Sửa điện dân dụng',
-    url: '',
-    parentId: 0,
-    description: 'Sửa đèn, điện...',
-    backgroundColor: '#098eb3',
-  },
-];
+import {loadMajors} from '../../../store/majors';
+
+// const primaryServices = [
+//   {
+//     image: require('../../../assets/images/freezing.png'),
+//     id: '1',
+//     name: 'Sửa điện lạnh',
+//     url: '',
+//     parentId: 0,
+//     description: 'Sửa tủ lạnh, điều hòa, máy giặt,...',
+//     backgroundColor: '#f2552c',
+//   },
+//   {
+//     image: require('../../../assets/images/laptop.png'),
+//     id: '2',
+//     name: 'Sửa điện tử',
+//     url: '',
+//     parentId: 0,
+//     description: 'Sửa laptop, điện thoại...',
+//     backgroundColor: '#ffd15c',
+//   },
+//   {
+//     image: require('../../../assets/images/house.png'),
+//     id: '3',
+//     name: 'Sửa đồ gia dụng',
+//     url: '',
+//     parentId: 0,
+//     description: 'Sửa tủ, giường...',
+//     backgroundColor: '#00a66f',
+//   },
+//   {
+//     image: require('../../../assets/images/lightbulb.png'),
+//     id: '4',
+//     name: 'Sửa điện dân dụng',
+//     url: '',
+//     parentId: 0,
+//     description: 'Sửa đèn, điện...',
+//     backgroundColor: '#098eb3',
+//   },
+// ];
 
 const HomeView = () => {
-  let data = useSelector((state) => state.user);
+  const data = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+
+  //select user's token
+  const {token} = data;
+
+  //select majorList
+  const {majorsList} = useSelector((state) => state.majors);
+
+  useEffect(() => {
+    dispatch(loadMajors(token));
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <HeaderBar navigation={navigation} />
@@ -62,7 +76,7 @@ const HomeView = () => {
           Hôm nay bạn cần sửa chữa gì không?
         </Text>
         <FlatList
-          data={primaryServices}
+          data={majorsList}
           style={styles.serviceContainer}
           renderItem={(item) => (
             <ServiceItem navigation={navigation} item={item} />
