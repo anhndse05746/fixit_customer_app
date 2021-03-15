@@ -1,15 +1,15 @@
-import React, {useEffect} from 'react';
-import {FlatList, SafeAreaView} from 'react-native';
-import {View} from 'react-native';
-import {StyleSheet, Text} from 'react-native';
-import {calcScale} from '../../../utils/dimension';
+import React, { useEffect } from 'react';
+import { FlatList, SafeAreaView } from 'react-native';
+import { View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
+import { calcScale } from '../../../utils/dimension';
 import HeaderBar from './HeaderBar';
 import CommonStyles from '../Styles';
 import ServiceItem from './ServiceItem';
-import {useNavigation} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {loadMajors} from '../../../store/majors';
+import { loadMajors } from '../../../store/majors';
 
 // const primaryServices = [
 //   {
@@ -56,20 +56,21 @@ const HomeView = () => {
   const navigation = useNavigation();
 
   //select user's token
-  const {token} = data;
+  const { token } = data;
 
   //select majorList
-  const {majorsList} = useSelector((state) => state.majors);
+  const { majorsList } = useSelector((state) => state.majors);
 
   useEffect(() => {
-    dispatch(loadMajors(token));
+    if (majorsList.length == 0)
+      dispatch(loadMajors(token));
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <HeaderBar navigation={navigation} />
       <View style={styles.innerContainer}>
-        <Text style={[styles.textBold, {paddingTop: calcScale(80)}]}>
+        <Text style={[styles.textBold, { paddingTop: calcScale(80) }]}>
           Hi, {data.name}!
         </Text>
         <Text style={styles.textRegular}>
@@ -82,7 +83,7 @@ const HomeView = () => {
             <ServiceItem navigation={navigation} item={item} />
           )}
           numColumns={2}
-          columnWrapperStyle={{flex: 1, justifyContent: 'space-around'}}
+          columnWrapperStyle={{ flex: 1, justifyContent: 'space-around' }}
           keyExtractor={(item) => item.id}
         />
       </View>

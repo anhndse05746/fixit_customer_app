@@ -9,13 +9,19 @@ const user = createSlice({
         phoneNumber: '',
         name: '',
         roleId: '',
+        email: '',
         loading: false,
         token: '',
-        message: ''
+        message: '',
+        changePassMessage: '',
+        updateUserMessage: ''
     },
     reducers: {
         usersRequested: (users, action) => {
+            console.log(action)
             users.message = ''
+            users.changePassMessage = ''
+            updateUserMessage = ''
             users.loading = true
         },
         usersLoggedIn: (users, action) => {
@@ -23,18 +29,22 @@ const user = createSlice({
             users.phoneNumber = action.payload.phone
             users.name = action.payload.name
             users.roleId = action.payload.roleId
+            users.email = action.payload.email
             users.token = action.payload.token
             users.message = LOGGED_IN
             users.loading = false
         },
         usersLoginFailed: (users, action) => {
             console.log(action)
-            users.message = "Sai tên tài khoản hoặc mật khẩu"
+            users.message = constants.LOGIN_FAIL_MESSAGE
             users.loading = false
             return;
         },
         usersUpdated: (users, action) => {
             console.log(action)
+            users.name = action.payload.name
+            users.email = action.payload.email
+            users.updateUserMessage = constants.UPDATE_SUCCESSFULLY
             users.loading = false
         },
         usersUpdateFailed: (users, action) => {
@@ -43,13 +53,25 @@ const user = createSlice({
             users.loading = false
             return;
         },
+        userChangePasswordSuccess: (users, action) => {
+            console.log(action)
+            if (action.payload == "success") {
+                users.changePassMessage = constants.RESET_PASSWORD_SUCCESSFULLY
+            }
+            else if (action.payload == "Incorrect password") {
+                users.changePassMessage = constants.OLD_PASSWORD_IS_NOT_CORRECT
+            }
+        },
+        userChangePasswordFail: (users, action) => {
+            console.log(action)
+        },
     }
 })
 
 export const LOGGED_IN = 'logged in'
 
 export default user.reducer
-export const { usersRequested, usersLoggedIn, usersLoginFailed } = user.actions
+export const { usersRequested, usersLoggedIn, usersLoginFailed, userChangePasswordFail, userChangePasswordSuccess, usersUpdateFailed, usersUpdated } = user.actions
 
 export const loadUsers = (username, password) => apiCallBegan({
     url: '/login',
@@ -62,4 +84,38 @@ export const loadUsers = (username, password) => apiCallBegan({
     onStart: usersRequested.type,
     onSuccess: usersLoggedIn.type,
     onError: usersLoginFailed.type
+})
+
+export const changePassword = (phone, token, old_password, new_password) => apiCallBegan({
+    url: '/api/changePassword',
+    headers: {
+        Authorization: token
+    },
+    data: {
+        phone_number: phone,
+        old_password: old_password,
+        new_password: new_password,
+        role_id: constants.ROLE_CUSTOMER
+    },
+    method: 'POST',
+    onStart: usersRequested.type,
+    onSuccess: userChangePasswordSuccess.type,
+    onError: userChangePasswordFail.type
+})
+
+export const updateUser = (phone, token, name, email) => apiCallBegan({
+    url: '/api/updateUser',
+    headers: {
+        Authorization: token
+    },
+    data: {
+        phone_number: phone,
+        role_id: constants.ROLE_CUSTOMER,
+        name: name,
+        email: email
+    },
+    method: 'POST',
+    onStart: usersRequested.type,
+    onSuccess: usersUpdated.type,
+    onError: usersUpdateFailed.type
 })

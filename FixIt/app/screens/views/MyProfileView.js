@@ -1,16 +1,21 @@
-import React from 'react';
-import {SafeAreaView} from 'react-native';
-import {View} from 'react-native';
-import {StyleSheet, Text} from 'react-native';
-import {width, calcScale} from '../../utils/dimension';
+import React, { useEffect } from 'react';
+import { SafeAreaView } from 'react-native';
+import { View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { Avatar, Header, Input } from 'react-native-elements';
+
+import { width, calcScale } from '../../utils/dimension';
 import CommonStyles from './Styles';
-import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
-import {Avatar, Header, Input} from 'react-native-elements';
+import { updateUser } from '../../store/user'
 
 const MyProfileView = () => {
-  let data = useSelector((state) => state.user);
+  const data = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const { updateUserMessage } = data
+
 
   const [notEdit, setNotEdit] = React.useState(true);
   const [headerText, setHeaderText] = React.useState('Sửa');
@@ -25,6 +30,9 @@ const MyProfileView = () => {
       setHeaderText('Lưu');
     } else {
       setHeaderText('Sửa');
+      if (name !== data.name || email !== data.email) {
+        dispatch(updateUser(data.phoneNumber, data.token, name, email))
+      }
     }
   };
 
@@ -61,17 +69,18 @@ const MyProfileView = () => {
           )}
         </View>
         <View style={styles.userInfoContainer}>
-          <Text style={[styles.textBold, {textAlign: 'center'}]}>
+          <Text style={[styles.textBold, { textAlign: 'center' }]}>
             {data.name}
           </Text>
-          <Text style={[styles.textRegular, {textAlign: 'center'}]}>
+          <Text style={[styles.textRegular, { textAlign: 'center' }]}>
             Khách hàng
           </Text>
         </View>
+        <Text>{updateUserMessage}</Text>
         <View style={styles.userInfoContainer}>
           <Input
-            containerStyle={[styles.input, {width: calcScale(width)}]}
-            inputContainerStyle={{borderBottomWidth: 0}}
+            containerStyle={[styles.input, { width: calcScale(width) }]}
+            inputContainerStyle={{ borderBottomWidth: 0 }}
             placeholder="Name"
             onChangeText={(name) => setName(name)}
             value={data.name}
@@ -80,9 +89,9 @@ const MyProfileView = () => {
           <Input
             containerStyle={[
               styles.input,
-              {width: calcScale(width), marginTop: calcScale(15)},
+              { width: calcScale(width), marginTop: calcScale(15) },
             ]}
-            inputContainerStyle={{borderBottomWidth: 0}}
+            inputContainerStyle={{ borderBottomWidth: 0 }}
             placeholder="Phone"
             onChangeText={(phone) => setPhone(phone)}
             value={data.phoneNumber}
@@ -92,12 +101,12 @@ const MyProfileView = () => {
           <Input
             containerStyle={[
               styles.input,
-              {width: calcScale(width), marginTop: calcScale(15)},
+              { width: calcScale(width), marginTop: calcScale(15) },
             ]}
-            inputContainerStyle={{borderBottomWidth: 0}}
+            inputContainerStyle={{ borderBottomWidth: 0 }}
             placeholder="Email"
             onChangeText={(email) => setEmail(email)}
-            value={email}
+            value={data.email}
             disabled={notEdit}
             keyboardType="email-address"
           />
