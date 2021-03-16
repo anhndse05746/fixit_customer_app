@@ -1,28 +1,27 @@
-import React, { useEffect } from 'react';
-import { SafeAreaView } from 'react-native';
-import { View } from 'react-native';
-import { StyleSheet, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
-import { Avatar, Header, Input } from 'react-native-elements';
+import React, {useEffect} from 'react';
+import {KeyboardAvoidingView, SafeAreaView} from 'react-native';
+import {View} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {Avatar, Header, Input} from 'react-native-elements';
 
-import { width, calcScale } from '../../utils/dimension';
+import {width, calcScale} from '../../utils/dimension';
 import CommonStyles from './Styles';
-import { updateUser } from '../../store/user'
+import {updateUser} from '../../store/user';
 
 const MyProfileView = () => {
   const data = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { updateUserMessage } = data
-
+  const {updateUserMessage} = data;
 
   const [notEdit, setNotEdit] = React.useState(true);
   const [headerText, setHeaderText] = React.useState('Sửa');
   const [isHasAvatar, setIsHasAvatar] = React.useState(false);
-  const [name, setName] = React.useState('');
-  const [phone, setPhone] = React.useState('');
-  const [email, setEmail] = React.useState('');
+  const [name, setName] = React.useState(data.name);
+  const [phone, setPhone] = React.useState(data.phoneNumber);
+  const [email, setEmail] = React.useState(data.email);
 
   const edit = () => {
     setNotEdit(!notEdit);
@@ -31,30 +30,31 @@ const MyProfileView = () => {
     } else {
       setHeaderText('Sửa');
       if (name !== data.name || email !== data.email) {
-        dispatch(updateUser(data.phoneNumber, data.token, name, email))
+        dispatch(updateUser(data.phoneNumber, data.token, name, email));
       }
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
       <Header
         rightComponent={{
           text: headerText,
-          color: '#000',
+          style: {color: '#fff'},
           onPress: () => edit(),
         }}
-        backgroundColor="#fff"
+        backgroundColor="rgb(242, 85, 44)"
       />
-      <View style={styles.coverColor}></View>
       <View style={styles.innerContainer}>
-        <View style={styles.avatarContainer}>
+        <View>
           {isHasAvatar ? (
-            <Avatar rounded size={calcScale(150)} />
+            <Avatar rounded size={calcScale(130)} />
           ) : (
             <Avatar
               rounded
-              size={calcScale(150)}
+              size={calcScale(130)}
               containerStyle={{
                 borderColor: 'rgb(242, 85, 44)',
                 borderWidth: calcScale(2),
@@ -67,52 +67,52 @@ const MyProfileView = () => {
               }}
             />
           )}
-        </View>
-        <View style={styles.userInfoContainer}>
-          <Text style={[styles.textBold, { textAlign: 'center' }]}>
-            {data.name}
-          </Text>
-          <Text style={[styles.textRegular, { textAlign: 'center' }]}>
-            Khách hàng
-          </Text>
+          <View style={{paddingTop: calcScale(20)}}>
+            <Text style={[styles.textBold, {textAlign: 'center'}]}>
+              {data.name}
+            </Text>
+            <Text style={[styles.textRegular, {textAlign: 'center'}]}>
+              Khách hàng
+            </Text>
+          </View>
         </View>
         <Text>{updateUserMessage}</Text>
-        <View style={styles.userInfoContainer}>
+        <View>
           <Input
-            containerStyle={[styles.input, { width: calcScale(width) }]}
-            inputContainerStyle={{ borderBottomWidth: 0 }}
+            containerStyle={[styles.input, {width: calcScale(width)}]}
+            inputContainerStyle={{borderBottomWidth: 0}}
             placeholder="Name"
             onChangeText={(name) => setName(name)}
-            value={data.name}
+            value={name}
             disabled={notEdit}
           />
           <Input
             containerStyle={[
               styles.input,
-              { width: calcScale(width), marginTop: calcScale(15) },
+              {width: calcScale(width), marginTop: calcScale(15)},
             ]}
-            inputContainerStyle={{ borderBottomWidth: 0 }}
+            inputContainerStyle={{borderBottomWidth: 0}}
             placeholder="Phone"
             onChangeText={(phone) => setPhone(phone)}
-            value={data.phoneNumber}
+            value={phone}
             disabled={notEdit}
             keyboardType="number-pad"
           />
           <Input
             containerStyle={[
               styles.input,
-              { width: calcScale(width), marginTop: calcScale(15) },
+              {width: calcScale(width), marginTop: calcScale(15)},
             ]}
-            inputContainerStyle={{ borderBottomWidth: 0 }}
+            inputContainerStyle={{borderBottomWidth: 0}}
             placeholder="Email"
             onChangeText={(email) => setEmail(email)}
-            value={data.email}
+            value={email}
             disabled={notEdit}
             keyboardType="email-address"
           />
         </View>
       </View>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -127,18 +127,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: calcScale(20),
-  },
-  coverColor: {
-    height: calcScale(150),
-    backgroundColor: 'rgb(242, 85, 44)',
-    zIndex: 0,
-  },
-  avatarContainer: {
-    marginTop: calcScale(-75),
-    zIndex: 1,
-  },
-  userInfoContainer: {
-    paddingTop: calcScale(20),
+    flex: 1,
   },
   textBold: {
     ...CommonStyles.textBold,

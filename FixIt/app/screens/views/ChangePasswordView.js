@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   Text,
   View,
@@ -8,17 +8,18 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
 } from 'react-native';
-import { Input } from 'react-native-elements';
-import { useDispatch, useSelector } from 'react-redux';
+import {Input} from 'react-native-elements';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import CommonStyles from './Styles';
 import PTButton from '../commonComponent/Button';
-import { calcScale } from '../../utils/dimension';
-import { changePassword } from '../../store/user'
-import constants from '../../utils/constants'
+import {calcScale} from '../../utils/dimension';
+import {changePassword} from '../../store/user';
+import constants from '../../utils/constants';
+import {TouchableOpacity} from 'react-native';
 
-const ChangePasswordView = ({ route, navigation }) => {
+const ChangePasswordView = ({route, navigation}) => {
   const [oldPassword, setOldPassword] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [repassword, setRepassword] = React.useState('');
@@ -29,8 +30,8 @@ const ChangePasswordView = ({ route, navigation }) => {
   const [matchedPassword, setMatchedPassword] = React.useState(false);
 
   const dispatch = useDispatch();
-  const data = useSelector(state => state.user)
-  const { changePassMessage } = data
+  const data = useSelector((state) => state.user);
+  const {changePassMessage} = data;
 
   const validateThenNavigate = () => {
     if (oldPassword === '') {
@@ -48,8 +49,10 @@ const ChangePasswordView = ({ route, navigation }) => {
       setErrorMessage(' không trùng với Password');
     } else {
       setErrorMessage('');
-      console.log('dispatch')
-      dispatch(changePassword(data.phoneNumber, data.token, oldPassword, password))
+      console.log('dispatch');
+      dispatch(
+        changePassword(data.phoneNumber, data.token, oldPassword, password),
+      );
     }
   };
 
@@ -57,7 +60,7 @@ const ChangePasswordView = ({ route, navigation }) => {
     if (changePassMessage == constants.RESET_PASSWORD_SUCCESSFULLY) {
       navigation.navigate('HomeView');
     }
-  }, [changePassMessage])
+  }, [changePassMessage]);
 
   return (
     <KeyboardAvoidingView
@@ -68,15 +71,20 @@ const ChangePasswordView = ({ route, navigation }) => {
           <Text
             style={[
               styles.textRegular,
-              { marginTop: calcScale(15), fontSize: calcScale(22) },
+              {marginTop: calcScale(15), fontSize: calcScale(22)},
             ]}>
-            Vui lòng điền những thông tin sau
+            <TouchableOpacity
+              style={{paddingRight: calcScale(20)}}
+              onPress={() => navigation.navigate('HomeView')}>
+              <Icon name="arrow-left" size={calcScale(22)} color="#000" />
+            </TouchableOpacity>
+            Đổi mật khẩu
           </Text>
           <Text>{changePassMessage}</Text>
           <View style={styles.formContainer}>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Mật khẩu cũ<Text style={{ color: 'red' }}>*</Text>
+                Mật khẩu cũ<Text style={{color: 'red'}}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -91,7 +99,7 @@ const ChangePasswordView = ({ route, navigation }) => {
                         size={calcScale(15)}
                         color="grey"
                         onPress={() => setOldSecure(!oldSecure)}
-                        style={{ marginRight: calcScale(5) }}
+                        style={{marginRight: calcScale(5)}}
                       />
                       <Icon
                         name="times-circle"
@@ -112,7 +120,7 @@ const ChangePasswordView = ({ route, navigation }) => {
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Mật khẩu mới<Text style={{ color: 'red' }}>*</Text>
+                Mật khẩu mới<Text style={{color: 'red'}}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -127,7 +135,7 @@ const ChangePasswordView = ({ route, navigation }) => {
                         size={calcScale(15)}
                         color="grey"
                         onPress={() => setSecure(!secure)}
-                        style={{ marginRight: calcScale(5) }}
+                        style={{marginRight: calcScale(5)}}
                       />
                       <Icon
                         name="times-circle"
@@ -148,7 +156,7 @@ const ChangePasswordView = ({ route, navigation }) => {
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Nhập lại mật khẩu <Text style={{ color: 'red' }}>*</Text>
+                Nhập lại mật khẩu <Text style={{color: 'red'}}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -163,7 +171,7 @@ const ChangePasswordView = ({ route, navigation }) => {
                         size={calcScale(15)}
                         color="grey"
                         onPress={() => setResecure(!resecure)}
-                        style={{ marginRight: calcScale(5) }}
+                        style={{marginRight: calcScale(5)}}
                       />
                       <Icon
                         name="times-circle"
@@ -183,7 +191,7 @@ const ChangePasswordView = ({ route, navigation }) => {
               />
             </View>
           </View>
-          <View style={{ alignItems: 'center' }}>
+          <View style={{alignItems: 'center'}}>
             <PTButton
               title="Xác nhận"
               onPress={() => {
@@ -208,10 +216,10 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     paddingHorizontal: calcScale(30),
+    flex: 1,
   },
   formContainer: {
     justifyContent: 'center',
-    marginVertical: calcScale(30),
   },
   input: {
     marginTop: calcScale(10),
