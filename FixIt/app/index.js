@@ -1,5 +1,5 @@
 import {Provider as PaperProvider} from 'react-native-paper';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaProvider,
   initialWindowMetrics,
@@ -13,27 +13,32 @@ import RNBootSplash from 'react-native-bootsplash';
 
 RNScreens.enableScreens();
 
-export default class Root extends React.Component {
-  constructor(props) {
-    super(props);
-    RNBootSplash.show({fade: true});
-  }
+const Root = () => {
+  const [constructorHasRun, setConstructorHasRun] = React.useState(false);
 
-  componentDidMount() {
+  const constructor = () => {
+    if (constructorHasRun) {
+      return;
+    } else {
+      RNBootSplash.show({fade: true});
+      setConstructorHasRun(true);
+    }
+  };
+
+  useEffect(() => {
     RNBootSplash.hide({fade: true});
-  }
+  }, []);
 
-  componentWillUnmount() {}
+  constructor();
+  return (
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <Provider store={store}>
+        <PaperProvider>
+          <AppContainer />
+        </PaperProvider>
+      </Provider>
+    </SafeAreaProvider>
+  );
+};
 
-  render() {
-    return (
-      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <Provider store={store}>
-          <PaperProvider>
-            <AppContainer />
-          </PaperProvider>
-        </Provider>
-      </SafeAreaProvider>
-    );
-  }
-}
+export default Root;
