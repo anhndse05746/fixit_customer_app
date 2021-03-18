@@ -58,7 +58,13 @@ const HomeStackNavigator = () => {
         name="HomeView"
         component={HomeView}
       />
-      <HomeStack.Screen name="ServiceListView" component={ServiceListView} />
+      <HomeStack.Screen
+        name="ServiceListView"
+        component={ServiceListView}
+        options={({route}) => ({
+          title: route.params.serviceName,
+        })}
+      />
     </HomeStack.Navigator>
   );
 };

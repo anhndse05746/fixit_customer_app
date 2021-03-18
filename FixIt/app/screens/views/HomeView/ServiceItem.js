@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {getLastUpdateTime} from 'react-native-device-info';
 
 import {calcScale, width} from '../../../utils/dimension';
 import CommonStyles from '../Styles';
@@ -17,20 +18,37 @@ const useComponentSize = () => {
 
 const ServiceItem = ({navigation, item}) => {
   const [size, onLayout] = useComponentSize();
+
   const data = item.item;
-  const colors = ['#f2552c', '#ffd15c', '#00a66f', '#098eb3'];
-  //console.log('item: ' + JSON.stringify(data));
+
+  const colorPicker = () => {
+    let color = 'rgb(242, 85, 44)';
+    if (data.id === 1) {
+      return (color = '#f2552c');
+    } else if (data.id === 2) {
+      return (color = '#ffd15c');
+    } else if (data.id === 3) {
+      return (color = '#00a66f');
+    } else if (data.id === 4) {
+      return (color = '#098eb3');
+    }
+  };
+
   return (
     <TouchableOpacity
       key={data.id.toString()}
       style={{
         ...styles.serviceBox,
-        backgroundColor: colors[Math.floor(Math.random() * colors.length)],
+        backgroundColor: colorPicker(),
       }}
       onLayout={onLayout}
-      onPress={() => navigation.navigate('ServiceListView', {data: item})}>
+      onPress={() =>
+        navigation.navigate('ServiceListView', {
+          data: data.services,
+          serviceName: data.name,
+        })
+      }>
       <Image
-        // source={data.image}
         source={{
           uri: data.image,
         }}
