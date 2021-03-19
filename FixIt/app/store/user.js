@@ -21,7 +21,7 @@ const user = createSlice({
             console.log(action)
             users.message = ''
             users.changePassMessage = ''
-            updateUserMessage = ''
+            users.updateUserMessage = ''
             users.loading = true
         },
         usersLoggedIn: (users, action) => {
@@ -71,14 +71,15 @@ const user = createSlice({
 export const LOGGED_IN = 'logged in'
 
 export default user.reducer
-export const { usersRequested, usersLoggedIn, usersLoginFailed, userChangePasswordFail, userChangePasswordSuccess, usersUpdateFailed, usersUpdated } = user.actions
+export const { usersRequested, usersLoggedIn, usersLoginFailed, userChangePasswordFail, userChangePasswordSuccess, usersUpdateFailed, usersUpdated, userUpdateDeviceToken } = user.actions
 
-export const loadUsers = (username, password) => apiCallBegan({
+export const loadUsers = (username, password, device_token) => apiCallBegan({
     url: '/login',
     data: {
         phoneNumber: username,
         password: password,
-        role_id: constants.ROLE_CUSTOMER
+        role_id: constants.ROLE_CUSTOMER,
+        device_token: device_token
     },
     method: 'POST',
     onStart: usersRequested.type,
