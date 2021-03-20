@@ -3,39 +3,21 @@ import {StyleSheet, FlatList} from 'react-native';
 import {List} from 'react-native-paper';
 import {calcScale} from '../../../utils/dimension';
 
-const ServicesBranch = ({item}) => {
-  const [expanded, setExpanded] = React.useState(false);
-
-  const toggleExpanded = (expanded) => {
-    setExpanded(!expanded);
-  };
-
+const ServicesBranch = ({navigation, item}) => {
   const data = item.item;
 
   return (
     <>
-      <List.Accordion
-        expanded={expanded}
+      <List.Item
         title={data.name}
         id={data.id}
         style={styles.itemList}
         titleStyle={styles.titleStyle}
-        onPress={() => toggleExpanded(expanded)}
-        key={data.id.toString()}>
-        <FlatList
-          data={data.issues}
-          renderItem={({item}) => (
-            <List.Item
-              onPress={() => {}}
-              style={styles.itemLink}
-              title={item.name}
-              titleStyle={styles.titleStyle}
-              key={item.id.toString()}
-            />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-        />
-      </List.Accordion>
+        onPress={() => {
+          navigation.navigate('CreateRequestView', {service: data});
+        }}
+        key={data.id.toString()}
+      />
     </>
   );
 };

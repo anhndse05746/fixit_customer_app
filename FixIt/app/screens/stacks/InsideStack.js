@@ -1,15 +1,17 @@
-import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
+import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-
-import HomeView from '../views/HomeView';
-import ServiceListView from '../views/ServiceView/ServiceListView';
-import AnnoucementView from '../views/AnnouncementView';
-import MyRequestView from '../views/MyRequestView';
 import {calcScale} from '../../utils/dimension';
+import AnnoucementView from '../views/AnnouncementView';
+import AddressListView from '../views/CreateRequestView/AddressListView';
+import ConfirmRequestView from '../views/CreateRequestView/ConfirmRequestView';
+import CreateAddressView from '../views/CreateRequestView/CreateAddressView';
+import CreateRequestView from '../views/CreateRequestView/CreateRequestView';
+import HomeView from '../views/HomeView';
 import MyProfileView from '../views/MyProfileView';
-import ChangePasswordView from '../views/ChangePasswordView';
+import MyRequestView from '../views/MyRequestView';
+import ServiceListView from '../views/ServiceView/ServiceListView';
 
 const InsideTabBottom = createBottomTabNavigator();
 
@@ -63,7 +65,45 @@ const HomeStackNavigator = () => {
         component={ServiceListView}
         options={({route}) => ({
           title: route.params.serviceName,
+          headerTitleStyle: {color: '#fff'},
+          headerStyle: {backgroundColor: 'rgb(242, 85, 44)'},
         })}
+      />
+      <HomeStack.Screen
+        name="CreateRequestView"
+        component={CreateRequestView}
+        options={{
+          title: 'Tạo yêu cầu',
+          headerTitleStyle: {color: '#fff'},
+          headerStyle: {backgroundColor: 'rgb(242, 85, 44)'},
+        }}
+      />
+      <HomeStack.Screen
+        name="ConfirmRequestView"
+        component={ConfirmRequestView}
+        options={{
+          title: 'Xác nhận yêu cầu',
+          headerTitleStyle: {color: '#fff'},
+          headerStyle: {backgroundColor: 'rgb(242, 85, 44)'},
+        }}
+      />
+      <HomeStack.Screen
+        name="AddressListView"
+        component={AddressListView}
+        options={{
+          title: 'Chọn địa chỉ',
+          headerTitleStyle: {color: '#fff'},
+          headerStyle: {backgroundColor: 'rgb(242, 85, 44)'},
+        }}
+      />
+      <HomeStack.Screen
+        name="CreateAddressView"
+        component={CreateAddressView}
+        options={{
+          title: 'Thêm địa chỉ',
+          headerTitleStyle: {color: '#fff'},
+          headerStyle: {backgroundColor: 'rgb(242, 85, 44)'},
+        }}
       />
     </HomeStack.Navigator>
   );
