@@ -18,7 +18,7 @@ import PTButton from '../commonComponent/Button';
 import { calcScale } from '../../utils/dimension';
 import { loadUsers, LOGGED_IN } from '../../store/user';
 import firebase from '../../config/firebaseConfig';
-import { userUpdateDeviceToken } from '../../store/user'
+import { clearMessage } from '../../store/user'
 
 const LoginView = ({ navigation }) => {
   const [username, setUsername] = React.useState('');
@@ -46,6 +46,7 @@ const LoginView = ({ navigation }) => {
 
   useEffect(() => {
     if (message === LOGGED_IN) {
+      dispatch({ type: clearMessage.type, payload: "" })
       navigation.navigate('DrawerInside');
     }
   }, [message]);

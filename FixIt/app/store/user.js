@@ -6,6 +6,7 @@ import constants from '../utils/constants'
 const user = createSlice({
     name: 'user',
     initialState: {
+        userId: '',
         phoneNumber: '',
         name: '',
         roleId: '',
@@ -13,24 +14,25 @@ const user = createSlice({
         loading: false,
         token: '',
         message: '',
-        changePassMessage: '',
-        updateUserMessage: ''
+        updateUserMessage: '',
+        addressList: []
     },
     reducers: {
         usersRequested: (users, action) => {
             console.log(action)
             users.message = ''
-            users.changePassMessage = ''
             users.updateUserMessage = ''
             users.loading = true
         },
         usersLoggedIn: (users, action) => {
             console.log(action)
+            users.userId = action.payload.id
             users.phoneNumber = action.payload.phone
             users.name = action.payload.name
             users.roleId = action.payload.roleId
             users.email = action.payload.email
             users.token = action.payload.token
+            users.addressList = action.payload.address_list
             users.message = LOGGED_IN
             users.loading = false
         },
@@ -56,14 +58,33 @@ const user = createSlice({
         userChangePasswordSuccess: (users, action) => {
             console.log(action)
             if (action.payload == "success") {
-                users.changePassMessage = constants.RESET_PASSWORD_SUCCESSFULLY
+                users.message = constants.RESET_PASSWORD_SUCCESSFULLY
             }
             else if (action.payload == "Incorrect password") {
-                users.changePassMessage = constants.OLD_PASSWORD_IS_NOT_CORRECT
+                users.message = constants.OLD_PASSWORD_IS_NOT_CORRECT
             }
         },
         userChangePasswordFail: (users, action) => {
             console.log(action)
+        },
+        userCreateAddress: (users, action) => {
+            console.log(action)
+            if (action.payload !== "New address is duplicated") {
+                users.addressList = action.payload
+                users.message = constants.CREATE_ADDRESS_SUCCESSFULLY
+            }
+            else (
+                users.message = constants.DUPLICATE_ADDRESS
+            )
+        },
+        userCreateAddressFailed: (users, action) => {
+            console.log(action)
+
+        },
+        clearMessage: (users, action) => {
+            console.log(action)
+            users.message = ''
+            users.updateUserMessage = ''
         },
     }
 })
@@ -71,12 +92,22 @@ const user = createSlice({
 export const LOGGED_IN = 'logged in'
 
 export default user.reducer
-export const { usersRequested, usersLoggedIn, usersLoginFailed, userChangePasswordFail, userChangePasswordSuccess, usersUpdateFailed, usersUpdated, userUpdateDeviceToken } = user.actions
+export const { usersRequested,
+    usersLoggedIn,
+    usersLoginFailed,
+    userChangePasswordFail,
+    userChangePasswordSuccess,
+    usersUpdateFailed,
+    usersUpdated,
+    userUpdateDeviceToken,
+    userCreateAddress,
+    userCreateAddressFailed,
+    clearMessage } = user.actions
 
 export const loadUsers = (username, password, device_token) => apiCallBegan({
     url: '/login',
     data: {
-        phoneNumber: username,
+        phone_number: username,
         password: password,
         role_id: constants.ROLE_CUSTOMER,
         device_token: device_token
@@ -120,3 +151,21 @@ export const updateUser = (phone, token, name, email) => apiCallBegan({
     onSuccess: usersUpdated.type,
     onError: usersUpdateFailed.type
 })
+
+export const createAddress = (id, token, city, district, address) => apiCallBegan({
+    url: '/api/createAddress',
+    headers: {
+        Authorization: token
+    },
+    data: {
+        user_id: id,
+        address: address,
+        district: district,
+        city: city
+    },
+    method: 'POST',
+    onStart: usersRequested.type,
+    onSuccess: userCreateAddress.type,
+    onError: userCreateAddressFailed.type
+})
+

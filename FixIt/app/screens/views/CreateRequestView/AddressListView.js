@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   FlatList,
   Keyboard,
@@ -12,35 +12,17 @@ import {
   View,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
-import {CheckBox, Input} from 'react-native-elements';
+import { CheckBox, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {calcScale} from '../../../utils/dimension';
+import { useSelector } from 'react-redux';
+import { calcScale } from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
 
-const AddressListView = ({navigation, route}) => {
-  let selectedId = route.params.selectedId;
-  const data = [
-    {
-      id: 0,
-      address: '3417 Gaston Avenue',
-      district: 'Suite 195',
-      city: 'Dallas',
-    },
+const AddressListView = ({ navigation, route }) => {
+  const { addressList } = useSelector(state => state.user)
 
-    {
-      id: 1,
-      address: '5236 West University Drive',
-      district: 'Suite 1900',
-      city: 'MCKINNEY',
-    },
-    {
-      id: 2,
-      address: '3800 Gaylord Parkway',
-      district: 'Ste 110',
-      city: 'FRISCO',
-    },
-  ];
+  let selectedId = route.params.selectedId;
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
   const [addressSelected, setAddressSelected] = React.useState([]);
@@ -57,7 +39,7 @@ const AddressListView = ({navigation, route}) => {
 
   constructor();
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity
         onPress={() => {
@@ -68,12 +50,12 @@ const AddressListView = ({navigation, route}) => {
           borderBottomWidth: 1,
           paddingBottom: calcScale(10),
         }}>
-        <View style={[styles.row, {marginTop: calcScale(20)}]}>
-          <View style={{marginLeft: calcScale(20)}}>
-            <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
+        <View style={[styles.row, { marginTop: calcScale(20) }]}>
+          <View style={{ marginLeft: calcScale(20) }}>
+            <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
               Địa chỉ
             </Text>
-            <Text style={{fontSize: calcScale(18)}}>
+            <Text style={{ fontSize: calcScale(18) }}>
               {item.address}, {item.district}, {item.city}
             </Text>
           </View>
@@ -96,17 +78,17 @@ const AddressListView = ({navigation, route}) => {
   };
 
   const getDataAndNavigate = () => {
-    data.map((item, index) => {
+    addressList.map((item, index) => {
       if (item.id === select) {
         addressSelected.push(item);
       }
     });
-    navigation.navigate('CreateRequestView', {address: addressSelected});
+    navigation.navigate('CreateRequestView', { address: addressSelected });
   };
 
   const renderFooter = () => {
     return (
-      <View style={{alignItems: 'center', marginTop: calcScale(20)}}>
+      <View style={{ alignItems: 'center', marginTop: calcScale(20) }}>
         <PTButton
           title="Thêm địa chỉ"
           onPress={() => navigation.navigate('CreateAddressView')}
@@ -125,7 +107,7 @@ const AddressListView = ({navigation, route}) => {
 
   return (
     <FlatList
-      data={data}
+      data={addressList}
       style={styles.container}
       renderItem={renderItem}
       keyExtractor={(item) => item.id.toString()}
