@@ -36,22 +36,29 @@ const InsideTabBottomNavigator = () => {
       })}
       tabBarOptions={{
         keyboardHidesTabBar: true,
-        showLabel: false,
+        showLabel: true,
         activeTintColor: 'rgb(242, 85, 44)',
       }}>
       <InsideTabBottom.Screen
         name="HomeStackNavigator"
         component={HomeStackNavigator}
+        options={{tabBarLabel: 'Trang chủ'}}
       />
       <InsideTabBottom.Screen
         name="MyRequestStackNavigator"
         component={MyRequestStackNavigator}
+        options={{tabBarLabel: 'Yêu cầu'}}
       />
       <InsideTabBottom.Screen
         name="AnnouncementStackNavigator"
         component={AnnouncementStackNavigator}
+        options={{tabBarLabel: 'Thông báo'}}
       />
-      <InsideTabBottom.Screen name="MyProfileView" component={MyProfileView} />
+      <InsideTabBottom.Screen
+        name="MyProfileView"
+        component={MyProfileView}
+        options={{tabBarLabel: 'Tôi'}}
+      />
     </InsideTabBottom.Navigator>
   );
 };
