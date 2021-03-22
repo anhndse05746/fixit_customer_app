@@ -1,16 +1,19 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {useNavigation} from '@react-navigation/core';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
+import {StyleSheet, TouchableHighlight} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {calcScale} from '../../utils/dimension';
-import AnnoucementView from '../views/AnnouncementView';
+import AnnouncementView from '../views/AnnouncementView';
 import AddressListView from '../views/CreateRequestView/AddressListView';
 import ConfirmRequestView from '../views/CreateRequestView/ConfirmRequestView';
 import CreateAddressView from '../views/CreateRequestView/CreateAddressView';
 import CreateRequestView from '../views/CreateRequestView/CreateRequestView';
 import HomeView from '../views/HomeView';
 import MyProfileView from '../views/MyProfileView';
-import MyRequestView from '../views/MyRequestView';
+import RequestTabs from '../views/MyRequestView/tabRoutes';
+import RequestDetailView from '../views/RequestDetailView';
 import ServiceListView from '../views/ServiceView/ServiceListView';
 
 const InsideTabBottom = createBottomTabNavigator();
@@ -22,9 +25,9 @@ const InsideTabBottomNavigator = () => {
         tabBarIcon: ({focused, color, size}) => {
           if (route.name === 'HomeStackNavigator') {
             return <Icon name="home" size={calcScale(22)} color={color} />;
-          } else if (route.name === 'MyRequestView') {
+          } else if (route.name === 'MyRequestStackNavigator') {
             return <Icon name="tasks" size={calcScale(22)} color={color} />;
-          } else if (route.name === 'AnnoucementView') {
+          } else if (route.name === 'AnnouncementStackNavigator') {
             return <Icon name="bell" size={calcScale(22)} color={color} />;
           } else {
             return <Icon name="user" size={calcScale(22)} color={color} />;
@@ -33,19 +36,29 @@ const InsideTabBottomNavigator = () => {
       })}
       tabBarOptions={{
         keyboardHidesTabBar: true,
-        showLabel: false,
+        showLabel: true,
         activeTintColor: 'rgb(242, 85, 44)',
       }}>
       <InsideTabBottom.Screen
         name="HomeStackNavigator"
         component={HomeStackNavigator}
+        options={{tabBarLabel: 'Trang chủ'}}
       />
-      <InsideTabBottom.Screen name="MyRequestView" component={MyRequestView} />
       <InsideTabBottom.Screen
-        name="AnnoucementView"
-        component={AnnoucementView}
+        name="MyRequestStackNavigator"
+        component={MyRequestStackNavigator}
+        options={{tabBarLabel: 'Yêu cầu'}}
       />
-      <InsideTabBottom.Screen name="MyProfileView" component={MyProfileView} />
+      <InsideTabBottom.Screen
+        name="AnnouncementStackNavigator"
+        component={AnnouncementStackNavigator}
+        options={{tabBarLabel: 'Thông báo'}}
+      />
+      <InsideTabBottom.Screen
+        name="MyProfileView"
+        component={MyProfileView}
+        options={{tabBarLabel: 'Tôi'}}
+      />
     </InsideTabBottom.Navigator>
   );
 };
@@ -108,5 +121,122 @@ const HomeStackNavigator = () => {
     </HomeStack.Navigator>
   );
 };
+
+const MyRequestStack = createStackNavigator();
+
+const MyRequestStackNavigator = () => {
+  const navigation = useNavigation();
+  return (
+    <MyRequestStack.Navigator
+      screenOptions={{
+        headerStyle: {backgroundColor: 'rgb(242, 85, 44)'},
+      }}>
+      <MyRequestStack.Screen
+        name="MyRequest"
+        options={{
+          title: 'My Request',
+          headerRight: () => {
+            return (
+              <TouchableHighlight
+                activeOpacity={1}
+                underlayColor={'#ccd0d5'}
+                onPress={() => navigation.openDrawer()}
+                style={styles.iconBox}>
+                <Icon name="user" size={calcScale(22)} color="#fff" />
+              </TouchableHighlight>
+            );
+          },
+          headerTitleStyle: {color: '#fff'},
+          headerLeft: null,
+        }}
+        component={RequestTabs}
+      />
+      <MyRequestStack.Screen
+        name="RequestDetailView"
+        component={RequestDetailView}
+        options={({route}) => ({
+          title: 'Chi tiết yêu cầu',
+          headerLeft: () => {
+            return (
+              <TouchableHighlight
+                activeOpacity={1}
+                underlayColor={'#ccd0d5'}
+                onPress={() => {
+                  route.params.flag === 'announcement'
+                    ? backToAnnouncement(navigation)
+                    : navigation.navigate('MyRequest');
+                }}
+                style={styles.backButton}>
+                <Icon
+                  name={Platform.OS === 'ios' ? 'chevron-left' : 'arrow-left'}
+                  size={calcScale(22)}
+                  color="#000000"
+                  light={true}
+                />
+              </TouchableHighlight>
+            );
+          },
+        })}
+      />
+    </MyRequestStack.Navigator>
+  );
+};
+
+const backToAnnouncement = (navigation) => {
+  navigation.pop();
+  navigation.navigate('AnnouncementView');
+};
+
+const AnnouncementStack = createStackNavigator();
+
+const AnnouncementStackNavigator = () => {
+  const navigation = useNavigation();
+  return (
+    <AnnouncementStack.Navigator
+      screenOptions={{
+        headerStyle: {backgroundColor: 'rgb(242, 85, 44)'},
+      }}>
+      <AnnouncementStack.Screen
+        name="AnnouncementView"
+        options={{
+          title: 'Notifications',
+          headerRight: () => {
+            return (
+              <TouchableHighlight
+                activeOpacity={1}
+                underlayColor={'#ccd0d5'}
+                onPress={() => navigation.openDrawer()}
+                style={styles.iconBox}>
+                <Icon name="user" size={calcScale(22)} color="#fff" />
+              </TouchableHighlight>
+            );
+          },
+          headerTitleStyle: {color: '#fff'},
+          headerLeft: null,
+        }}
+        component={AnnouncementView}
+      />
+    </AnnouncementStack.Navigator>
+  );
+};
+
+const styles = StyleSheet.create({
+  iconBox: {
+    width: calcScale(40),
+    height: calcScale(40),
+    borderRadius: calcScale(40),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: calcScale(10),
+  },
+  backButton: {
+    width: calcScale(50),
+    height: calcScale(50),
+    borderRadius: calcScale(25),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: calcScale(10),
+  },
+});
 
 export default InsideTabBottomNavigator;

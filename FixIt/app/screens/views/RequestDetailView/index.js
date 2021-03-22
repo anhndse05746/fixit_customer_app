@@ -1,14 +1,44 @@
-import React from 'react';
+import * as React from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {calcScale} from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
 
-const ConfirmRequestView = ({navigation, route}) => {
+const RequestDetailView = ({navigation, route}) => {
+  const data = {
+    address: 'địa chỉ',
+    service: 'Sửa lò vi sóng',
+    request: 'yêu cầu sửa lò',
+    issues: [
+      {
+        id: 1,
+        name: 'Sửa lò vi sóng không nóng',
+        estimate_fix_duration: 10,
+        estimate_price: 100.0,
+      },
+      {
+        id: 2,
+        name: 'Xử lý rỉ sét bên trong lò vi sóng',
+        estimate_fix_duration: 10,
+        estimate_price: 100.0,
+      },
+      {
+        id: 3,
+        name: 'Thay thế cục sóng, cầu chì lò vi sóng',
+        estimate_fix_duration: 10,
+        estimate_price: 100.0,
+      },
+    ],
+    description: '',
+    date: new Date(),
+    payment: 'Tiên mặt',
+    status: 'Đang tìm thợ',
+  };
+
   const user = useSelector((state) => state.user);
 
-  const data = route.params.requestData;
+  const requestId = route.params.requestId;
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
   const [estimate_fix_duration, setEstimate_fix_duration] = React.useState(0);
@@ -18,7 +48,6 @@ const ConfirmRequestView = ({navigation, route}) => {
     if (constructorHasRun) {
       return;
     } else {
-      console.log(data);
       let price = 0;
       let time = 0;
       data.issues.map((issue, index) => {
@@ -96,7 +125,7 @@ const ConfirmRequestView = ({navigation, route}) => {
                   fontSize: calcScale(16),
                   marginBottom: calcScale(10),
                 }}>
-                + {item.title}
+                + {item.name}
               </Text>
             );
           })}
@@ -170,6 +199,40 @@ const ConfirmRequestView = ({navigation, route}) => {
             {data.date.toLocaleDateString()}
           </Text>
         </View>
+        <View style={styles.innerFormContainer}>
+          <Text
+            style={{
+              fontSize: calcScale(18),
+              fontWeight: 'bold',
+              marginBottom: calcScale(10),
+            }}>
+            Hình thức thanh toán
+          </Text>
+          <Text
+            style={{
+              fontSize: calcScale(18),
+              marginBottom: calcScale(10),
+            }}>
+            {data.payment}
+          </Text>
+        </View>
+        <View style={styles.innerFormContainer}>
+          <Text
+            style={{
+              fontSize: calcScale(18),
+              fontWeight: 'bold',
+              marginBottom: calcScale(10),
+            }}>
+            Trạng thái
+          </Text>
+          <Text
+            style={{
+              fontSize: calcScale(18),
+              marginBottom: calcScale(10),
+            }}>
+            {data.status}
+          </Text>
+        </View>
         <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
           <PTButton
             title="Xác nhận"
@@ -182,6 +245,8 @@ const ConfirmRequestView = ({navigation, route}) => {
     </ScrollView>
   );
 };
+
+export default RequestDetailView;
 
 const styles = StyleSheet.create({
   container: {
@@ -222,5 +287,3 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(242, 85, 44)',
   },
 });
-
-export default ConfirmRequestView;

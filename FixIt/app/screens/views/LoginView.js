@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   Text,
   View,
@@ -10,17 +10,21 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { Input } from 'react-native-elements';
-import { useDispatch, useSelector } from 'react-redux';
+import {Input} from 'react-native-elements';
+import {useDispatch, useSelector} from 'react-redux';
 
 import CommonStyles from './Styles';
 import PTButton from '../commonComponent/Button';
-import { calcScale } from '../../utils/dimension';
-import { loadUsers, LOGGED_IN } from '../../store/user';
+import {calcScale} from '../../utils/dimension';
+import {loadUsers, LOGGED_IN} from '../../store/user';
 import firebase from '../../config/firebaseConfig';
+<<<<<<< HEAD
 import { clearMessage } from '../../store/user'
+=======
+import {userUpdateDeviceToken} from '../../store/user';
+>>>>>>> be75c98c3017cfe8b632dc2b0a26feb030c6b367
 
-const LoginView = ({ navigation }) => {
+const LoginView = ({navigation}) => {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [secure, setSecure] = React.useState(true);
@@ -29,7 +33,7 @@ const LoginView = ({ navigation }) => {
 
   const dispatch = useDispatch();
   let data = useSelector((state) => state.user);
-  let { message } = data;
+  let {message} = data;
 
   const login = (username, password) => {
     //call api & check user to login
@@ -53,11 +57,11 @@ const LoginView = ({ navigation }) => {
 
   useEffect(() => {
     //Get device token
-    const { messaging } = firebase();
+    const {messaging} = firebase();
     (async () => {
       const token = await messaging().getToken();
-      setDeviceToken(token)
-    })()
+      setDeviceToken(token);
+    })();
   }, []);
 
   return (
@@ -84,14 +88,14 @@ const LoginView = ({ navigation }) => {
             ) : null}
             <Input
               containerStyle={styles.input}
-              inputContainerStyle={{ borderBottomWidth: 0 }}
+              inputContainerStyle={{borderBottomWidth: 0}}
               placeholder="Username"
               onChangeText={(username) => setUsername(username)}
               keyboardType="number-pad"
             />
             <Input
               containerStyle={styles.input}
-              inputContainerStyle={{ borderBottomWidth: 0 }}
+              inputContainerStyle={{borderBottomWidth: 0}}
               placeholder="Password"
               onChangeText={(password) => setPassword(password)}
               secureTextEntry={secure}
@@ -110,7 +114,7 @@ const LoginView = ({ navigation }) => {
               onPress={() => navigation.navigate('ForgetPasswordView')}>
               <Text style={styles.forgotPassword}>Quên mật khẩu?</Text>
             </TouchableOpacity>
-            <View style={{ alignItems: 'center' }}>
+            <View style={{alignItems: 'center'}}>
               <PTButton
                 title="Đăng nhập"
                 onPress={() => login(username, password)}
@@ -127,7 +131,7 @@ const LoginView = ({ navigation }) => {
                 <Text
                   style={[
                     styles.textRegular,
-                    { textDecorationLine: 'underline' },
+                    {textDecorationLine: 'underline'},
                   ]}>
                   Đăng kí ngay
                 </Text>
@@ -148,9 +152,9 @@ const LoginView = ({ navigation }) => {
               <Image
                 source={require('../../assets/images/google-logo.png')}
                 resizeMode="contain"
-                style={{ height: calcScale(40), flex: 0.15 }}
+                style={{height: calcScale(40), flex: 0.15}}
               />
-              <Text style={[styles.textRegular, { color: '#000', flex: 0.75 }]}>
+              <Text style={[styles.textRegular, {color: '#000', flex: 0.75}]}>
                 Đăng nhập với Google
               </Text>
             </TouchableOpacity>
