@@ -1,11 +1,12 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
-import {apiCallBegan} from './apiActions';
+import { apiCallBegan } from './apiActions';
 import constants from '../utils/constants';
 
 const user = createSlice({
   name: 'user',
   initialState: {
+    userId: '',
     phoneNumber: '',
     name: '',
     roleId: '',
@@ -13,65 +14,85 @@ const user = createSlice({
     loading: false,
     token: '',
     message: '',
-    changePassMessage: '',
     updateUserMessage: '',
+    addressList: []
   },
   reducers: {
     usersRequested: (users, action) => {
-      console.log(action);
-      users.message = '';
-      users.changePassMessage = '';
-      users.updateUserMessage = '';
-      users.loading = true;
+      console.log(action)
+      users.message = ''
+      users.updateUserMessage = ''
+      users.loading = true
     },
     usersLoggedIn: (users, action) => {
-      console.log(action);
-      users.phoneNumber = action.payload.phone;
-      users.name = action.payload.name;
-      users.roleId = action.payload.roleId;
-      users.email = action.payload.email;
-      users.token = action.payload.token;
-      users.message = LOGGED_IN;
-      users.loading = false;
+      console.log(action)
+      users.userId = action.payload.id
+      users.phoneNumber = action.payload.phone
+      users.name = action.payload.name
+      users.roleId = action.payload.roleId
+      users.email = action.payload.email
+      users.token = action.payload.token
+      users.addressList = action.payload.address_list
+      users.message = LOGGED_IN
+      users.loading = false
     },
     usersLoginFailed: (users, action) => {
-      console.log(action);
-      users.message = constants.LOGIN_FAIL_MESSAGE;
-      users.loading = false;
+      console.log(action)
+      users.message = constants.LOGIN_FAIL_MESSAGE
+      users.loading = false
       return;
     },
     usersUpdated: (users, action) => {
-      console.log(action);
-      users.name = action.payload.name;
-      users.email = action.payload.email;
-      users.updateUserMessage = constants.UPDATE_SUCCESSFULLY;
-      users.loading = false;
+      console.log(action)
+      users.name = action.payload.name
+      users.email = action.payload.email
+      users.updateUserMessage = constants.UPDATE_SUCCESSFULLY
+      users.loading = false
     },
     usersUpdateFailed: (users, action) => {
-      console.log(action);
-      users.message = '';
-      users.loading = false;
+      console.log(action)
+      users.message = ""
+      users.loading = false
       return;
     },
     userChangePasswordSuccess: (users, action) => {
-      console.log(action);
-      if (action.payload == 'success') {
-        users.changePassMessage = constants.RESET_PASSWORD_SUCCESSFULLY;
-      } else if (action.payload == 'Incorrect password') {
-        users.changePassMessage = constants.OLD_PASSWORD_IS_NOT_CORRECT;
+      console.log(action)
+      if (action.payload == "success") {
+        users.message = constants.RESET_PASSWORD_SUCCESSFULLY
+      }
+      else if (action.payload == "Incorrect password") {
+        users.message = constants.OLD_PASSWORD_IS_NOT_CORRECT
       }
     },
     userChangePasswordFail: (users, action) => {
-      console.log(action);
+      console.log(action)
     },
-  },
-});
+    userCreateAddress: (users, action) => {
+      console.log(action)
+      if (action.payload !== "New address is duplicated") {
+        users.addressList.push(action.payload)
+        users.message = constants.CREATE_ADDRESS_SUCCESSFULLY
+      }
+      else (
+        users.message = constants.DUPLICATE_ADDRESS
+      )
+    },
+    userCreateAddressFailed: (users, action) => {
+      console.log(action)
+
+    },
+    clearMessage: (users, action) => {
+      console.log(action)
+      users.message = ''
+      users.updateUserMessage = ''
+    },
+  }
+})
 
 export const LOGGED_IN = 'logged in';
 
-export default user.reducer;
-export const {
-  usersRequested,
+export default user.reducer
+export const { usersRequested,
   usersLoggedIn,
   usersLoginFailed,
   userChangePasswordFail,
@@ -79,7 +100,9 @@ export const {
   usersUpdateFailed,
   usersUpdated,
   userUpdateDeviceToken,
-} = user.actions;
+  userCreateAddress,
+  userCreateAddressFailed,
+  clearMessage } = user.actions
 
 export const loadUsers = (username, password, device_token) =>
   apiCallBegan({
@@ -88,7 +111,7 @@ export const loadUsers = (username, password, device_token) =>
       phone_number: username,
       password: password,
       role_id: constants.ROLE_CUSTOMER,
-      device_token: device_token,
+      device_token: device_token
     },
     method: 'POST',
     onStart: usersRequested.type,
@@ -129,5 +152,23 @@ export const updateUser = (phone, token, name, email) =>
     method: 'POST',
     onStart: usersRequested.type,
     onSuccess: usersUpdated.type,
-    onError: usersUpdateFailed.type,
-  });
+    onError: usersUpdateFailed.type
+  })
+
+export const createAddress = (id, token, city, district, address) => apiCallBegan({
+  url: '/api/createAddress',
+  headers: {
+    Authorization: token
+  },
+  data: {
+    user_id: id,
+    address: address,
+    district: district,
+    city: city
+  },
+  method: 'POST',
+  onStart: usersRequested.type,
+  onSuccess: userCreateAddress.type,
+  onError: userCreateAddressFailed.type
+})
+
