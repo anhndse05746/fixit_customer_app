@@ -3,7 +3,7 @@
  */
 import { AppRegistry } from 'react-native';
 import { name as appName } from './app.json';
-import firebase from './app/config/firebaseConfig'
+import messaging from '@react-native-firebase/messaging';
 
 if (__DEV__) {
 } else {
@@ -17,5 +17,11 @@ if (__DEV__) {
   console.error = () => { };
   console.info = () => { };
 }
+
+// Register background handler
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage);
+});
+
 
 AppRegistry.registerComponent(appName, () => require('./app/index').default);
