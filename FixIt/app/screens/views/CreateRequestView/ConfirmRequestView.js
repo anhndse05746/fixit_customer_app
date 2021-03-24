@@ -1,11 +1,11 @@
 import React from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {useSelector} from 'react-redux';
-import {calcScale} from '../../../utils/dimension';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
+import { calcScale } from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
 
-const ConfirmRequestView = ({navigation, route}) => {
+const ConfirmRequestView = ({ navigation, route }) => {
   const user = useSelector((state) => state.user);
 
   const data = route.params.requestData;
@@ -42,14 +42,14 @@ const ConfirmRequestView = ({navigation, route}) => {
           paddingBottom: calcScale(10),
           marginTop: calcScale(20),
         }}>
-        <View style={{marginLeft: calcScale(20)}}>
-          <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
+        <View style={{ marginLeft: calcScale(20) }}>
+          <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
             Địa chỉ
           </Text>
-          <Text style={{fontSize: calcScale(18), marginTop: calcScale(5)}}>
+          <Text style={{ fontSize: calcScale(18), marginTop: calcScale(5) }}>
             {user.name} | {user.phoneNumber}
           </Text>
-          <Text style={{fontSize: calcScale(18)}}>{data.address}</Text>
+          <Text style={{ fontSize: calcScale(18) }}>{data.address}</Text>
         </View>
       </View>
       <View style={styles.form}>
@@ -167,13 +167,13 @@ const ConfirmRequestView = ({navigation, route}) => {
               fontSize: calcScale(18),
               marginBottom: calcScale(10),
             }}>
-            {data.date.toLocaleDateString()}
+            {data.date.toString()}
           </Text>
         </View>
-        <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
+        <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
           <PTButton
             title="Xác nhận"
-            onPress={() => {}}
+            onPress={() => { }}
             style={styles.button}
             color="#fff"
           />
