@@ -1,66 +1,24 @@
-import * as React from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {useSelector} from 'react-redux';
-import {calcScale} from '../../../utils/dimension';
+import React, { useEffect } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { calcScale } from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
+import { getRequestDetail } from '../../../store/request'
 
-const RequestDetailView = ({navigation, route}) => {
-  const data = {
-    address: 'địa chỉ',
-    service: 'Sửa lò vi sóng',
-    request: 'yêu cầu sửa lò',
-    issues: [
-      {
-        id: 1,
-        name: 'Sửa lò vi sóng không nóng',
-        estimate_fix_duration: 10,
-        estimate_price: 100.0,
-      },
-      {
-        id: 2,
-        name: 'Xử lý rỉ sét bên trong lò vi sóng',
-        estimate_fix_duration: 10,
-        estimate_price: 100.0,
-      },
-      {
-        id: 3,
-        name: 'Thay thế cục sóng, cầu chì lò vi sóng',
-        estimate_fix_duration: 10,
-        estimate_price: 100.0,
-      },
-    ],
-    description: '',
-    date: new Date(),
-    payment: 'Tiên mặt',
-    status: 'Đang tìm thợ',
-  };
-
+const RequestDetailView = ({ navigation, route }) => {
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch()
+  const request = useSelector(state => state.request)
 
-  const requestId = route.params.requestId;
+  useEffect(() => {
+    //console.log(request.onGoingRequests)
+    dispatch(getRequestDetail(user.token, route.params.requestId))
+  }, [])
 
-  const [constructorHasRun, setConstructorHasRun] = React.useState(false);
-  const [estimate_fix_duration, setEstimate_fix_duration] = React.useState(0);
-  const [estimate_price, setEstimate_price] = React.useState(0);
+  //const data = route.params.requestDetail
 
-  const constructor = () => {
-    if (constructorHasRun) {
-      return;
-    } else {
-      let price = 0;
-      let time = 0;
-      data.issues.map((issue, index) => {
-        price += parseFloat(issue.estimate_price);
-        time += issue.estimate_fix_duration;
-      });
-      setEstimate_price(price);
-      setEstimate_fix_duration(time);
-      setConstructorHasRun(true);
-    }
-  };
-
-  constructor();
+  const data = request.requestDetail
 
   return (
     <ScrollView style={styles.container}>
@@ -71,14 +29,14 @@ const RequestDetailView = ({navigation, route}) => {
           paddingBottom: calcScale(10),
           marginTop: calcScale(20),
         }}>
-        <View style={{marginLeft: calcScale(20)}}>
-          <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
+        <View style={{ marginLeft: calcScale(20) }}>
+          <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
             Địa chỉ
           </Text>
-          <Text style={{fontSize: calcScale(18), marginTop: calcScale(5)}}>
+          <Text style={{ fontSize: calcScale(18), marginTop: calcScale(5) }}>
             {user.name} | {user.phoneNumber}
           </Text>
-          <Text style={{fontSize: calcScale(18)}}>{data.address}</Text>
+          <Text style={{ fontSize: calcScale(18) }}>{data.address + ', ' + data.district + ', ' + data.city}</Text>
         </View>
       </View>
       <View style={styles.form}>
@@ -88,7 +46,7 @@ const RequestDetailView = ({navigation, route}) => {
               fontSize: calcScale(28),
               fontWeight: 'bold',
             }}>
-            Dịch vụ: {data.service}
+            Dịch vụ: {data.service.name}
           </Text>
         </View>
         <View style={styles.innerFormContainer}>
@@ -117,15 +75,15 @@ const RequestDetailView = ({navigation, route}) => {
             }}>
             Vấn đề đang gặp phải
           </Text>
-          {data.issues.map((item, index) => {
+          {data.request_issues.map((item, index) => {
             return (
               <Text
-                key={item.id.toString()}
+                key={item.id}
                 style={{
                   fontSize: calcScale(16),
                   marginBottom: calcScale(10),
                 }}>
-                + {item.name}
+                + {item.issue.name}
               </Text>
             );
           })}
@@ -162,7 +120,7 @@ const RequestDetailView = ({navigation, route}) => {
               fontSize: calcScale(16),
               marginBottom: calcScale(10),
             }}>
-            {estimate_fix_duration}
+            {data.estimate_time}
           </Text>
         </View>
         <View style={styles.innerFormContainer}>
@@ -179,7 +137,7 @@ const RequestDetailView = ({navigation, route}) => {
               fontSize: calcScale(16),
               marginBottom: calcScale(10),
             }}>
-            {estimate_price}
+            {data.estimate_price}
           </Text>
         </View>
         <View style={styles.innerFormContainer}>
@@ -196,7 +154,7 @@ const RequestDetailView = ({navigation, route}) => {
               fontSize: calcScale(18),
               marginBottom: calcScale(10),
             }}>
-            {data.date.toLocaleDateString()}
+            {data.schedule_time.toString()}
           </Text>
         </View>
         <View style={styles.innerFormContainer}>
@@ -213,7 +171,8 @@ const RequestDetailView = ({navigation, route}) => {
               fontSize: calcScale(18),
               marginBottom: calcScale(10),
             }}>
-            {data.payment}
+            {/* {data.payment} */}
+            Cash
           </Text>
         </View>
         <View style={styles.innerFormContainer}>
@@ -230,13 +189,13 @@ const RequestDetailView = ({navigation, route}) => {
               fontSize: calcScale(18),
               marginBottom: calcScale(10),
             }}>
-            {data.status}
+            {data.request_statuses[0].status.name}
           </Text>
         </View>
-        <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
+        <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
           <PTButton
             title="Xác nhận"
-            onPress={() => {}}
+            onPress={() => { }}
             style={styles.button}
             color="#fff"
           />
@@ -244,6 +203,7 @@ const RequestDetailView = ({navigation, route}) => {
       </View>
     </ScrollView>
   );
+
 };
 
 export default RequestDetailView;
