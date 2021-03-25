@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -8,19 +8,32 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {Input} from 'react-native-elements';
+import { Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {calcScale} from '../../../utils/dimension';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { calcScale } from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import CommonStyles from '../Styles';
+import { createAddress, clearMessage } from '../../../store/user'
+import constants from '../../../utils/constants'
 
-const CreateAddressView = ({navigation}) => {
+const CreateAddressView = ({ navigation }) => {
   const [city, setCity] = React.useState('');
   const [district, setDistrict] = React.useState('');
   const [address, setAddress] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  useEffect(() => {}, []);
+  const dispatch = useDispatch()
+  const { userId, token, message } = useSelector(state => state.user)
+  useEffect(() => {
+    if (message === constants.CREATE_ADDRESS_SUCCESSFULLY) {
+      dispatch({ type: clearMessage.type, payload: "" })
+      navigation.navigate('AddressListView', {
+        selectedId: -1,
+      });
+    }
+  }, [message]);
 
   const validateThenNavigate = () => {
     if (city === '') {
@@ -31,9 +44,7 @@ const CreateAddressView = ({navigation}) => {
       setErrorMessage(' không được để trống');
     } else {
       setErrorMessage('');
-      navigation.navigate('AddressListView', {
-        selectedId: -1,
-      });
+      dispatch(createAddress(userId, token, city, district, address))
     }
   };
 
@@ -46,14 +57,15 @@ const CreateAddressView = ({navigation}) => {
           <Text
             style={[
               styles.textRegular,
-              {marginTop: calcScale(15), fontSize: calcScale(22)},
+              { marginTop: calcScale(15), fontSize: calcScale(22) },
             ]}>
             Vui lòng điền những thông tin sau
           </Text>
+          <Text>{message}</Text>
           <View style={styles.formContainer}>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Thành phố <Text style={{color: 'red'}}>*</Text>
+                Thành phố <Text style={{ color: 'red' }}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -78,7 +90,7 @@ const CreateAddressView = ({navigation}) => {
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Quận/Huyện<Text style={{color: 'red'}}>*</Text>
+                Quận/Huyện<Text style={{ color: 'red' }}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -103,7 +115,7 @@ const CreateAddressView = ({navigation}) => {
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Địa chỉ<Text style={{color: 'red'}}>*</Text>
+                Địa chỉ<Text style={{ color: 'red' }}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -127,7 +139,7 @@ const CreateAddressView = ({navigation}) => {
               />
             </View>
           </View>
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             <PTButton
               title="Xác nhận"
               onPress={() => validateThenNavigate()}
