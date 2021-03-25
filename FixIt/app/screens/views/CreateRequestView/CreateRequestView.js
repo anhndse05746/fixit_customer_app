@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -11,17 +11,17 @@ import {
   View,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
-import {CheckBox, Input} from 'react-native-elements';
+import { CheckBox, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {useSelector} from 'react-redux';
-import {calcScale} from '../../../utils/dimension';
+import { useSelector } from 'react-redux';
+import { calcScale } from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
 
-const CreateRequestView = ({navigation, route}) => {
+const CreateRequestView = ({ navigation, route }) => {
   const user = useSelector((state) => state.user);
 
-  const data = route.params.service;
+  const service = route.params.service;
 
   const address = route.params.address;
 
@@ -37,7 +37,7 @@ const CreateRequestView = ({navigation, route}) => {
     if (constructorHasRun) {
       return;
     } else {
-      data.issues.map((issue, index) => {
+      service.issues.map((issue, index) => {
         const checkBox = {
           id: issue.id,
           checked: false,
@@ -67,7 +67,7 @@ const CreateRequestView = ({navigation, route}) => {
       }
     });
     const requestData = {
-      service: data.name,
+      service: service,
       address: address,
       request: request,
       description: description,
@@ -83,7 +83,7 @@ const CreateRequestView = ({navigation, route}) => {
     } else {
       setErrorMessage('');
       setErrorCheckbox('');
-      navigation.navigate('ConfirmRequestView', {requestData: requestData});
+      navigation.navigate('ConfirmRequestView', { requestData: requestData });
     }
   };
 
@@ -110,23 +110,23 @@ const CreateRequestView = ({navigation, route}) => {
               borderBottomWidth: 1,
               paddingBottom: calcScale(10),
             }}>
-            <View style={[styles.row, {marginTop: calcScale(20)}]}>
-              <View style={{marginLeft: calcScale(20)}}>
-                <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
+            <View style={[styles.row, { marginTop: calcScale(20) }]}>
+              <View style={{ marginLeft: calcScale(20) }}>
+                <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
                   Địa chỉ
                 </Text>
                 <Text
-                  style={{fontSize: calcScale(18), marginTop: calcScale(5)}}>
+                  style={{ fontSize: calcScale(18), marginTop: calcScale(5) }}>
                   {user.name} | {user.phoneNumber}
                 </Text>
-                <Text style={{fontSize: calcScale(18)}}>
+                <Text style={{ fontSize: calcScale(18) }}>
                   {address === null || address === undefined
                     ? 'Chọn địa chỉ'
                     : address[0].address +
-                      ',' +
-                      address[0].district +
-                      ',' +
-                      address[0].city}
+                    ',' +
+                    address[0].district +
+                    ',' +
+                    address[0].city}
                 </Text>
               </View>
               <View
@@ -145,7 +145,7 @@ const CreateRequestView = ({navigation, route}) => {
                   fontSize: calcScale(28),
                   fontWeight: 'bold',
                 }}>
-                Dịch vụ: {data.name}
+                Dịch vụ: {service.name}
               </Text>
             </View>
             <View style={styles.innerFormContainer}>
@@ -159,7 +159,7 @@ const CreateRequestView = ({navigation, route}) => {
               </Text>
               <Input
                 containerStyle={styles.input}
-                inputContainerStyle={{borderBottomWidth: 0}}
+                inputContainerStyle={{ borderBottomWidth: 0 }}
                 placeholder=""
                 onChangeText={(request) => setRequest(request)}
                 value={request}
@@ -224,7 +224,7 @@ const CreateRequestView = ({navigation, route}) => {
                 Thời gian
               </Text>
               <DatePicker
-                style={{width: '100%'}}
+                style={{ width: '100%' }}
                 date={date}
                 mode="date"
                 placeholder="select date"
@@ -251,7 +251,7 @@ const CreateRequestView = ({navigation, route}) => {
                 <Text>Thời gian{errorMessage}</Text>
               ) : null}
             </View>
-            <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
+            <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
               <PTButton
                 title="Tiếp tục"
                 onPress={() => getDataAndNavigateConfirm()}
