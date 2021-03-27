@@ -8,83 +8,7 @@ const request = createSlice({
     initialState: {
         message: '',
         isLoading: false,
-        requestDetail: {
-            "id": 73,
-            "schedule_time": "2021-03-25T18:46:05.000Z",
-            "estimate_time": 10,
-            "estimate_price": "100.00",
-            "description": "Kong bit ",
-            "address": "1379 Giải Phóng",
-            "district": "Hoàng Mai ",
-            "city": "Hà Nội ",
-            "createdAt": "2021-03-25T18:46:31.000Z",
-            "updatedAt": "2021-03-25T18:46:31.000Z",
-            "customer_id": 31,
-            "repairer_id": 1,
-            "service_id": 6,
-            "service": {
-                "id": 6,
-                "name": "Sửa máy nước nóng",
-                "issues": [
-                    {
-                        "id": 26,
-                        "name": "Máy nước nóng không nóng"
-                    },
-                    {
-                        "id": 27,
-                        "name": "Máy nước nóng rò rỉ điện"
-                    },
-                    {
-                        "id": 28,
-                        "name": "Máy nước nóng chảy nước"
-                    },
-                    {
-                        "id": 29,
-                        "name": "Máy nước nóng không hoạt động"
-                    },
-                    {
-                        "id": 33,
-                        "name": "Issue test1"
-                    }
-                ]
-            },
-            "Customer": {
-                "id": 31,
-                "name": "DuyAnh"
-            },
-            "Repairer": {
-                "id": 1,
-                "name": "đang tìm thợ"
-            },
-            "request_issues": [
-                {
-                    "request_id": 73,
-                    "issues_id": 26,
-                    "createdAt": "2021-03-25T18:46:33.000Z",
-                    "updatedAt": "2021-03-25T18:46:33.000Z",
-                    "issue": {
-                        "id": 26,
-                        "name": "Máy nước nóng không nóng"
-                    }
-                }
-            ],
-            "invoice": null,
-            "request_statuses": [
-                {
-                    "request_id": 73,
-                    "status_id": 1,
-                    "cancel_by": null,
-                    "cancel_reason": null,
-                    "createdAt": "2021-03-25T18:46:33.000Z",
-                    "updatedAt": "2021-03-25T18:46:33.000Z",
-                    "status": {
-                        "id": 1,
-                        "name": "Đang tìm thợ"
-                    }
-                }
-            ]
-        }
-        ,
+        requestDetail: {},
         onGoingRequests: [],
         executingRequest: [],
         completeRequest: [],
@@ -94,6 +18,7 @@ const request = createSlice({
         onRequestStarted: (request, action) => {
             console.log(action)
             request.message = ''
+            request.requestDetail = {}
             request.isLoading = true
         },
         createRequestSuccess: (request, action) => {
@@ -135,6 +60,7 @@ const request = createSlice({
             console.log(action)
             request.isLoading = false
             request.requestDetail = action.payload
+            console.log(request.requestDetail)
         },
         getRequestDetailFail: (request, action) => {
             console.log(action)
