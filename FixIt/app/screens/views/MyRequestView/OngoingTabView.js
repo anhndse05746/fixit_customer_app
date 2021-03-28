@@ -7,28 +7,31 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {calcScale} from '../../../utils/dimension';
+import { useSelector } from 'react-redux';
+import { calcScale } from '../../../utils/dimension';
 import commonStyles from '../Styles';
 import ListEmptyComponent from './ListEmpty';
 
-const OngoingTabview = ({navigation}) => {
-  const ongoingData = [
-    {
-      id: 1,
-      service: 'Sửa lò vi sóng',
-      estimate_fix_duration: 100,
-      estimate_price: 100,
-      status: 'Đang tìm thợ',
-    },
-    {
-      id: 2,
-      service: 'Service test',
-      estimate_fix_duration: 200,
-      estimate_price: 150,
-      status: 'Đang tìm thợ',
-    },
-  ];
+const OngoingTabview = ({ navigation }) => {
+  const request = useSelector(state => state.request)
+
+  const ongoingData = request.onGoingRequests
+  // [
+  //   {
+  //     id: 1,
+  //     service: 'Sửa lò vi sóng',
+  //     estimate_fix_duration: 100,
+  //     estimate_price: 100,
+  //     status: 'Đang tìm thợ',
+  //   },
+  //   {
+  //     id: 2,
+  //     service: 'Service test',
+  //     estimate_fix_duration: 200,
+  //     estimate_price: 150,
+  //     status: 'Đang tìm thợ',
+  //   },
+  // ];
 
   // // Seletor redux
   // const isFetching = useSelector((state) => state.ongoing.isFetching);
@@ -70,25 +73,25 @@ const OngoingTabview = ({navigation}) => {
   //   };
   // }, [ongoingData]);
 
-  const renderListTicket = ({item}) => {
+  const renderListTicket = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.ticketContainer}
-        onPress={() =>
+        onPress={() => {
           navigation.navigate('RequestDetailView', {
             flag: 'myrequest',
             requestId: item.id,
           })
-        }>
+        }}>
         <View style={styles.row}>
           <Text style={[styles.textBold, styles.textTitle]}>
-            {item.service}
+            {item.serviceName}
           </Text>
         </View>
-        <View style={[styles.row, {justifyContent: 'space-between'}]}>
+        <View style={[styles.row, { justifyContent: 'space-between' }]}>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Thời gian:</Text>
-            <Text style={styles.textBold}>{item.estimate_fix_duration}</Text>
+            <Text style={styles.textBold}>{item.estimate_time}</Text>
           </View>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Giá:</Text>
@@ -96,7 +99,7 @@ const OngoingTabview = ({navigation}) => {
           </View>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Trạng thái:</Text>
-            <Text style={styles.textBold}>{item.status}</Text>
+            <Text style={styles.textBold}>{item.statusName}</Text>
           </View>
         </View>
       </TouchableOpacity>

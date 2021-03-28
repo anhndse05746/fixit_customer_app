@@ -8,6 +8,7 @@ const request = createSlice({
     initialState: {
         message: '',
         isLoading: false,
+        requestDetail: {},
         onGoingRequests: [],
         executingRequest: [],
         completeRequest: [],
@@ -17,6 +18,7 @@ const request = createSlice({
         onRequestStarted: (request, action) => {
             console.log(action)
             request.message = ''
+            request.requestDetail = {}
             request.isLoading = true
         },
         createRequestSuccess: (request, action) => {
@@ -34,11 +36,41 @@ const request = createSlice({
             console.log(action)
             request.message = ''
         },
+        listRequestSuccess: (request, action) => {
+            console.log(action)
+            request.isLoading = false
+            request.onGoingRequests = action.payload.listFindingRequest
+            request.executingRequest = action.payload.listProcessingRequest
+            request.completeRequest = action.payload.listCompletedRequest
+            request.canceledRequest = action.payload.listCancelledRequest
+        },
+        listRequestFail: (request, action) => {
+            console.log(action)
+            request.isLoading = false
+        },
+        updateListRequestSuccess: (request, action) => {
+            console.log(action)
+            request.isLoading = false
+        },
+        updateListRequestFail: (request, action) => {
+            console.log(action)
+            request.isLoading = false
+        },
+        getRequestDetailSuccess: (request, action) => {
+            console.log(action)
+            request.isLoading = false
+            request.requestDetail = action.payload
+            console.log(request.requestDetail)
+        },
+        getRequestDetailFail: (request, action) => {
+            console.log(action)
+            request.isLoading = false
+        },
     }
 })
 
 export default request.reducer
-export const { onRequestStarted, createRequestSuccess, createRequestFail, clearMessage } = request.actions
+export const { onRequestStarted, createRequestSuccess, createRequestFail, clearMessage, listRequestFail, listRequestSuccess, updateListRequestFail, updateListRequestSuccess, getRequestDetailFail, getRequestDetailSuccess } = request.actions
 
 export const createRequest = (token, request) => apiCallBegan({
     url: '/api/createRequest',
@@ -61,4 +93,46 @@ export const createRequest = (token, request) => apiCallBegan({
     onStart: onRequestStarted.type,
     onSuccess: createRequestSuccess.type,
     onError: createRequestFail.type,
+})
+
+export const listAllRequest = (token, customer_id) => apiCallBegan({
+    url: '/api/getInitListRequest',
+    headers: {
+        Authorization: token,
+    },
+    data: {
+        customer_id: customer_id
+    },
+    method: 'POST',
+    onStart: onRequestStarted.type,
+    onSuccess: listRequestSuccess.type,
+    onError: listRequestFail.type,
+})
+
+export const updateListRequest = (token, customer_id, status) => apiCallBegan({
+    url: '/api/',
+    headers: {
+        Authorization: token,
+    },
+    data: {
+        customer_id: customer_id
+    },
+    method: 'POST',
+    onStart: onRequestStarted.type,
+    onSuccess: '',
+    onError: '',
+})
+
+export const getRequestDetail = (token, request_id) => apiCallBegan({
+    url: '/api/getRequestDetail',
+    headers: {
+        Authorization: token,
+    },
+    data: {
+        request_id: request_id
+    },
+    method: 'POST',
+    onStart: onRequestStarted.type,
+    onSuccess: getRequestDetailSuccess.type,
+    onError: getRequestDetailFail.type,
 })

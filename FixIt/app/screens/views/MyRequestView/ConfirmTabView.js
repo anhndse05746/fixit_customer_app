@@ -7,28 +7,30 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {calcScale} from '../../../utils/dimension';
+import { useDispatch, useSelector } from 'react-redux';
+import { calcScale } from '../../../utils/dimension';
 import commonStyles from '../Styles';
 import ListEmptyComponent from './ListEmpty';
 
-const ConfirmTabView = ({navigation}) => {
-  const confirmData = [
-    {
-      id: 1,
-      service: 'Sửa lò vi sóng',
-      estimate_fix_duration: 100,
-      estimate_price: 100,
-      status: 'Hoàn thành',
-    },
-    {
-      id: 2,
-      service: 'Service test',
-      estimate_fix_duration: 200,
-      estimate_price: 150,
-      status: 'Hoàn thành',
-    },
-  ];
+const ConfirmTabView = ({ navigation }) => {
+  const request = useSelector(state => state.request)
+  const confirmData = request.completeRequest
+  // [
+  //   {
+  //     id: 1,
+  //     service: 'Sửa lò vi sóng',
+  //     estimate_fix_duration: 100,
+  //     estimate_price: 100,
+  //     status: 'Hoàn thành',
+  //   },
+  //   {
+  //     id: 2,
+  //     service: 'Service test',
+  //     estimate_fix_duration: 200,
+  //     estimate_price: 150,
+  //     status: 'Hoàn thành',
+  //   },
+  // ];
 
   // // Seletor redux
   // const isFetching = useSelector((state) => state.confirm.isFetching);
@@ -63,7 +65,7 @@ const ConfirmTabView = ({navigation}) => {
   //   const page = currentPage + 1;
   // }, [confirmData]);
 
-  const renderListTicket = ({item}) => {
+  const renderListTicket = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.ticketContainer}
@@ -75,13 +77,13 @@ const ConfirmTabView = ({navigation}) => {
         }>
         <View style={styles.row}>
           <Text style={[styles.textBold, styles.textTitle]}>
-            {item.service}
+            {item.serviceName}
           </Text>
         </View>
-        <View style={[styles.row, {justifyContent: 'space-between'}]}>
+        <View style={[styles.row, { justifyContent: 'space-between' }]}>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Thời gian:</Text>
-            <Text style={styles.textBold}>{item.estimate_fix_duration}</Text>
+            <Text style={styles.textBold}>{item.estimate_time}</Text>
           </View>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Giá:</Text>
@@ -89,7 +91,7 @@ const ConfirmTabView = ({navigation}) => {
           </View>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Trạng thái:</Text>
-            <Text style={styles.textBold}>{item.status}</Text>
+            <Text style={styles.textBold}>{item.statusName}</Text>
           </View>
         </View>
       </TouchableOpacity>
