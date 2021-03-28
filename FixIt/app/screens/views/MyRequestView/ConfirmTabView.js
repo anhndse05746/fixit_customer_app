@@ -77,7 +77,7 @@ const ConfirmTabView = ({ navigation }) => {
         }>
         <View style={styles.row}>
           <Text style={[styles.textBold, styles.textTitle]}>
-            {item.service_id}
+            {item.serviceName}
           </Text>
         </View>
         <View style={[styles.row, { justifyContent: 'space-between' }]}>
@@ -91,7 +91,7 @@ const ConfirmTabView = ({ navigation }) => {
           </View>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Trạng thái:</Text>
-            <Text style={styles.textBold}>{item.currentStatus}</Text>
+            <Text style={styles.textBold}>{item.statusName}</Text>
           </View>
         </View>
       </TouchableOpacity>
