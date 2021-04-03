@@ -101,7 +101,8 @@ export const listAllRequest = (token, customer_id) => apiCallBegan({
         Authorization: token,
     },
     data: {
-        customer_id: customer_id
+        customer_id: customer_id,
+        role: constants.ROLE_CUSTOMER
     },
     method: 'POST',
     onStart: onRequestStarted.type,

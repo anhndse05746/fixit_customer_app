@@ -132,7 +132,7 @@ const MyRequestStackNavigator = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    console.log('on Going Requests List: ' + request.onGoingRequests)
+    //console.log('on Going Requests List: ' + user.token + user.userId)
     dispatch(listAllRequest(user.token, user.userId))
   }, [])
 
