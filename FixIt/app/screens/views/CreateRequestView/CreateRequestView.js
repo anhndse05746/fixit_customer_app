@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -10,18 +10,18 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import DatePicker from 'react-native-datepicker';
-import { CheckBox, Input } from 'react-native-elements';
+import DatePicker from 'react-native-date-picker';
+import {CheckBox, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useSelector } from 'react-redux';
-import { calcScale } from '../../../utils/dimension';
+import {useSelector} from 'react-redux';
+import {calcScale} from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
 
-const CreateRequestView = ({ navigation, route }) => {
+const CreateRequestView = ({navigation, route}) => {
   const user = useSelector((state) => state.user);
 
-  const service = route.params.service;
+  const data = route.params.service;
 
   const address = route.params.address;
 
@@ -31,13 +31,14 @@ const CreateRequestView = ({ navigation, route }) => {
   const [date, setDate] = React.useState(new Date());
   const [issues, setIssues] = React.useState([]);
   const [errorMessage, setErrorMessage] = React.useState('');
+  const [addressError, setAddressError] = React.useState('');
   const [errorCheckbox, setErrorCheckbox] = React.useState('');
 
   const constructor = () => {
     if (constructorHasRun) {
       return;
     } else {
-      service.issues.map((issue, index) => {
+      data.issues.map((issue, index) => {
         const checkBox = {
           id: issue.id,
           checked: false,
@@ -66,24 +67,26 @@ const CreateRequestView = ({ navigation, route }) => {
         issuesData.push(issue);
       }
     });
-    const requestData = {
-      service: service,
-      address: address,
-      request: request,
-      description: description,
-      date: date,
-      issues: issuesData,
-    };
-    if (request === '') {
+    if (address === undefined) {
+      setAddressError('Bạn cần chọn địa chỉ');
+    } else if (request === '') {
       setErrorMessage(' không được để trống');
     } else if (issuesData.length === 0) {
       setErrorCheckbox('Bạn cần bọn vấn đề gặp phải');
     } else if (date === '') {
       setErrorCheckbox(' không được để trống');
     } else {
+      const requestData = {
+        service: data.name,
+        address: address,
+        request: request,
+        description: description,
+        date: date,
+        issues: issuesData,
+      };
       setErrorMessage('');
       setErrorCheckbox('');
-      navigation.navigate('ConfirmRequestView', { requestData: requestData });
+      // navigation.navigate('ConfirmRequestView', {requestData: requestData});
     }
   };
 
@@ -93,51 +96,6 @@ const CreateRequestView = ({ navigation, route }) => {
       style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView>
-          <TouchableOpacity
-            onPress={() => {
-              if (address === null || address === undefined) {
-                navigation.navigate('AddressListView', {
-                  selectedId: -1,
-                });
-              } else {
-                navigation.navigate('AddressListView', {
-                  selectedId: address[0].id,
-                });
-              }
-            }}
-            style={{
-              borderBottomColor: '#ccc',
-              borderBottomWidth: 1,
-              paddingBottom: calcScale(10),
-            }}>
-            <View style={[styles.row, { marginTop: calcScale(20) }]}>
-              <View style={{ marginLeft: calcScale(20) }}>
-                <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
-                  Địa chỉ
-                </Text>
-                <Text
-                  style={{ fontSize: calcScale(18), marginTop: calcScale(5) }}>
-                  {user.name} | {user.phoneNumber}
-                </Text>
-                <Text style={{ fontSize: calcScale(18) }}>
-                  {address === null || address === undefined
-                    ? 'Chọn địa chỉ'
-                    : address[0].address +
-                    ',' +
-                    address[0].district +
-                    ',' +
-                    address[0].city}
-                </Text>
-              </View>
-              <View
-                style={{
-                  alignItems: 'center',
-                  marginRight: calcScale(20),
-                }}>
-                <Icon name="chevron-right" size={calcScale(22)} color="#000" />
-              </View>
-            </View>
-          </TouchableOpacity>
           <View style={styles.form}>
             <View style={styles.formHeader}>
               <Text
@@ -145,7 +103,7 @@ const CreateRequestView = ({ navigation, route }) => {
                   fontSize: calcScale(28),
                   fontWeight: 'bold',
                 }}>
-                Dịch vụ: {service.name}
+                Dịch vụ: {data.name}
               </Text>
             </View>
             <View style={styles.innerFormContainer}>
@@ -159,7 +117,7 @@ const CreateRequestView = ({ navigation, route }) => {
               </Text>
               <Input
                 containerStyle={styles.input}
-                inputContainerStyle={{ borderBottomWidth: 0 }}
+                inputContainerStyle={{borderBottomWidth: 0}}
                 placeholder=""
                 onChangeText={(request) => setRequest(request)}
                 value={request}
@@ -224,25 +182,22 @@ const CreateRequestView = ({ navigation, route }) => {
                 Thời gian
               </Text>
               <DatePicker
-                style={{ width: '100%' }}
+                // style={{width: '100%'}}
                 date={date}
-                mode="date"
-                placeholder="select date"
-                format="YYYY-MM-DD"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    left: 0,
-                    top: 4,
-                    marginLeft: 0,
-                  },
-                  dateInput: {
-                    marginLeft: 36,
-                  },
-                  // ... You can check the source to find the other keys.
-                }}
+                mode="datetime"
+                // customStyles={{
+                //   dateIcon: {
+                //     position: 'absolute',
+                //     left: 0,
+                //     top: 4,
+                //     marginLeft: 0,
+                //   },
+                //   dateInput: {
+                //     marginLeft: 36,
+                //   },
+                //   // ... You can check the source to find the other keys.
+                // }}
+                minimumDate={new Date()}
                 onDateChange={(date) => {
                   setDate(date);
                 }}
@@ -251,7 +206,61 @@ const CreateRequestView = ({ navigation, route }) => {
                 <Text>Thời gian{errorMessage}</Text>
               ) : null}
             </View>
-            <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
+            <TouchableOpacity
+              onPress={() => {
+                if (address === null || address === undefined) {
+                  navigation.navigate('AddressListView', {
+                    selectedId: -1,
+                  });
+                } else {
+                  navigation.navigate('AddressListView', {
+                    selectedId: address[0].id,
+                  });
+                }
+              }}
+              style={{
+                borderTopColor: '#ccc',
+                borderTopWidth: 1,
+                paddingBottom: calcScale(10),
+              }}>
+              <View style={[styles.row, {marginTop: calcScale(20)}]}>
+                <View style={{marginLeft: calcScale(20)}}>
+                  <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
+                    Địa chỉ
+                  </Text>
+                  <Text
+                    style={{fontSize: calcScale(18), marginTop: calcScale(5)}}>
+                    {user.name} | {user.phoneNumber}
+                  </Text>
+                  <Text style={{fontSize: calcScale(18)}}>
+                    {address === null || address === undefined
+                      ? 'Chọn địa chỉ'
+                      : address[0].address +
+                        ',' +
+                        address[0].district +
+                        ',' +
+                        address[0].city}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    alignItems: 'center',
+                    marginRight: calcScale(20),
+                  }}>
+                  <Icon
+                    name="chevron-right"
+                    size={calcScale(22)}
+                    color="#000"
+                  />
+                </View>
+              </View>
+            </TouchableOpacity>
+            {addressError !== '' && address === undefined ? (
+              <Text style={{marginLeft: calcScale(20), color: 'red'}}>
+                {addressError}
+              </Text>
+            ) : null}
+            <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
               <PTButton
                 title="Tiếp tục"
                 onPress={() => getDataAndNavigateConfirm()}
