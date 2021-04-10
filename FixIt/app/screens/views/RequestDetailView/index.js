@@ -4,22 +4,66 @@ import { useDispatch, useSelector } from 'react-redux';
 import { calcScale } from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
-import { getRequestDetail } from '../../../store/request'
+import { getRequestDetail, cancelRequest, listAllRequest } from '../../../store/request'
+import constants from '../../../utils/constants'
 
 const RequestDetailView = ({ navigation, route }) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch()
   const request = useSelector(state => state.request)
+  const { message } = request
 
   useEffect(() => {
     //console.log(request.onGoingRequests)
     dispatch(getRequestDetail(user.token, route.params.requestId))
   }, [])
 
+  useEffect(() => {
+    console.log(message);
+    if (message === constants.CANCEL_REQUEST_SUCCESSFULLY) {
+      alert(message);
+      dispatch(listAllRequest(user.token, user.userId));
+      //navigate to home view
+      navigation.navigate(route.params.currentTab);
+    }
+  }, [message]);
+
   //const data = route.params.requestDetail
 
   const data = request.requestDetail
-  console.log(data)
+
+  const cancelRequestTrigger = (token, requestId, cancel_reason) => {
+    dispatch(cancelRequest(token, requestId, cancel_reason));
+  };
+
+  //Get status object of request
+  let requestStatus;
+  let myRequestButton
+  if (data.request_statuses) {
+    requestStatus = data.request_statuses[0].status_id;
+    if (requestStatus == 2 || requestStatus == 1) {
+      myRequestButton = <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
+        <PTButton
+          title="Hủy yêu cầu"
+          onPress={() => cancelRequestTrigger(user.token, data.id, "Lí Do Lí chấu")}
+          style={styles.button}
+          color="#fff"
+        />
+      </View>
+    } else if (requestStatus == 4) {
+      myRequestButton = <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
+        <PTButton
+          title="Xem hoá đơn"
+          onPress={() => { }}
+          style={styles.button}
+          color="#fff"
+        />
+      </View>
+    } else if (requestStatus == 6) {
+      myRequestButton = null
+    }
+  }
+
   return (
     <ScrollView style={styles.container}>
       {data.id ? (
@@ -194,14 +238,7 @@ const RequestDetailView = ({ navigation, route }) => {
                 {data.request_statuses[0].status.name}
               </Text>
             </View>
-            <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
-              <PTButton
-                title="Xác nhận"
-                onPress={() => { }}
-                style={styles.button}
-                color="#fff"
-              />
-            </View>
+            {myRequestButton}
           </View>
         </View>
       ) : (

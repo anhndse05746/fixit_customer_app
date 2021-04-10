@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { calcScale } from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
-import { createRequest, clearMessage } from '../../../store/request';
+import { createRequest, clearMessage, listAllRequest } from '../../../store/request';
 
 const ConfirmRequestView = ({ navigation, route }) => {
   const user = useSelector((state) => state.user);
@@ -61,6 +61,7 @@ const ConfirmRequestView = ({ navigation, route }) => {
     if (message != '') {
       dispatch({ type: clearMessage.type });
       alert(message);
+      dispatch(listAllRequest(user.token, user.userId))
       navigation.navigate('HomeView');
     }
   }, [message]);

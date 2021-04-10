@@ -8,27 +8,43 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { clearMessage, createAddress } from '../../../store/user';
+import { cityOfVN } from '../../../utils/cityOfVietNam';
+import constants from '../../../utils/constants';
 import { calcScale } from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import CommonStyles from '../Styles';
-import { createAddress, clearMessage } from '../../../store/user'
-import constants from '../../../utils/constants'
 
 const CreateAddressView = ({ navigation }) => {
-  const [city, setCity] = React.useState('');
-  const [district, setDistrict] = React.useState('');
+  const [constructorHasRun, setConstructorHasRun] = React.useState(false);
+  const [cities, setCities] = React.useState([]);
+  const [selectedCity, setSelectedCity] = React.useState('');
+  const [selectedCityIndex, setSelectedCityIndex] = React.useState(0);
+  const [selectedDistrict, setSelectedDistrict] = React.useState('');
   const [address, setAddress] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  const dispatch = useDispatch()
-  const { userId, token, message } = useSelector(state => state.user)
+  const constructor = () => {
+    if (constructorHasRun) {
+      return;
+    } else {
+      setCities(cityOfVN);
+      setConstructorHasRun(true);
+    }
+  };
+
+  constructor();
+
+  const dispatch = useDispatch();
+  const { userId, token, message } = useSelector((state) => state.user);
+
   useEffect(() => {
     if (message === constants.CREATE_ADDRESS_SUCCESSFULLY) {
-      dispatch({ type: clearMessage.type, payload: "" })
+      dispatch({ type: clearMessage.type, payload: '' });
       navigation.navigate('AddressListView', {
         selectedId: -1,
       });
@@ -36,15 +52,13 @@ const CreateAddressView = ({ navigation }) => {
   }, [message]);
 
   const validateThenNavigate = () => {
-    if (city === '') {
-      setErrorMessage(' không được để trống');
-    } else if (district === '') {
-      setErrorMessage(' không được để trống');
-    } else if (address === '') {
+    if (address === '') {
       setErrorMessage(' không được để trống');
     } else {
       setErrorMessage('');
-      dispatch(createAddress(userId, token, city, district, address))
+      dispatch(
+        createAddress(userId, token, selectedCity, selectedDistrict, address),
+      );
     }
   };
 
@@ -65,53 +79,46 @@ const CreateAddressView = ({ navigation }) => {
           <View style={styles.formContainer}>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Thành phố <Text style={{ color: 'red' }}>*</Text>
+                Tỉnh/Thành phố <Text style={{ color: 'red' }}>*</Text>
               </Text>
-              <Input
-                containerStyle={styles.input}
-                onChangeText={(city) => setCity(city)}
-                rightIcon={
-                  city != '' ? (
-                    <Icon
-                      name="times-circle"
-                      size={calcScale(15)}
-                      color="grey"
-                      onPress={() => setCity('')}
+              <Picker
+                selectedValue={selectedCity}
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedCity(itemValue);
+                  setSelectedCityIndex(itemIndex);
+                }}>
+                {cities.map((city) => {
+                  return (
+                    <Picker.Item
+                      label={city.Name}
+                      value={city.Name}
+                      key={city.Id}
                     />
-                  ) : null
-                }
-                value={city}
-                errorMessage={
-                  errorMessage !== '' && city === ''
-                    ? 'Thành phố' + errorMessage
-                    : ''
-                }
-              />
+                  );
+                })}
+              </Picker>
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Quận/Huyện<Text style={{ color: 'red' }}>*</Text>
+                Quận/Huyện <Text style={{ color: 'red' }}>*</Text>
               </Text>
-              <Input
-                containerStyle={styles.input}
-                onChangeText={(district) => setDistrict(district)}
-                rightIcon={
-                  district != '' ? (
-                    <Icon
-                      name="times-circle"
-                      size={calcScale(15)}
-                      color="grey"
-                      onPress={() => setDistrict('')}
-                    />
-                  ) : null
-                }
-                value={district}
-                errorMessage={
-                  errorMessage !== '' && district === ''
-                    ? 'Quận/Huyện' + errorMessage
-                    : ''
-                }
-              />
+              <Picker
+                selectedValue={selectedDistrict}
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedDistrict(itemValue);
+                }}>
+                {cities.length > 0
+                  ? cities[selectedCityIndex].Districts.map((district) => {
+                    return (
+                      <Picker.Item
+                        label={district.Name}
+                        value={district.Name}
+                        key={district.Id}
+                      />
+                    );
+                  })
+                  : null}
+              </Picker>
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
@@ -133,7 +140,7 @@ const CreateAddressView = ({ navigation }) => {
                 value={address}
                 errorMessage={
                   errorMessage !== '' && address === ''
-                    ? 'Phone number' + errorMessage
+                    ? 'Địa chỉ' + errorMessage
                     : ''
                 }
               />

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  DevSettings,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -9,17 +10,21 @@ import {
 import {Avatar} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
-
+import userPreferences from '../../libs/UserPreferences';
+import {TOKEN_KEY} from '../../utils/constants';
 import {calcScale} from '../../utils/dimension';
 import commonStyles from './Styles';
 
 const MyProfileDrawer = ({navigation}) => {
   const [isHasAvatar, setIsHasAvatar] = React.useState(false);
 
-  let data = useSelector((state) => state.user);
+  const data = useSelector((state) => state.user);
+
+  console.log(JSON.stringify(data));
 
   const logOut = () => {
-    // navigation.navigate('OutsideStack');
+    userPreferences.removeItem(TOKEN_KEY);
+    DevSettings.reload();
   };
 
   return (

@@ -81,6 +81,7 @@ const OngoingTabview = ({ navigation }) => {
           navigation.navigate('RequestDetailView', {
             flag: 'myrequest',
             requestId: item.id,
+            currentTab: 'Ongoing'
           })
         }}>
         <View style={styles.row}>

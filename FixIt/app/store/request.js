@@ -66,11 +66,33 @@ const request = createSlice({
             console.log(action)
             request.isLoading = false
         },
+        cancelRequestSuccess: (request, action) => {
+            if (action.payload.message != 'Can not cancel this request') {
+                request.message = constants.CANCEL_REQUEST_SUCCESSFULLY
+            }
+            console.log(action)
+            request.isLoading = false
+        },
+        cancelRequestFail: (request, action) => {
+            console.log(action)
+            request.isLoading = false
+        },
     }
 })
 
 export default request.reducer
-export const { onRequestStarted, createRequestSuccess, createRequestFail, clearMessage, listRequestFail, listRequestSuccess, updateListRequestFail, updateListRequestSuccess, getRequestDetailFail, getRequestDetailSuccess } = request.actions
+export const { onRequestStarted,
+    createRequestSuccess,
+    createRequestFail,
+    clearMessage,
+    listRequestFail,
+    listRequestSuccess,
+    updateListRequestFail,
+    updateListRequestSuccess,
+    getRequestDetailFail,
+    getRequestDetailSuccess,
+    cancelRequestFail,
+    cancelRequestSuccess } = request.actions
 
 export const createRequest = (token, request) => apiCallBegan({
     url: '/api/createRequest',
@@ -136,4 +158,20 @@ export const getRequestDetail = (token, request_id) => apiCallBegan({
     onStart: onRequestStarted.type,
     onSuccess: getRequestDetailSuccess.type,
     onError: getRequestDetailFail.type,
+})
+
+export const cancelRequest = (token, request_id, cancel_reason) => apiCallBegan({
+    url: '/api/cancelRequest',
+    headers: {
+        Authorization: token,
+    },
+    data: {
+        request_id: request_id,
+        cancel_by: constants.ROLE_CUSTOMER,
+        cancel_reason: cancel_reason
+    },
+    method: 'POST',
+    onStart: onRequestStarted.type,
+    onSuccess: cancelRequestSuccess.type,
+    onError: cancelRequestFail.type,
 })
