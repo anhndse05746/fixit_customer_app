@@ -1,25 +1,25 @@
-import React, {useEffect} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {calcScale} from '../../../utils/dimension';
+import React, { useEffect } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { calcScale } from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
-import {createRequest, clearMessage} from '../../../store/request';
+import { createRequest, clearMessage } from '../../../store/request';
 
-const ConfirmRequestView = ({navigation, route}) => {
+const ConfirmRequestView = ({ navigation, route }) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const requestStates = useSelector((state) => state.request);
-  const {message} = requestStates;
+  const { message } = requestStates;
   const data = route.params.requestData;
-  const {address, service, issues} = data;
+  const { address, service, issues } = data;
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
   const [estimate_fix_duration, setEstimate_fix_duration] = React.useState(0);
   const [estimate_price, setEstimate_price] = React.useState(0);
 
   let request_issues = [];
   for (let i = 0; i < issues.length; i++) {
-    request_issues.push({issues_id: issues[i].id});
+    request_issues.push({ issues_id: issues[i].id });
   }
 
   const requestData = {
@@ -34,6 +34,9 @@ const ConfirmRequestView = ({navigation, route}) => {
     district: address[0].district,
     request_issues: request_issues,
   };
+
+  console.log({ requestData })
+  console.log({ request_issues })
 
   const constructor = () => {
     if (constructorHasRun) {
@@ -56,7 +59,7 @@ const ConfirmRequestView = ({navigation, route}) => {
 
   useEffect(() => {
     if (message != '') {
-      dispatch({type: clearMessage.type});
+      dispatch({ type: clearMessage.type });
       alert(message);
       navigation.navigate('HomeView');
     }
@@ -189,11 +192,11 @@ const ConfirmRequestView = ({navigation, route}) => {
             paddingTop: calcScale(10),
             marginBottom: calcScale(20),
           }}>
-          <View style={{marginLeft: calcScale(20)}}>
-            <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
+          <View style={{ marginLeft: calcScale(20) }}>
+            <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
               Địa chỉ
             </Text>
-            <Text style={{fontSize: calcScale(18), marginTop: calcScale(5)}}>
+            <Text style={{ fontSize: calcScale(18), marginTop: calcScale(5) }}>
               {user.name} | {user.phoneNumber}
             </Text>
             <Text
@@ -202,7 +205,7 @@ const ConfirmRequestView = ({navigation, route}) => {
               }}>{`${address[0].address}, ${address[0].district}, ${address[0].city}`}</Text>
           </View>
         </View>
-        <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
+        <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
           <PTButton
             title="Xác nhận"
             onPress={() => dispatch(createRequest(user.token, requestData))}
