@@ -1,23 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
-import Navigation from './libs/Navigation';
-import {getActiveRouteName} from './utils/navigation';
+import {createStackNavigator} from '@react-navigation/stack';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {StatusBar} from 'react-native';
 import {connect} from 'react-redux';
-import {
-  ROOT_BACKGROUND,
-  ROOT_INSIDE,
-  ROOT_LOADING,
-  ROOT_OUTSIDE,
-} from './store/appState';
-import AuthLoadingView from './screens/views/AuthLoadingView';
+import Navigation from './libs/Navigation';
+import userPreferences from './libs/UserPreferences';
 import DrawerInside from './screens/stacks/DrawerStack';
 import OutsideStackNavigator from './screens/stacks/OutsideStack';
-import {StatusBar} from 'react-native';
+import {EncryptionKey_TOKEN_KEY, TOKEN_KEY} from './utils/constants';
+import {getActiveRouteName} from './utils/navigation';
 
 const Stack = createStackNavigator();
-const App = React.memo(({root}) => {
+const App = () => {
   React.useEffect(() => {
     const state = Navigation.navigationRef.current?.getRootState();
     const currentRouteName = getActiveRouteName(state);
@@ -38,18 +33,13 @@ const App = React.memo(({root}) => {
       <StatusBar hidden />
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <>
-          {root === ROOT_LOADING || root === ROOT_BACKGROUND ? (
-            <Stack.Screen name="AuthLoading" component={AuthLoadingView} />
-          ) : null}
-          {/* {root === ROOT_OUTSIDE ? ( */}
           <Stack.Screen name="OutsideStack" component={OutsideStackNavigator} />
-          {/* ) : null} */}
           <Stack.Screen name="DrawerInside" component={DrawerInside} />
         </>
       </Stack.Navigator>
     </NavigationContainer>
   );
-});
+};
 
 const mapStateToProps = (state) => ({
   root: state.app.root,
