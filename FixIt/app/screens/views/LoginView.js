@@ -32,7 +32,7 @@ const LoginView = ({navigation}) => {
   const [deviceToken, setDeviceToken] = React.useState('');
 
   const dispatch = useDispatch();
-  let data = useSelector((state) => state.user);
+  const data = useSelector((state) => state.user);
   let {message} = data;
 
   const login = (username, password) => {
@@ -50,12 +50,23 @@ const LoginView = ({navigation}) => {
 
   useEffect(() => {
     if (message === LOGGED_IN) {
-      userPreferences.setEncryptData(
-        TOKEN_KEY,
-        data.token,
-        EncryptionKey_TOKEN_KEY,
-      );
-      userPreferences.setObjectAsync(USER_KEY, data);
+      if (data) {
+        userPreferences.setEncryptData(
+          TOKEN_KEY,
+          data.token,
+          EncryptionKey_TOKEN_KEY,
+        );
+        const userData = {
+          id: data.userId,
+          phone: data.phoneNumber,
+          name: data.name,
+          roleId: data.roleId,
+          email: data.email,
+          token: data.token,
+          address_list: data.addressList,
+        };
+        userPreferences.setObjectAsync(USER_KEY, userData);
+      }
       dispatch({type: clearMessage.type, payload: ''});
       navigation.navigate('DrawerInside');
     }

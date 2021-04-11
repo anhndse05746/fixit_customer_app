@@ -19,4 +19,18 @@ module.exports = Object.freeze({
 
   CREATE_ADDRESS_SUCCESSFULLY: 'Tạo địa chỉ thành công',
   DUPLICATE_ADDRESS: 'Địa chỉ này đã được đăng ký',
+
+  CANCEL_REQUEST_SUCCESSFULLY: "Huỷ yêu cầu thành công",
+
+  // Đang tìm thợ
+  STATUS_REQUEST_FINDING: 1,
+  // Thợ đã nhận đồng thời có nút Bắt đầu sửa
+  STATUS_REQUEST_HASTAKEN: 2,
+  // Đang sửa: chuyển sang sau khi thợ ấn vào nút Bắt đầu sửa
+  STATUS_REQUEST_FIXING: 3,
+  // Đã sửa xong đồng thời khi ấn vào tạo hóa đơn
+  STATUS_REQUEST_FIXED: 4,
+  // Đã tạo xong hóa đơn
+  STATUS_REQUEST_PAID: 5,
+  STATUS_REQUEST_CANCELED: 6,
 });

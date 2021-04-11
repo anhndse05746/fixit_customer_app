@@ -17,6 +17,7 @@ import constants from '../../../utils/constants';
 import {calcScale} from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import CommonStyles from '../Styles';
+import {Picker} from '@react-native-picker/picker';
 
 const CreateAddressView = ({navigation}) => {
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);

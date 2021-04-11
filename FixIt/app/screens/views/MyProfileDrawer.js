@@ -20,11 +20,10 @@ const MyProfileDrawer = ({navigation}) => {
 
   const data = useSelector((state) => state.user);
 
-  console.log(JSON.stringify(data));
-
   const logOut = () => {
     userPreferences.removeItem(TOKEN_KEY);
-    DevSettings.reload();
+    // DevSettings.reload();
+    navigation.navigate('OutsideStack');
   };
 
   return (
@@ -124,11 +123,9 @@ const MyProfileDrawer = ({navigation}) => {
             </View>
           </TouchableOpacity> */}
         </View>
-        <View style={styles.footer}>
-          <TouchableOpacity onPress={() => logOut()}>
-            <Text style={styles.headmanText}>Log out</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.footer} onPress={() => logOut()}>
+          <Text style={styles.headmanText}>Log out</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </View>
   );

@@ -81,6 +81,7 @@ const ExecuteTabView = ({ navigation }) => {
           navigation.navigate('RequestDetailView', {
             flag: 'myrequest',
             requestId: item.id,
+            currentTab: 'Execute'
           })
         }>
         <View style={styles.row}>

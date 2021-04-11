@@ -25,7 +25,7 @@ const OutsideStackNavigator = ({navigation}) => {
       TOKEN_KEY,
       EncryptionKey_TOKEN_KEY,
     );
-    if (await !token) {
+    if (!token) {
       console.log('DONT HAVE TOKEN');
     } else {
       console.log('HAVE TOKEN');
