@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import RateTabView from './RateTabView';
+import CancelTabView from './CancelTabView';
 import OngoingTabview from './OngoingTabView';
 import ExecuteTabView from './ExecuteTabView';
 import ConfirmTabView from './ConfirmTabView';
@@ -21,14 +21,14 @@ const RequestTabs = () => {
         options={{tabBarLabel: 'Đang xử lý'}}
       />
       <Tab.Screen
-        name="Rate"
-        component={RateTabView}
-        options={{tabBarLabel: 'Đánh giá'}}
-      />
-      <Tab.Screen
         name="Confirm"
         component={ConfirmTabView}
         options={{tabBarLabel: 'Hoàn thành'}}
+      />
+      <Tab.Screen
+        name="Cancel"
+        component={CancelTabView}
+        options={{tabBarLabel: 'Đã hủy'}}
       />
     </Tab.Navigator>
   );

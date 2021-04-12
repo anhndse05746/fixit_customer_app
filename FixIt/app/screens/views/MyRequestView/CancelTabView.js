@@ -12,21 +12,21 @@ import {calcScale} from '../../../utils/dimension';
 import commonStyles from '../Styles';
 import ListEmptyComponent from './ListEmpty';
 
-const RateTabView = ({navigation}) => {
+const CancelTabView = ({navigation}) => {
   const rateData = [
     {
       id: 1,
       service: 'Sửa lò vi sóng',
       estimate_fix_duration: 100,
       estimate_price: 100,
-      status: 'Đợi đánh giá',
+      status: 'Đã hủy',
     },
     {
       id: 2,
       service: 'Service test',
       estimate_fix_duration: 200,
       estimate_price: 150,
-      status: 'Đợi đánh giá',
+      status: 'Đã hủy',
     },
   ];
 
@@ -143,7 +143,7 @@ const RateTabView = ({navigation}) => {
   );
 };
 
-export default RateTabView;
+export default CancelTabView;
 
 const styles = StyleSheet.create({
   sceneContainer: {

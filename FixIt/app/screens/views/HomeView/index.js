@@ -23,7 +23,9 @@ const HomeView = () => {
   const {majorsList} = useSelector((state) => state.majors);
 
   useEffect(() => {
-    if (majorsList.length == 0) dispatch(loadMajors(token));
+    if (majorsList) {
+      if (majorsList.length == 0) dispatch(loadMajors(token));
+    }
   }, []);
 
   return (
