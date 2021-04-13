@@ -31,6 +31,8 @@ const ServiceItem = ({navigation, item}) => {
       return (color = '#00a66f');
     } else if (data.id === 4) {
       return (color = '#098eb3');
+    } else {
+      return color;
     }
   };
 

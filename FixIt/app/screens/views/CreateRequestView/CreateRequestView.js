@@ -29,7 +29,15 @@ const CreateRequestView = ({ navigation, route }) => {
   const [request, setRequest] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [date, setDate] = React.useState(new Date());
-  const [issues, setIssues] = React.useState([]);
+  const [issues, setIssues] = React.useState([
+    {
+      id: -1,
+      checked: false,
+      title: 'Khác',
+      estimate_fix_duration: 0,
+      estimate_price: 0,
+    },
+  ]);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [addressError, setAddressError] = React.useState('');
   const [errorCheckbox, setErrorCheckbox] = React.useState('');
@@ -46,7 +54,7 @@ const CreateRequestView = ({ navigation, route }) => {
           estimate_fix_duration: issue.estimate_fix_duration,
           estimate_price: issue.estimate_price,
         };
-        issues.push(checkBox);
+        issues.unshift(checkBox);
       });
       setConstructorHasRun(true);
     }

@@ -14,7 +14,7 @@ import ListEmptyComponent from './ListEmpty';
 
 const CancelTabView = ({ navigation }) => {
   const request = useSelector(state => state.request)
-  const rateData = request.canceledRequest
+  const canceledData = request.canceledRequest
   // [
   //   {
   //     id: 1,
@@ -37,20 +37,20 @@ const CancelTabView = ({ navigation }) => {
   // const currentPage = useSelector((state) => state.approval.currentPage);
   // const isLoadingMore = useSelector((state) => state.approval.isLoadingMore);
   // const totalPage = useSelector((state) => state.approval.totalPage);
-  // const rateData = useSelector((state) => state.approval.data);
+  // const canceledData = useSelector((state) => state.approval.data);
 
   // State
   const [isEndReach, setEndReach] = React.useState(true);
 
   // //Effect
   // React.useEffect(() => {
-  //   fetchRateData();
+  //   fetchcanceledData();
   // }, []);
 
   // //Dispatch
   // const dispatch = useDispatch();
 
-  // const fetchRateData = React.useCallback(() => {
+  // const fetchcanceledData = React.useCallback(() => {
   //   const request = {
   //     pageNum: 1,
   //     pageSize: 5,
@@ -64,13 +64,13 @@ const CancelTabView = ({ navigation }) => {
   //   }
   // };
 
-  // const loadMoreRateData = React.useCallback(() => {
+  // const loadMorecanceledData = React.useCallback(() => {
   //   const page = currentPage + 1;
   //   const request = {
   //     pageNum: page,
   //     pageSize: 5,
   //   };
-  // }, [rateData]);
+  // }, [canceledData]);
 
   const renderListTicket = ({ item }) => {
     const schedule_time = `${item.schedule_time.split('T')[1].split('.')[0].split(':')[0]}:${item.schedule_time.split('T')[1].split('.')[0].split(':')[1]}, ${item.schedule_time.split('T')[0]}`
@@ -139,7 +139,7 @@ const CancelTabView = ({ navigation }) => {
         />
       ) : ( */}
       <FlatList
-        data={rateData}
+        data={canceledData}
         showsVerticalScrollIndicator={false}
         renderItem={renderListTicket}
         keyExtractor={(item) => item.id.toString()}
