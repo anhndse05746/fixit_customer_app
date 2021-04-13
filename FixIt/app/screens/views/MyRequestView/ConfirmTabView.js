@@ -66,6 +66,8 @@ const ConfirmTabView = ({ navigation }) => {
   // }, [confirmData]);
 
   const renderListTicket = ({ item }) => {
+    const schedule_time = `${item.schedule_time.split('T')[1].split('.')[0].split(':')[0]}:${item.schedule_time.split('T')[1].split('.')[0].split(':')[1]}, ${item.schedule_time.split('T')[0]}`
+
     return (
       <TouchableOpacity
         style={styles.ticketContainer}
@@ -76,18 +78,26 @@ const ConfirmTabView = ({ navigation }) => {
           })
         }>
         <View style={styles.row}>
-          <Text style={[styles.textBold, styles.textTitle]}>
-            {item.serviceName}
-          </Text>
+          <View style={styles.column}>
+            <Text style={[styles.textBold, styles.textTitle]}>
+              {item.serviceName}
+            </Text>
+            <Text style={[styles.textBold, styles.textTitle]}>
+              {schedule_time}
+            </Text>
+            <Text style={[styles.textBold, styles.textTitle]}>
+              {`${item.address}, ${item.district}, ${item.city}`}
+            </Text>
+          </View>
         </View>
         <View style={[styles.row, { justifyContent: 'space-between' }]}>
           <View style={styles.column}>
-            <Text style={styles.textRegular}>Thời gian:</Text>
-            <Text style={styles.textBold}>{item.estimate_time}</Text>
+            <Text style={styles.textRegular}>Thời gian ước tính: </Text>
+            <Text style={styles.textBold}>{item.estimate_time} phút</Text>
           </View>
           <View style={styles.column}>
-            <Text style={styles.textRegular}>Giá:</Text>
-            <Text style={styles.textBold}>{item.estimate_price}</Text>
+            <Text style={styles.textRegular}>Giá ước tính:</Text>
+            <Text style={styles.textBold}>{item.estimate_price} VND</Text>
           </View>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Trạng thái:</Text>

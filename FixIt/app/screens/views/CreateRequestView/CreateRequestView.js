@@ -113,28 +113,6 @@ const CreateRequestView = ({ navigation, route }) => {
                   fontWeight: 'bold',
                   marginBottom: calcScale(10),
                 }}>
-                Yêu cầu
-              </Text>
-              <Input
-                containerStyle={styles.input}
-                inputContainerStyle={{ borderBottomWidth: 0 }}
-                placeholder=""
-                onChangeText={(request) => setRequest(request)}
-                value={request}
-                errorMessage={
-                  errorMessage !== '' && request === ''
-                    ? 'Yêu cầu' + errorMessage
-                    : ''
-                }
-              />
-            </View>
-            <View style={styles.innerFormContainer}>
-              <Text
-                style={{
-                  fontSize: calcScale(18),
-                  fontWeight: 'bold',
-                  marginBottom: calcScale(10),
-                }}>
                 Vấn đề đang gặp phải
               </Text>
               {issues.map((item, index) => {

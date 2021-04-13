@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -8,8 +8,8 @@ import {
   TextInput,
   Modal,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {calcScale} from '../../../utils/dimension';
+import { useDispatch, useSelector } from 'react-redux';
+import { calcScale } from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
 import {
@@ -19,11 +19,11 @@ import {
 } from '../../../store/request';
 import constants from '../../../utils/constants';
 
-const RequestDetailView = ({navigation, route}) => {
+const RequestDetailView = ({ navigation, route }) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const request = useSelector((state) => state.request);
-  const {message} = request;
+  const { message } = request;
   const [modalVisible, setModalVisible] = React.useState(false);
   const [cancelReason, setCancelReason] = React.useState('');
 
@@ -60,7 +60,7 @@ const RequestDetailView = ({navigation, route}) => {
     requestStatus = data.request_statuses[0].status_id;
     if (requestStatus == 2 || requestStatus == 1) {
       myRequestButton = (
-        <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
+        <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
           <PTButton
             title="Hủy yêu cầu"
             onPress={() => setModalVisible(true)}
@@ -71,10 +71,10 @@ const RequestDetailView = ({navigation, route}) => {
       );
     } else if (requestStatus == 4) {
       myRequestButton = (
-        <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
+        <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
           <PTButton
             title="Xem hoá đơn"
-            onPress={() => {}}
+            onPress={() => { }}
             style={styles.button}
             color="#fff"
           />
@@ -89,7 +89,7 @@ const RequestDetailView = ({navigation, route}) => {
     <ScrollView
       style={[
         styles.container,
-        modalVisible ? {backgroundColor: 'rgba(0,0,0,0.5)'} : '',
+        modalVisible ? { backgroundColor: 'rgba(0,0,0,0.5)' } : '',
       ]}>
       <Modal
         animationType="slide"
@@ -126,7 +126,7 @@ const RequestDetailView = ({navigation, route}) => {
               <PTButton
                 title="Không hủy"
                 color="#fff"
-                style={[styles.button, {backgroundColor: '#ccc', width: '45%'}]}
+                style={[styles.button, { backgroundColor: '#ccc', width: '45%' }]}
                 onPress={() => setModalVisible(false)}
               />
               <PTButton
@@ -134,7 +134,7 @@ const RequestDetailView = ({navigation, route}) => {
                 color="#fff"
                 style={[
                   styles.button,
-                  {width: '45%', marginLeft: calcScale(20)},
+                  { width: '45%', marginLeft: calcScale(20) },
                 ]}
                 onPress={() =>
                   cancelRequestTrigger(user.token, data.id, cancelReason)
@@ -153,14 +153,14 @@ const RequestDetailView = ({navigation, route}) => {
               paddingBottom: calcScale(10),
               marginTop: calcScale(20),
             }}>
-            <View style={{marginLeft: calcScale(20)}}>
-              <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
+            <View style={{ marginLeft: calcScale(20) }}>
+              <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
                 Địa chỉ
               </Text>
-              <Text style={{fontSize: calcScale(18), marginTop: calcScale(5)}}>
+              <Text style={{ fontSize: calcScale(18), marginTop: calcScale(5) }}>
                 {user.name} | {user.phoneNumber}
               </Text>
-              <Text style={{fontSize: calcScale(18)}}>
+              <Text style={{ fontSize: calcScale(18) }}>
                 {data.address + ', ' + data.district + ', ' + data.city}
               </Text>
             </View>
@@ -173,23 +173,6 @@ const RequestDetailView = ({navigation, route}) => {
                   fontWeight: 'bold',
                 }}>
                 Dịch vụ: {data.service.name}
-              </Text>
-            </View>
-            <View style={styles.innerFormContainer}>
-              <Text
-                style={{
-                  fontSize: calcScale(18),
-                  fontWeight: 'bold',
-                  marginBottom: calcScale(10),
-                }}>
-                Yêu cầu
-              </Text>
-              <Text
-                style={{
-                  fontSize: calcScale(16),
-                  marginBottom: calcScale(10),
-                }}>
-                {data.request}
               </Text>
             </View>
             <View style={styles.innerFormContainer}>
@@ -325,7 +308,7 @@ const RequestDetailView = ({navigation, route}) => {
         <ActivityIndicator
           size="small"
           color="#3368f3"
-          style={{marginTop: calcScale(10)}}
+          style={{ marginTop: calcScale(10) }}
         />
       )}
     </ScrollView>

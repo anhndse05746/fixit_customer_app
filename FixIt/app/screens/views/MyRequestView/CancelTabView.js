@@ -7,28 +7,30 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {calcScale} from '../../../utils/dimension';
+import { useDispatch, useSelector } from 'react-redux';
+import { calcScale } from '../../../utils/dimension';
 import commonStyles from '../Styles';
 import ListEmptyComponent from './ListEmpty';
 
-const CancelTabView = ({navigation}) => {
-  const rateData = [
-    {
-      id: 1,
-      service: 'Sửa lò vi sóng',
-      estimate_fix_duration: 100,
-      estimate_price: 100,
-      status: 'Đã hủy',
-    },
-    {
-      id: 2,
-      service: 'Service test',
-      estimate_fix_duration: 200,
-      estimate_price: 150,
-      status: 'Đã hủy',
-    },
-  ];
+const CancelTabView = ({ navigation }) => {
+  const request = useSelector(state => state.request)
+  const rateData = request.canceledRequest
+  // [
+  //   {
+  //     id: 1,
+  //     service: 'Sửa lò vi sóng',
+  //     estimate_fix_duration: 100,
+  //     estimate_price: 100,
+  //     status: 'Đã hủy',
+  //   },
+  //   {
+  //     id: 2,
+  //     service: 'Service test',
+  //     estimate_fix_duration: 200,
+  //     estimate_price: 150,
+  //     status: 'Đã hủy',
+  //   },
+  // ];
 
   // // Seletor redux
   // const isFetching = useSelector((state) => state.approval.isFetching);
@@ -70,7 +72,9 @@ const CancelTabView = ({navigation}) => {
   //   };
   // }, [rateData]);
 
-  const renderListTicket = ({item}) => {
+  const renderListTicket = ({ item }) => {
+    const schedule_time = `${item.schedule_time.split('T')[1].split('.')[0].split(':')[0]}:${item.schedule_time.split('T')[1].split('.')[0].split(':')[1]}, ${item.schedule_time.split('T')[0]}`
+
     return (
       <TouchableOpacity
         style={styles.ticketContainer}
@@ -81,22 +85,30 @@ const CancelTabView = ({navigation}) => {
           })
         }>
         <View style={styles.row}>
-          <Text style={[styles.textBold, styles.textTitle]}>
-            {item.service}
-          </Text>
-        </View>
-        <View style={[styles.row, {justifyContent: 'space-between'}]}>
           <View style={styles.column}>
-            <Text style={styles.textRegular}>Thời gian:</Text>
-            <Text style={styles.textBold}>{item.estimate_fix_duration}</Text>
+            <Text style={[styles.textBold, styles.textTitle]}>
+              {item.serviceName}
+            </Text>
+            <Text style={[styles.textBold, styles.textTitle]}>
+              {schedule_time}
+            </Text>
+            <Text style={[styles.textBold, styles.textTitle]}>
+              {`${item.address}, ${item.district}, ${item.city}`}
+            </Text>
+          </View>
+        </View>
+        <View style={[styles.row, { justifyContent: 'space-between' }]}>
+          <View style={styles.column}>
+            <Text style={styles.textRegular}>Thời gian ước tính: </Text>
+            <Text style={styles.textBold}>{item.estimate_time} phút</Text>
           </View>
           <View style={styles.column}>
-            <Text style={styles.textRegular}>Giá:</Text>
-            <Text style={styles.textBold}>{item.estimate_price}</Text>
+            <Text style={styles.textRegular}>Giá ước tính:</Text>
+            <Text style={styles.textBold}>{item.estimate_price} VND</Text>
           </View>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Trạng thái:</Text>
-            <Text style={styles.textBold}>{item.status}</Text>
+            <Text style={styles.textBold}>{item.statusName}</Text>
           </View>
         </View>
       </TouchableOpacity>
