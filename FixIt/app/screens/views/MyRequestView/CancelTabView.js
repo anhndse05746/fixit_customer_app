@@ -13,42 +13,44 @@ import commonStyles from '../Styles';
 import ListEmptyComponent from './ListEmpty';
 
 const CancelTabView = ({navigation}) => {
-  const rateData = [
-    {
-      id: 1,
-      service: 'Sửa lò vi sóng',
-      estimate_fix_duration: 100,
-      estimate_price: 100,
-      status: 'Đã hủy',
-    },
-    {
-      id: 2,
-      service: 'Service test',
-      estimate_fix_duration: 200,
-      estimate_price: 150,
-      status: 'Đã hủy',
-    },
-  ];
+  const request = useSelector((state) => state.request);
+  const canceledData = request.canceledRequest;
+  // const canceledData = [
+  //   {
+  //     id: 1,
+  //     service: 'Sửa lò vi sóng',
+  //     estimate_fix_duration: 100,
+  //     estimate_price: 100,
+  //     status: 'Đã hủy',
+  //   },
+  //   {
+  //     id: 2,
+  //     service: 'Service test',
+  //     estimate_fix_duration: 200,
+  //     estimate_price: 150,
+  //     status: 'Đã hủy',
+  //   },
+  // ];
 
   // // Seletor redux
   // const isFetching = useSelector((state) => state.approval.isFetching);
   // const currentPage = useSelector((state) => state.approval.currentPage);
   // const isLoadingMore = useSelector((state) => state.approval.isLoadingMore);
   // const totalPage = useSelector((state) => state.approval.totalPage);
-  // const rateData = useSelector((state) => state.approval.data);
+  // const canceledData = useSelector((state) => state.approval.data);
 
   // State
   const [isEndReach, setEndReach] = React.useState(true);
 
   // //Effect
   // React.useEffect(() => {
-  //   fetchRateData();
+  //   fetchcanceledData();
   // }, []);
 
   // //Dispatch
   // const dispatch = useDispatch();
 
-  // const fetchRateData = React.useCallback(() => {
+  // const fetchcanceledData = React.useCallback(() => {
   //   const request = {
   //     pageNum: 1,
   //     pageSize: 5,
@@ -62,13 +64,13 @@ const CancelTabView = ({navigation}) => {
   //   }
   // };
 
-  // const loadMoreRateData = React.useCallback(() => {
+  // const loadMorecanceledData = React.useCallback(() => {
   //   const page = currentPage + 1;
   //   const request = {
   //     pageNum: page,
   //     pageSize: 5,
   //   };
-  // }, [rateData]);
+  // }, [canceledData]);
 
   const renderListTicket = ({item}) => {
     return (
@@ -82,13 +84,13 @@ const CancelTabView = ({navigation}) => {
         }>
         <View style={styles.row}>
           <Text style={[styles.textBold, styles.textTitle]}>
-            {item.service}
+            {item.serviceName}
           </Text>
         </View>
         <View style={[styles.row, {justifyContent: 'space-between'}]}>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Thời gian:</Text>
-            <Text style={styles.textBold}>{item.estimate_fix_duration}</Text>
+            <Text style={styles.textBold}>{item.estimate_time}</Text>
           </View>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Giá:</Text>
@@ -96,7 +98,7 @@ const CancelTabView = ({navigation}) => {
           </View>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Trạng thái:</Text>
-            <Text style={styles.textBold}>{item.status}</Text>
+            <Text style={styles.textBold}>{item.statusName}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -127,7 +129,7 @@ const CancelTabView = ({navigation}) => {
         />
       ) : ( */}
       <FlatList
-        data={rateData}
+        data={canceledData}
         showsVerticalScrollIndicator={false}
         renderItem={renderListTicket}
         keyExtractor={(item) => item.id.toString()}

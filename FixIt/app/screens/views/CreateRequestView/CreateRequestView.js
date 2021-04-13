@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -11,14 +11,14 @@ import {
   View,
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import { CheckBox, Input } from 'react-native-elements';
+import {CheckBox, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useSelector } from 'react-redux';
-import { calcScale } from '../../../utils/dimension';
+import {useSelector} from 'react-redux';
+import {calcScale} from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
 
-const CreateRequestView = ({ navigation, route }) => {
+const CreateRequestView = ({navigation, route}) => {
   const user = useSelector((state) => state.user);
 
   const data = route.params.service;
@@ -29,7 +29,15 @@ const CreateRequestView = ({ navigation, route }) => {
   const [request, setRequest] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [date, setDate] = React.useState(new Date());
-  const [issues, setIssues] = React.useState([]);
+  const [issues, setIssues] = React.useState([
+    {
+      id: -1,
+      checked: false,
+      title: 'Khác',
+      estimate_fix_duration: 0,
+      estimate_price: 0,
+    },
+  ]);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [addressError, setAddressError] = React.useState('');
   const [errorCheckbox, setErrorCheckbox] = React.useState('');
@@ -46,7 +54,7 @@ const CreateRequestView = ({ navigation, route }) => {
           estimate_fix_duration: issue.estimate_fix_duration,
           estimate_price: issue.estimate_price,
         };
-        issues.push(checkBox);
+        issues.unshift(checkBox);
       });
       setConstructorHasRun(true);
     }
@@ -86,7 +94,7 @@ const CreateRequestView = ({ navigation, route }) => {
       };
       setErrorMessage('');
       setErrorCheckbox('');
-      navigation.navigate('ConfirmRequestView', { requestData: requestData });
+      navigation.navigate('ConfirmRequestView', {requestData: requestData});
     }
   };
 
@@ -117,7 +125,7 @@ const CreateRequestView = ({ navigation, route }) => {
               </Text>
               <Input
                 containerStyle={styles.input}
-                inputContainerStyle={{ borderBottomWidth: 0 }}
+                inputContainerStyle={{borderBottomWidth: 0}}
                 placeholder=""
                 onChangeText={(request) => setRequest(request)}
                 value={request}
@@ -223,23 +231,23 @@ const CreateRequestView = ({ navigation, route }) => {
                 borderTopWidth: 1,
                 paddingBottom: calcScale(10),
               }}>
-              <View style={[styles.row, { marginTop: calcScale(20) }]}>
-                <View style={{ marginLeft: calcScale(20) }}>
-                  <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
+              <View style={[styles.row, {marginTop: calcScale(20)}]}>
+                <View style={{marginLeft: calcScale(20)}}>
+                  <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
                     Địa chỉ
                   </Text>
                   <Text
-                    style={{ fontSize: calcScale(18), marginTop: calcScale(5) }}>
+                    style={{fontSize: calcScale(18), marginTop: calcScale(5)}}>
                     {user.name} | {user.phoneNumber}
                   </Text>
-                  <Text style={{ fontSize: calcScale(18) }}>
+                  <Text style={{fontSize: calcScale(18)}}>
                     {address === null || address === undefined
                       ? 'Chọn địa chỉ'
                       : address[0].address +
-                      ',' +
-                      address[0].district +
-                      ',' +
-                      address[0].city}
+                        ',' +
+                        address[0].district +
+                        ',' +
+                        address[0].city}
                   </Text>
                 </View>
                 <View
@@ -256,11 +264,11 @@ const CreateRequestView = ({ navigation, route }) => {
               </View>
             </TouchableOpacity>
             {addressError !== '' && address === undefined ? (
-              <Text style={{ marginLeft: calcScale(20), color: 'red' }}>
+              <Text style={{marginLeft: calcScale(20), color: 'red'}}>
                 {addressError}
               </Text>
             ) : null}
-            <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
+            <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
               <PTButton
                 title="Tiếp tục"
                 onPress={() => getDataAndNavigateConfirm()}

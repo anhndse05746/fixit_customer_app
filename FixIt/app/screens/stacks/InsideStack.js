@@ -186,12 +186,14 @@ const MyRequestStackNavigator = () => {
                 <Icon
                   name={Platform.OS === 'ios' ? 'chevron-left' : 'arrow-left'}
                   size={calcScale(22)}
-                  color="#000000"
+                  color="#fff"
                   light={true}
                 />
               </TouchableHighlight>
             );
           },
+          headerTitleStyle: {color: '#fff'},
+          headerTintColor: '#fff',
         })}
       />
     </MyRequestStack.Navigator>
