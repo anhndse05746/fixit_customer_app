@@ -229,7 +229,7 @@ const RequestDetailView = ({ navigation, route }) => {
                   fontSize: calcScale(16),
                   marginBottom: calcScale(10),
                 }}>
-                {data.estimate_time}
+                {data.estimate_time} Phút
               </Text>
             </View>
             <View style={styles.innerFormContainer}>
@@ -239,14 +239,34 @@ const RequestDetailView = ({ navigation, route }) => {
                   fontWeight: 'bold',
                   marginBottom: calcScale(10),
                 }}>
-                Tiền sửa ước tính
+                Tiền công ước tính
               </Text>
               <Text
                 style={{
                   fontSize: calcScale(16),
                   marginBottom: calcScale(10),
                 }}>
-                {data.estimate_price}
+                {data.estimate_price} VND
+              </Text>
+              <Text>
+                (Tiền công chưa bao gồm chi phí vật tư thay thế)
+              </Text>
+            </View>
+            <View style={styles.innerFormContainer}>
+              <Text
+                style={{
+                  fontSize: calcScale(18),
+                  fontWeight: 'bold',
+                  marginBottom: calcScale(10),
+                }}>
+                Tiền công tối thiểu
+              </Text>
+              <Text
+                style={{
+                  fontSize: calcScale(16),
+                  marginBottom: calcScale(10),
+                }}>
+                30.000 VND
               </Text>
             </View>
             <View style={styles.innerFormContainer}>

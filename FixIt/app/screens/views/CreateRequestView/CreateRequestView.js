@@ -26,7 +26,6 @@ const CreateRequestView = ({ navigation, route }) => {
   const address = route.params.address;
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
-  const [request, setRequest] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [date, setDate] = React.useState(new Date());
   const [issues, setIssues] = React.useState([
@@ -77,8 +76,6 @@ const CreateRequestView = ({ navigation, route }) => {
     });
     if (address === undefined) {
       setAddressError('Bạn cần chọn địa chỉ');
-    } else if (request === '') {
-      setErrorMessage(' không được để trống');
     } else if (issuesData.length === 0) {
       setErrorCheckbox('Bạn cần bọn vấn đề gặp phải');
     } else if (date === '') {
@@ -87,7 +84,6 @@ const CreateRequestView = ({ navigation, route }) => {
       const requestData = {
         service: data,
         address: address,
-        request: request,
         description: description,
         date: date,
         issues: issuesData,

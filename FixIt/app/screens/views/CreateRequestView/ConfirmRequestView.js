@@ -85,23 +85,6 @@ const ConfirmRequestView = ({ navigation, route }) => {
               fontWeight: 'bold',
               marginBottom: calcScale(10),
             }}>
-            Yêu cầu
-          </Text>
-          <Text
-            style={{
-              fontSize: calcScale(16),
-              marginBottom: calcScale(10),
-            }}>
-            {data.request}
-          </Text>
-        </View>
-        <View style={styles.innerFormContainer}>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              fontWeight: 'bold',
-              marginBottom: calcScale(10),
-            }}>
             Vấn đề đang gặp phải
           </Text>
           {data.issues.map((item, index) => {
@@ -149,7 +132,7 @@ const ConfirmRequestView = ({ navigation, route }) => {
               fontSize: calcScale(16),
               marginBottom: calcScale(10),
             }}>
-            {estimate_fix_duration}
+            {estimate_fix_duration} Phút
           </Text>
         </View>
         <View style={styles.innerFormContainer}>
@@ -166,7 +149,7 @@ const ConfirmRequestView = ({ navigation, route }) => {
               fontSize: calcScale(16),
               marginBottom: calcScale(10),
             }}>
-            {estimate_price}
+            {estimate_price} VND
           </Text>
         </View>
         <View style={styles.innerFormContainer}>

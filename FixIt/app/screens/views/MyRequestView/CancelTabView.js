@@ -87,10 +87,7 @@ const CancelTabView = ({ navigation }) => {
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={[styles.textBold, styles.textTitle]}>
-              {item.serviceName}
-            </Text>
-            <Text style={[styles.textBold, styles.textTitle]}>
-              {schedule_time}
+              {schedule_time} - {item.serviceName}
             </Text>
             <Text style={[styles.textBold, styles.textTitle]}>
               {`${item.address}, ${item.district}, ${item.city}`}
