@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   Text,
   View,
@@ -7,21 +7,21 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { Input } from 'react-native-elements';
-import { useDispatch, useSelector } from 'react-redux';
+import {Input} from 'react-native-elements';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import CommonStyles from '../Styles';
 import PTButton from '../../commonComponent/Button';
-import { calcScale } from '../../../utils/dimension';
+import {calcScale} from '../../../utils/dimension';
 import ConfirmPhoneView from './ConfirmPhoneView';
-import { checkRegisteredUser } from '../../../store/resetPassword'
+import {checkRegisteredUser} from '../../../store/resetPassword';
 
-const ForgetPasswordView = ({ navigation }) => {
+const ForgetPasswordView = ({navigation}) => {
   const [phone, setPhone] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  const { isRegistered, message } = useSelector((state) => state.resetPassword);
+  const {isRegistered, message} = useSelector((state) => state.resetPassword);
   const dispatch = useDispatch();
 
   const checkRegistered = (phone) => {
@@ -39,7 +39,7 @@ const ForgetPasswordView = ({ navigation }) => {
       setErrorMessage(' is required');
     } else {
       setErrorMessage('');
-      navigation.navigate('ConfirmPhoneView', { phone: phone });
+      navigation.navigate('ConfirmPhoneView', {phone: phone});
     }
   };
 
@@ -52,21 +52,21 @@ const ForgetPasswordView = ({ navigation }) => {
           <Text
             style={[
               styles.textRegular,
-              { marginTop: calcScale(15), fontSize: calcScale(22) },
+              {marginTop: calcScale(15), fontSize: calcScale(22)},
             ]}>
             Vui lòng điền số điện thoại đã đăng kí
           </Text>
           <Text
             style={[
               styles.textRegular,
-              { marginTop: calcScale(15), fontSize: calcScale(22) },
+              {marginTop: calcScale(15), fontSize: calcScale(22)},
             ]}>
             {message}
           </Text>
           <View style={styles.formContainer}>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Phone number <Text style={{ color: 'red' }}>*</Text>
+                Phone number <Text style={{color: 'red'}}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -92,7 +92,7 @@ const ForgetPasswordView = ({ navigation }) => {
               />
             </View>
           </View>
-          <View style={{ alignItems: 'center' }}>
+          <View style={{alignItems: 'center'}}>
             <PTButton
               title="Tiếp tục"
               onPress={() => {

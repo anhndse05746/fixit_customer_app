@@ -7,74 +7,36 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { calcScale } from '../../../utils/dimension';
+import {useDispatch, useSelector} from 'react-redux';
+import {listAllRequest} from '../../../store/request';
+import {calcScale} from '../../../utils/dimension';
 import commonStyles from '../Styles';
 import ListEmptyComponent from './ListEmpty';
 
-const ExecuteTabView = ({ navigation }) => {
-  const request = useSelector(state => state.request)
+const ExecuteTabView = ({navigation}) => {
+  const request = useSelector((state) => state.request);
+  const user = useSelector((state) => state.user);
 
-  const executeData = request.executingRequest
-  // [
-  //   {
-  //     id: 1,
-  //     service: 'Sửa lò vi sóng',
-  //     estimate_fix_duration: 100,
-  //     estimate_price: 100,
-  //     status: 'Đang xử lí',
-  //   },
-  //   {
-  //     id: 2,
-  //     service: 'Service test',
-  //     estimate_fix_duration: 200,
-  //     estimate_price: 150,
-  //     status: 'Đang xử lí',
-  //   },
-  // ];
+  const executeData = request.executingRequest;
+  let isLoading = request.isLoading;
 
-  // // Seletor redux
-  // const isFetching = useSelector((state) => state.execute.isFetching);
-  // const currentPage = useSelector((state) => state.execute.currentPage);
-  // const isLoadingMore = useSelector((state) => state.execute.isLoadingMore);
-  // const totalPage = useSelector((state) => state.execute.totalPage);
-  // const executeData = useSelector((state) => state.execute.data);
+  // Dispatch
+  const dispatch = useDispatch();
 
-  // State
-  const [isEndReach, setEndReach] = React.useState(true);
+  //Reload
+  const reloadData = () => {
+    dispatch(listAllRequest(user.token, user.userId));
+  };
 
-  // // Effects
-  // React.useEffect(() => {
-  //   fetchExecuteData();
-  // }, []);
-
-  // // Dispatch
-  // const dispatch = useDispatch();
-
-  // const fetchExecuteData = React.useCallback(() => {
-  //   const request = {
-  //     pageNum: 1,
-  //     pageSize: 5,
-  //   };
-  // }, []);
-
-  // const loadMore = () => {
-  //   if (isEndReach && !isLoadingMore && currentPage < totalPage) {
-  //     loadMoreExecuteData();
-  //     setEndReach(false);
-  //   }
-  // };
-
-  // const loadMoreExecuteData = React.useCallback(() => {
-  //   const page = currentPage + 1;
-  //   const request = {
-  //     pageNum: page,
-  //     pageSize: 5,
-  //   };
-  // }, [executeData]);
-
-  const renderListTicket = ({ item }) => {
-    const schedule_time = `${item.schedule_time.split('T')[1].split('.')[0].split(':')[0]}:${item.schedule_time.split('T')[1].split('.')[0].split(':')[1]}, ${item.schedule_time.split('T')[0]}`
+  const renderListTicket = ({item}) => {
+    let schedule_time;
+    if (item.schedule_time) {
+      schedule_time = `${
+        item.schedule_time.split('T')[1].split('.')[0].split(':')[0]
+      }:${item.schedule_time.split('T')[1].split('.')[0].split(':')[1]}, ${
+        item.schedule_time.split('T')[0]
+      }`;
+    }
 
     return (
       <TouchableOpacity
@@ -83,7 +45,7 @@ const ExecuteTabView = ({ navigation }) => {
           navigation.navigate('RequestDetailView', {
             flag: 'myrequest',
             requestId: item.id,
-            currentTab: 'Execute'
+            currentTab: 'Execute',
           })
         }>
         <View style={styles.row}>
@@ -96,7 +58,7 @@ const ExecuteTabView = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <View style={[styles.row, { justifyContent: 'space-between' }]}>
+        <View style={[styles.row, {justifyContent: 'space-between'}]}>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Thời gian ước tính:</Text>
             <Text style={styles.textBold}>{item.estimate_time} phút</Text>
@@ -114,42 +76,18 @@ const ExecuteTabView = ({ navigation }) => {
     );
   };
 
-  // const renderFooter = () => {
-  //   if (isLoadingMore && isEndReach) {
-  //     return (
-  //       <ActivityIndicator
-  //         size="small"
-  //         color="#3368f3"
-  //         style={{paddingBottom: calcScale(10)}}
-  //       />
-  //     );
-  //   } else {
-  //     return null;
-  //   }
-  // };
-
   return (
     <View style={styles.sceneContainer}>
-      {/* {isFetching ? (
-        <ActivityIndicator
-          size="small"
-          color="#3368f3"
-          style={{marginTop: calcScale(10)}}
-        />
-      ) : ( */}
       <FlatList
         data={executeData}
         showsVerticalScrollIndicator={false}
         renderItem={renderListTicket}
         keyExtractor={(item) => item.id.toString()}
-        // onEndReached={loadMore}
-        onMomentumScrollBegin={() => setEndReach(true)}
         bounces={false}
-        // ListFooterComponent={renderFooter}
-        onEndReachedThreshold={0.2}
         ListEmptyComponent={() => <ListEmptyComponent />}
+        onRefresh={() => reloadData()}
+        refreshing={isLoading}
       />
-      {/* )} */}
     </View>
   );
 };
@@ -165,7 +103,7 @@ const styles = StyleSheet.create({
   },
   ticketContainer: {
     width: calcScale(420),
-    height: calcScale(120),
+    height: calcScale(140),
     backgroundColor: 'rgb(255, 224, 216)',
     padding: calcScale(20),
     margin: calcScale(10),
@@ -181,6 +119,7 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     fontSize: calcScale(16),
+    paddingBottom: calcScale(10),
   },
   textBold: {
     ...commonStyles.textBold,

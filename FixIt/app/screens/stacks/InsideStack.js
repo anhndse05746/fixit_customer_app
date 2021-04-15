@@ -56,7 +56,7 @@ const InsideTabBottomNavigator = () => {
         options={{tabBarLabel: 'Thông báo'}}
       />
       <InsideTabBottom.Screen
-        name="MyProfileView"
+        name="Thông tin cá nhân"
         component={MyProfileView}
         options={{tabBarLabel: 'Tôi'}}
       />
@@ -149,7 +149,7 @@ const MyRequestStackNavigator = () => {
       <MyRequestStack.Screen
         name="MyRequest"
         options={{
-          title: 'My Request',
+          title: 'Danh sách yêu cầu',
           headerRight: () => {
             return (
               <TouchableHighlight
@@ -217,7 +217,7 @@ const AnnouncementStackNavigator = () => {
       <AnnouncementStack.Screen
         name="AnnouncementView"
         options={{
-          title: 'Notifications',
+          title: 'Thông báo',
           headerRight: () => {
             return (
               <TouchableHighlight

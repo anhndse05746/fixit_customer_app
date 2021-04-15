@@ -7,66 +7,36 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { calcScale } from '../../../utils/dimension';
+import {useDispatch, useSelector} from 'react-redux';
+import {listAllRequest} from '../../../store/request';
+import {calcScale} from '../../../utils/dimension';
 import commonStyles from '../Styles';
 import ListEmptyComponent from './ListEmpty';
 
-const ConfirmTabView = ({ navigation }) => {
-  const request = useSelector(state => state.request)
-  const confirmData = request.completeRequest
-  // [
-  //   {
-  //     id: 1,
-  //     service: 'Sửa lò vi sóng',
-  //     estimate_fix_duration: 100,
-  //     estimate_price: 100,
-  //     status: 'Hoàn thành',
-  //   },
-  //   {
-  //     id: 2,
-  //     service: 'Service test',
-  //     estimate_fix_duration: 200,
-  //     estimate_price: 150,
-  //     status: 'Hoàn thành',
-  //   },
-  // ];
+const ConfirmTabView = ({navigation}) => {
+  const request = useSelector((state) => state.request);
+  const user = useSelector((state) => state.user);
 
-  // // Seletor redux
-  // const isFetching = useSelector((state) => state.confirm.isFetching);
-  // const currentPage = useSelector((state) => state.confirm.currentPage);
-  // const totalPage = useSelector((state) => state.confirm.totalPage);
-  // const isLoadingMore = useSelector((state) => state.confirm.isLoadingMore);
-  // const confirmData = useSelector((state) => state.confirm.data);
+  const confirmData = request.completeRequest;
+  let isLoading = request.isLoading;
 
-  // State
-  const [isEndReach, setEndReach] = React.useState(true);
+  //Dispatch
+  const dispatch = useDispatch();
 
-  // // Effects
-  // React.useEffect(() => {
-  //   fetchConfirmData();
-  // }, []);
+  //Reload
+  const reloadData = () => {
+    dispatch(listAllRequest(user.token, user.userId));
+  };
 
-  // //Dispatch
-  // const dispatch = useDispatch();
-
-  // const loadMore = () => {
-  //   if (isEndReach && !isLoadingMore && currentPage < totalPage) {
-  //     loadMoreConfirmData();
-  //     setEndReach(false);
-  //   }
-  // };
-
-  // const fetchConfirmData = React.useCallback(() => {
-  //   const page = 1;
-  // }, []);
-
-  // const loadMoreConfirmData = React.useCallback(() => {
-  //   const page = currentPage + 1;
-  // }, [confirmData]);
-
-  const renderListTicket = ({ item }) => {
-    const schedule_time = `${item.schedule_time.split('T')[1].split('.')[0].split(':')[0]}:${item.schedule_time.split('T')[1].split('.')[0].split(':')[1]}, ${item.schedule_time.split('T')[0]}`
+  const renderListTicket = ({item}) => {
+    let schedule_time;
+    if (item.schedule_time) {
+      schedule_time = `${
+        item.schedule_time.split('T')[1].split('.')[0].split(':')[0]
+      }:${item.schedule_time.split('T')[1].split('.')[0].split(':')[1]}, ${
+        item.schedule_time.split('T')[0]
+      }`;
+    }
 
     return (
       <TouchableOpacity
@@ -87,7 +57,7 @@ const ConfirmTabView = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <View style={[styles.row, { justifyContent: 'space-between' }]}>
+        <View style={[styles.row, {justifyContent: 'space-between'}]}>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Thời gian ước tính: </Text>
             <Text style={styles.textBold}>{item.estimate_time} phút</Text>
@@ -105,42 +75,18 @@ const ConfirmTabView = ({ navigation }) => {
     );
   };
 
-  // const renderFooter = () => {
-  //   if (isLoadingMore && isEndReach) {
-  //     return (
-  //       <ActivityIndicator
-  //         size="small"
-  //         color="#3368f3"
-  //         style={{paddingBottom: calcScale(10)}}
-  //       />
-  //     );
-  //   } else {
-  //     return null;
-  //   }
-  // };
-
   return (
     <View style={styles.sceneContainer}>
-      {/* {isFetching ? (
-        <ActivityIndicator
-          size="small"
-          color="#3368f3"
-          style={{marginTop: calcScale(10)}}
-        />
-      ) : ( */}
       <FlatList
         data={confirmData}
         showsVerticalScrollIndicator={false}
         renderItem={renderListTicket}
         keyExtractor={(item) => item.id.toString()}
-        // onEndReached={loadMore}
-        onEndReachedThreshold={0.2}
-        onMomentumScrollBegin={() => setEndReach(true)}
-        // ListFooterComponent={renderFooter}
         bounces={false}
         ListEmptyComponent={() => <ListEmptyComponent />}
+        onRefresh={() => reloadData()}
+        refreshing={isLoading}
       />
-      {/* )} */}
     </View>
   );
 };
@@ -156,7 +102,7 @@ const styles = StyleSheet.create({
   },
   ticketContainer: {
     width: calcScale(420),
-    height: calcScale(120),
+    height: calcScale(140),
     backgroundColor: 'rgb(255, 224, 216)',
     padding: calcScale(20),
     margin: calcScale(10),
@@ -172,6 +118,7 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     fontSize: calcScale(16),
+    paddingBottom: calcScale(10),
   },
   textBold: {
     ...commonStyles.textBold,

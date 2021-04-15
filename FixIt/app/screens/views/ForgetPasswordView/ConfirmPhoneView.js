@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   Text,
   StyleSheet,
@@ -7,16 +7,16 @@ import {
 } from 'react-native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 
-import { calcScale } from '../../../utils/dimension';
+import {calcScale} from '../../../utils/dimension';
 import CommonStyles from '../Styles';
 import PTButton from '../../commonComponent/Button';
 import firebase from '../../../config/firebaseConfig';
 
-const ConfirmPhoneView = ({ route, navigation }) => {
+const ConfirmPhoneView = ({route, navigation}) => {
   const formatedPhoneNumber = '+84' + route.params.phone;
 
   //otp states
-  const { auth } = firebase();
+  const {auth} = firebase();
   const [confirm, setConfirm] = React.useState(null);
   const [code, setCode] = React.useState('');
 
@@ -30,7 +30,7 @@ const ConfirmPhoneView = ({ route, navigation }) => {
   const confirmOTP = async () => {
     try {
       await confirm.confirm(code);
-      navigation.navigate('ResetPasswordView', { phone: route.params.phone })
+      navigation.navigate('ResetPasswordView', {phone: route.params.phone});
     } catch (error) {
       console.log(error);
       alert(JSON.stringify(error));
@@ -45,11 +45,11 @@ const ConfirmPhoneView = ({ route, navigation }) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
-      <Text style={[styles.textRegular, { marginTop: calcScale(30) }]}>
+      <Text style={[styles.textRegular, {marginTop: calcScale(30)}]}>
         Mã OTP đã được gửi đến số điện thoại của bạn.
       </Text>
       <OTPInputView
-        style={{ width: '80%', height: 100 }}
+        style={{width: '80%', height: 100}}
         pinCount={6}
         // code={code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
         // onCodeChanged = {(code) => setCode(code)}
@@ -58,8 +58,9 @@ const ConfirmPhoneView = ({ route, navigation }) => {
         codeInputHighlightStyle={styles.styleHighLighted}
         onCodeFilled={(code) => setCode(code)}
       />
-      <TouchableOpacity onPress={() => signInWithPhoneNumber(formatedPhoneNumber)}>
-        <Text style={[styles.textRegular, { textDecorationLine: 'underline' }]}>
+      <TouchableOpacity
+        onPress={() => signInWithPhoneNumber(formatedPhoneNumber)}>
+        <Text style={[styles.textRegular, {textDecorationLine: 'underline'}]}>
           Gửi lại mã OTP.
         </Text>
       </TouchableOpacity>
