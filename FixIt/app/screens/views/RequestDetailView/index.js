@@ -146,25 +146,6 @@ const RequestDetailView = ({ navigation, route }) => {
       </Modal>
       {data.id ? (
         <View>
-          <View
-            style={{
-              borderBottomColor: '#ccc',
-              borderBottomWidth: 1,
-              paddingBottom: calcScale(10),
-              marginTop: calcScale(20),
-            }}>
-            <View style={{ marginLeft: calcScale(20) }}>
-              <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
-                Địa chỉ
-              </Text>
-              <Text style={{ fontSize: calcScale(18), marginTop: calcScale(5) }}>
-                {user.name} | {user.phoneNumber}
-              </Text>
-              <Text style={{ fontSize: calcScale(18) }}>
-                {data.address + ', ' + data.district + ', ' + data.city}
-              </Text>
-            </View>
-          </View>
           <View style={styles.form}>
             <View style={styles.formHeader}>
               <Text
@@ -176,14 +157,22 @@ const RequestDetailView = ({ navigation, route }) => {
               </Text>
             </View>
             <View style={styles.innerFormContainer}>
-              <Text
+              {requestStatus == 5 ? <Text
                 style={{
                   fontSize: calcScale(18),
                   fontWeight: 'bold',
                   marginBottom: calcScale(10),
                 }}>
-                Vấn đề đang gặp phải
-              </Text>
+                Công việc đã thực hiện
+              </Text> :
+                <Text
+                  style={{
+                    fontSize: calcScale(18),
+                    fontWeight: 'bold',
+                    marginBottom: calcScale(10),
+                  }}>
+                  Vấn đề đang gặp phải
+              </Text>}
               {data.request_issues.map((item, index) => {
                 return (
                   <Text
@@ -209,7 +198,6 @@ const RequestDetailView = ({ navigation, route }) => {
               <Text
                 style={{
                   fontSize: calcScale(18),
-                  fontWeight: 'bold',
                   marginBottom: calcScale(10),
                 }}>
                 {data.description}
@@ -301,7 +289,7 @@ const RequestDetailView = ({ navigation, route }) => {
                   marginBottom: calcScale(10),
                 }}>
                 {/* {data.payment} */}
-                Cash
+                Tiền mặt
               </Text>
             </View>
             <View style={styles.innerFormContainer}>
@@ -320,6 +308,25 @@ const RequestDetailView = ({ navigation, route }) => {
                 }}>
                 {data.request_statuses[0].status.name}
               </Text>
+            </View>
+            <View
+              style={{
+                borderTopColor: '#ccc',
+                borderTopWidth: 1,
+                paddingTop: calcScale(10),
+                //marginTop: calcScale(20),
+              }}>
+              <View style={{ marginLeft: calcScale(20) }}>
+                <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
+                  Địa chỉ
+              </Text>
+                <Text style={{ fontSize: calcScale(18), marginTop: calcScale(5) }}>
+                  {user.name} | {user.phoneNumber}
+                </Text>
+                <Text style={{ fontSize: calcScale(18) }}>
+                  {data.address + ', ' + data.district + ', ' + data.city}
+                </Text>
+              </View>
             </View>
             {myRequestButton}
           </View>
