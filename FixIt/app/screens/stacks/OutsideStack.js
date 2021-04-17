@@ -33,7 +33,7 @@ const OutsideStackNavigator = ({navigation}) => {
       console.log('HAVE TOKEN');
       const decode = jwt_decode(token);
       const date = new Date();
-      if (decode.exp * 1000 - 60000 < date.getTime()) {
+      if (decode.exp * 1000 - 60000 > date.getTime()) {
         console.log('OK TOKEN');
         const user = await userPreferences.getObjectAsync(USER_KEY);
         dispatch({type: usersLoggedIn.type, payload: user});
