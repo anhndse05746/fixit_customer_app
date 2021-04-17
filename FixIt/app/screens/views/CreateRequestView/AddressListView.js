@@ -1,26 +1,13 @@
-import React, { useEffect } from 'react';
-import {
-  FlatList,
-  Keyboard,
-  KeyboardAvoidingView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
-import DatePicker from 'react-native-datepicker';
-import { CheckBox, Input } from 'react-native-elements';
+import React from 'react';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useSelector } from 'react-redux';
-import { calcScale } from '../../../utils/dimension';
+import {useSelector} from 'react-redux';
+import {calcScale} from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
 
-const AddressListView = ({ navigation, route }) => {
-  const { addressList } = useSelector(state => state.user)
+const AddressListView = ({navigation, route}) => {
+  const {addressList} = useSelector((state) => state.user);
 
   let selectedId = route.params.selectedId;
 
@@ -39,7 +26,7 @@ const AddressListView = ({ navigation, route }) => {
 
   constructor();
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
         onPress={() => {
@@ -50,12 +37,12 @@ const AddressListView = ({ navigation, route }) => {
           borderBottomWidth: 1,
           paddingBottom: calcScale(10),
         }}>
-        <View style={[styles.row, { marginTop: calcScale(20) }]}>
-          <View style={{ marginLeft: calcScale(20) }}>
-            <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
+        <View style={[styles.row, {marginTop: calcScale(20)}]}>
+          <View style={{marginLeft: calcScale(20)}}>
+            <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
               Địa chỉ
             </Text>
-            <Text style={{ fontSize: calcScale(18) }}>
+            <Text style={{fontSize: calcScale(18)}}>
               {item.address}, {item.district}, {item.city}
             </Text>
           </View>
@@ -83,12 +70,12 @@ const AddressListView = ({ navigation, route }) => {
         addressSelected.push(item);
       }
     });
-    navigation.navigate('CreateRequestView', { address: addressSelected });
+    navigation.navigate('CreateRequestView', {address: addressSelected});
   };
 
   const renderFooter = () => {
     return (
-      <View style={{ alignItems: 'center', marginTop: calcScale(20) }}>
+      <View style={{alignItems: 'center', marginTop: calcScale(20)}}>
         <PTButton
           title="Thêm địa chỉ"
           onPress={() => navigation.navigate('CreateAddressView')}

@@ -36,7 +36,6 @@
     "react-native-bootsplash": "^3.1.2",
     "react-native-console-time-polyfill": "^1.2.1",
     "react-native-date-picker": "^3.2.10",
-    "react-native-datepicker": "^1.7.2",
     "react-native-device-info": "8.0.1",
     "react-native-elements": "^3.1.0",
     "react-native-gesture-handler": "^1.9.0",
