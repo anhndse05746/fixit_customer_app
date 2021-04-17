@@ -142,9 +142,19 @@ const CreateRequestView = ({navigation, route}) => {
                 Vấn đề đang gặp phải
               </Text>
               {issues.map((item, index) => {
+                console.log('item: ' + JSON.stringify(item));
                 return (
                   <CheckBox
-                    title={item.title}
+                    title={
+                      <Text
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text>{item.title}</Text>
+                        <Text> - {item.estimate_price}0đ</Text>
+                      </Text>
+                    }
                     checked={item.checked}
                     onPress={() => toggleCheckbox(index)}
                     containerStyle={styles.checkBox}

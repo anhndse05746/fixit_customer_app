@@ -15,6 +15,7 @@ import {
 import userPreferences from '../../libs/UserPreferences';
 import {useDispatch} from 'react-redux';
 import {usersLoggedIn} from '../../store/user';
+import jwt_decode from 'jwt-decode';
 
 const OutsideStack = createStackNavigator();
 const OutsideStackNavigator = ({navigation}) => {
@@ -25,13 +26,22 @@ const OutsideStackNavigator = ({navigation}) => {
       TOKEN_KEY,
       EncryptionKey_TOKEN_KEY,
     );
+    const decode = jwt_decode(token);
+    const date = new Date();
+
     if (!token) {
       console.log('DONT HAVE TOKEN');
     } else {
       console.log('HAVE TOKEN');
-      const user = await userPreferences.getObjectAsync(USER_KEY);
-      dispatch({type: usersLoggedIn.type, payload: user});
-      navigation.navigate('DrawerInside');
+      if (decode.exp * 1000 - 60000 < date.getTime()) {
+        console.log('OK TOKEN');
+        const user = await userPreferences.getObjectAsync(USER_KEY);
+        dispatch({type: usersLoggedIn.type, payload: user});
+        navigation.navigate('DrawerInside');
+      } else {
+        console.log('TOKEN EXPIRED');
+        userPreferences.removeItem(TOKEN_KEY);
+      }
     }
   };
 
