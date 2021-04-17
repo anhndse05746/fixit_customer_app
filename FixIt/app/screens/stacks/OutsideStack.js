@@ -26,13 +26,13 @@ const OutsideStackNavigator = ({navigation}) => {
       TOKEN_KEY,
       EncryptionKey_TOKEN_KEY,
     );
-    const decode = jwt_decode(token);
-    const date = new Date();
 
     if (!token) {
       console.log('DONT HAVE TOKEN');
     } else {
       console.log('HAVE TOKEN');
+      const decode = jwt_decode(token);
+      const date = new Date();
       if (decode.exp * 1000 - 60000 < date.getTime()) {
         console.log('OK TOKEN');
         const user = await userPreferences.getObjectAsync(USER_KEY);
