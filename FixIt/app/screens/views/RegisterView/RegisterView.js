@@ -21,6 +21,7 @@ import {useReducer} from 'react';
 
 const RegisterView = ({navigation}) => {
   const [fullName, setFullName] = React.useState('');
+  const [nationId, setNationId] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [phone, setPhone] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -29,6 +30,7 @@ const RegisterView = ({navigation}) => {
   const [resecure, setResecure] = React.useState(true);
   const [checked, setChecked] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
+  const [errorPhone, setErrorPhone] = React.useState(false);
   const [matchedPassword, setMatchedPassword] = React.useState(false);
 
   const {isRegistered, message} = useSelector((state) => state.register);
@@ -52,20 +54,25 @@ const RegisterView = ({navigation}) => {
 
   const navigateOtpScreen = (user) => {
     if (fullName === '') {
-      setErrorMessage(' is required');
+      setErrorMessage(' không được để trống');
+    } else if (nationId === '') {
+      setErrorMessage(' không được để trống');
     } else if (phone === '') {
-      setErrorMessage(' is required');
+      setErrorMessage(' không được để trống');
+    } else if (!/^(84|0[3|5|7|8|9])+([0-9]{8})\b$/.test(phone)) {
+      setErrorPhone(true);
+      setErrorMessage(' không đúng định dạng');
     } else if (password === '') {
-      setErrorMessage(' is required');
+      setErrorMessage(' không được để trống');
     } else if (repassword === '') {
-      setErrorMessage(' is required');
+      setErrorMessage(' không được để trống');
     } else if (
       password !== '' &&
       repassword !== '' &&
       password !== repassword
     ) {
       setMatchedPassword(true);
-      setErrorMessage(' is not matched with Password');
+      setErrorMessage(' không khớp với mật khẩu');
     } else {
       setErrorMessage('');
       navigation.navigate('OTPView', user);
@@ -114,7 +121,32 @@ const RegisterView = ({navigation}) => {
                 value={fullName}
                 errorMessage={
                   errorMessage !== '' && fullName === ''
-                    ? 'Full Name' + errorMessage
+                    ? 'Họ và tên' + errorMessage
+                    : ''
+                }
+              />
+            </View>
+            <View style={styles.column}>
+              <Text style={styles.textRegular}>
+                CMT/CCCD <Text style={{color: 'red'}}>*</Text>
+              </Text>
+              <Input
+                containerStyle={styles.input}
+                onChangeText={(nationId) => setNationId(nationId)}
+                rightIcon={
+                  nationId != '' ? (
+                    <Icon
+                      name="times-circle"
+                      size={calcScale(15)}
+                      color="grey"
+                      onPress={() => setNationId('')}
+                    />
+                  ) : null
+                }
+                value={address}
+                errorMessage={
+                  errorMessage !== '' && address === ''
+                    ? 'CMT/CCCD' + errorMessage
                     : ''
                 }
               />
@@ -141,7 +173,7 @@ const RegisterView = ({navigation}) => {
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Phone number <Text style={{color: 'red'}}>*</Text>
+                Số điện thoại <Text style={{color: 'red'}}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -160,8 +192,8 @@ const RegisterView = ({navigation}) => {
                 value={phone}
                 keyboardType="number-pad"
                 errorMessage={
-                  errorMessage !== '' && phone === ''
-                    ? 'Phone number' + errorMessage
+                  (errorMessage !== '' && phone === '') || errorPhone
+                    ? 'Số điện thoại' + errorMessage
                     : ''
                 }
               />
@@ -197,7 +229,7 @@ const RegisterView = ({navigation}) => {
                 value={password}
                 errorMessage={
                   errorMessage !== '' && password === ''
-                    ? 'Password' + errorMessage
+                    ? 'Mật khẩu' + errorMessage
                     : ''
                 }
               />
@@ -233,7 +265,7 @@ const RegisterView = ({navigation}) => {
                 value={repassword}
                 errorMessage={
                   (errorMessage !== '' && repassword === '') || matchedPassword
-                    ? 'Re-enter password' + errorMessage
+                    ? 'Nhập lại mật khẩu' + errorMessage
                     : ''
                 }
               />
