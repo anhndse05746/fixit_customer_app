@@ -14,6 +14,7 @@ import DatePicker from 'react-native-date-picker';
 import {CheckBox, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
+import {cityOfVN} from '../../../utils/cityOfVietNam';
 import {calcScale} from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
@@ -26,6 +27,7 @@ const CreateRequestView = ({navigation, route}) => {
   const address = route.params.address;
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
+  const [cities, setCities] = React.useState([]);
   const [description, setDescription] = React.useState('');
   const [date, setDate] = React.useState(new Date());
   const [issues, setIssues] = React.useState([
@@ -55,9 +57,19 @@ const CreateRequestView = ({navigation, route}) => {
         };
         issues.unshift(checkBox);
       });
+      setCities(cityOfVN);
       setConstructorHasRun(true);
     }
   };
+
+  let city = address
+    ? cities.find((x) => x.Id === '0' + address[0].city).Name
+    : '';
+  let district = address
+    ? cities
+        .find((x) => x.Id === '0' + address[0].city)
+        .Districts.find((x) => x.Id === '00' + address[0].district).Name
+    : '';
 
   constructor();
 
@@ -110,28 +122,6 @@ const CreateRequestView = ({navigation, route}) => {
                 Dịch vụ: {data.name}
               </Text>
             </View>
-            {/* <View style={styles.innerFormContainer}>
-              <Text
-                style={{
-                  fontSize: calcScale(18),
-                  fontWeight: 'bold',
-                  marginBottom: calcScale(10),
-                }}>
-                Yêu cầu
-              </Text>
-              <Input
-                containerStyle={styles.input}
-                inputContainerStyle={{borderBottomWidth: 0}}
-                placeholder=""
-                onChangeText={(request) => setRequest(request)}
-                value={request}
-                errorMessage={
-                  errorMessage !== '' && request === ''
-                    ? 'Yêu cầu' + errorMessage
-                    : ''
-                }
-              />
-            </View> */}
             <View style={styles.innerFormContainer}>
               <Text
                 style={{
@@ -196,21 +186,8 @@ const CreateRequestView = ({navigation, route}) => {
                 Thời gian
               </Text>
               <DatePicker
-                // style={{width: '100%'}}
                 date={date}
                 mode="datetime"
-                // customStyles={{
-                //   dateIcon: {
-                //     position: 'absolute',
-                //     left: 0,
-                //     top: 4,
-                //     marginLeft: 0,
-                //   },
-                //   dateInput: {
-                //     marginLeft: 36,
-                //   },
-                //   // ... You can check the source to find the other keys.
-                // }}
                 minimumDate={new Date()}
                 onDateChange={(date) => {
                   setDate(date);
@@ -249,11 +226,7 @@ const CreateRequestView = ({navigation, route}) => {
                   <Text style={{fontSize: calcScale(18)}}>
                     {address === null || address === undefined
                       ? 'Chọn địa chỉ'
-                      : address[0].address +
-                        ',' +
-                        address[0].district +
-                        ',' +
-                        address[0].city}
+                      : address[0].address + ', ' + district + ', ' + city}
                   </Text>
                 </View>
                 <View

@@ -1,20 +1,20 @@
-import React, { useEffect } from 'react';
-import { KeyboardAvoidingView, SafeAreaView } from 'react-native';
-import { View } from 'react-native';
-import { StyleSheet, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
-import { Avatar, Header, Input } from 'react-native-elements';
+import React, {useEffect} from 'react';
+import {KeyboardAvoidingView, SafeAreaView} from 'react-native';
+import {View} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {Avatar, Header, Input} from 'react-native-elements';
 
-import { width, calcScale } from '../../utils/dimension';
+import {width, calcScale} from '../../utils/dimension';
 import CommonStyles from './Styles';
-import { updateUser } from '../../store/user';
+import {updateUser} from '../../store/user';
 
 const MyProfileView = () => {
   const data = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { updateUserMessage } = data;
+  const {updateUserMessage} = data;
 
   const [notEdit, setNotEdit] = React.useState(true);
   const [headerText, setHeaderText] = React.useState('Sửa');
@@ -42,13 +42,13 @@ const MyProfileView = () => {
       <Header
         rightComponent={{
           text: headerText,
-          style: { color: '#fff' },
+          style: {color: '#fff'},
           onPress: () => edit(),
         }}
         backgroundColor="rgb(242, 85, 44)"
       />
       <View style={styles.innerContainer}>
-        <View>
+        <View style={{paddingTop: calcScale(10)}}>
           {isHasAvatar ? (
             <Avatar rounded size={calcScale(130)} />
           ) : (
@@ -67,20 +67,20 @@ const MyProfileView = () => {
               }}
             />
           )}
-          <View style={{ paddingTop: calcScale(20) }}>
-            <Text style={[styles.textBold, { textAlign: 'center' }]}>
-              {data.name}
-            </Text>
-            <Text style={[styles.textRegular, { textAlign: 'center' }]}>
-              Khách hàng
-            </Text>
-          </View>
+        </View>
+        <View style={{paddingTop: calcScale(20)}}>
+          <Text style={[styles.textBold, {textAlign: 'center'}]}>
+            {data.name}
+          </Text>
+          <Text style={[styles.textRegular, {textAlign: 'center'}]}>
+            Khách hàng
+          </Text>
         </View>
         <Text>{updateUserMessage}</Text>
         <View>
           <Input
-            containerStyle={[styles.input, { width: calcScale(width) }]}
-            inputContainerStyle={{ borderBottomWidth: 0 }}
+            containerStyle={[styles.input, {width: calcScale(width)}]}
+            inputContainerStyle={{borderBottomWidth: 0}}
             placeholder="Name"
             onChangeText={(name) => setName(name)}
             value={name}
@@ -89,9 +89,9 @@ const MyProfileView = () => {
           <Input
             containerStyle={[
               styles.input,
-              { width: calcScale(width), marginTop: calcScale(15) },
+              {width: calcScale(width), marginTop: calcScale(15)},
             ]}
-            inputContainerStyle={{ borderBottomWidth: 0 }}
+            inputContainerStyle={{borderBottomWidth: 0}}
             placeholder="Phone"
             onChangeText={(phone) => setPhone(phone)}
             value={phone}
@@ -101,9 +101,9 @@ const MyProfileView = () => {
           <Input
             containerStyle={[
               styles.input,
-              { width: calcScale(width), marginTop: calcScale(15) },
+              {width: calcScale(width), marginTop: calcScale(15)},
             ]}
-            inputContainerStyle={{ borderBottomWidth: 0 }}
+            inputContainerStyle={{borderBottomWidth: 0}}
             placeholder="Email"
             onChangeText={(email) => setEmail(email)}
             value={email}

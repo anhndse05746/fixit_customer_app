@@ -36,10 +36,6 @@ const RegisterView = ({navigation}) => {
   const {isRegistered, message} = useSelector((state) => state.register);
   const dispatch = useDispatch();
 
-  const checkRegistered = (phone) => {
-    dispatch(checkRegisteredUser(phone));
-  };
-
   useEffect(() => {
     const user = {
       phone: phone,
@@ -48,11 +44,11 @@ const RegisterView = ({navigation}) => {
       password: password,
     };
     if (isRegistered == false) {
-      navigateOtpScreen(user);
+      navigation.navigate('OTPView', user);
     }
   }, [isRegistered]);
 
-  const navigateOtpScreen = (user) => {
+  const navigateOtpScreen = () => {
     if (fullName === '') {
       setErrorMessage(' không được để trống');
     } else if (nationId === '') {
@@ -75,7 +71,8 @@ const RegisterView = ({navigation}) => {
       setErrorMessage(' không khớp với mật khẩu');
     } else {
       setErrorMessage('');
-      navigation.navigate('OTPView', user);
+      setErrorPhone(false);
+      dispatch(checkRegisteredUser(phone));
     }
   };
 
@@ -92,13 +89,15 @@ const RegisterView = ({navigation}) => {
             ]}>
             Vui lòng điền những thông tin sau
           </Text>
-          <Text
-            style={[
-              styles.textRegular,
-              {marginTop: calcScale(15), fontSize: calcScale(22)},
-            ]}>
-            {message}
-          </Text>
+          {message ? (
+            <Text
+              style={[
+                styles.textRegular,
+                {marginTop: calcScale(15), fontSize: calcScale(22)},
+              ]}>
+              {message}
+            </Text>
+          ) : null}
           <View style={styles.formContainer}>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
@@ -143,9 +142,9 @@ const RegisterView = ({navigation}) => {
                     />
                   ) : null
                 }
-                value={address}
+                value={nationId}
                 errorMessage={
-                  errorMessage !== '' && address === ''
+                  errorMessage !== '' && nationId === ''
                     ? 'CMT/CCCD' + errorMessage
                     : ''
                 }
@@ -282,7 +281,7 @@ const RegisterView = ({navigation}) => {
             <PTButton
               title="Tiếp tục"
               onPress={() => {
-                checkRegistered(phone);
+                navigateOtpScreen();
               }}
               style={styles.button}
               color="#fff"

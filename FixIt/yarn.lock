@@ -4328,6 +4328,11 @@
   dependencies:
     "is-docker" "^2.0.0"
 
+"isaac@^0.0.5":
+  "integrity" "sha1-pPKSIpqL324zkAo+uLQgGlf/LYk="
+  "resolved" "https://registry.npmjs.org/isaac/-/isaac-0.0.5.tgz"
+  "version" "0.0.5"
+
 "isarray@~1.0.0", "isarray@1.0.0":
   "integrity" "sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE="
   "resolved" "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz"
@@ -6451,11 +6456,6 @@
     "fbemitter" "^2.1.1"
     "invariant" "^2.2.4"
     "use-subscription" "^1.0.0"
-
-"react-native-bcrypt@^2.4.0":
-  "integrity" "sha1-ld/y28hJwisl8Lk3mre/69IUC/0="
-  "resolved" "https://registry.npmjs.org/react-native-bcrypt/-/react-native-bcrypt-2.4.0.tgz"
-  "version" "2.4.0"
 
 "react-native-bootsplash@^3.1.2":
   "integrity" "sha512-Br2lCqKmJYYP3a/PjmQwI98u+Koiib5zxeRVGbQZ+YeU3shUOpFlTtaYUnHuxiZH91Qp7UqBlRg/u6NUrEm8RQ=="
