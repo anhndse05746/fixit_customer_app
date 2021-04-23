@@ -18,14 +18,20 @@ import {
   listAllRequest,
 } from '../../../store/request';
 import constants from '../../../utils/constants';
+import {cityOfVN} from '../../../utils/cityOfVietNam';
 
 const RequestDetailView = ({navigation, route}) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const request = useSelector((state) => state.request);
   const {message} = request;
+
+  const [constructorHasRun, setConstructorHasRun] = React.useState(false);
+  const [cities, setCities] = React.useState([]);
+
   const [modalVisible, setModalVisible] = React.useState(false);
   const [cancelReason, setCancelReason] = React.useState('');
+  const [cancelReasonError, setCancelReasonError] = React.useState('');
 
   useEffect(() => {
     //console.log(request.onGoingRequests)
@@ -46,10 +52,23 @@ const RequestDetailView = ({navigation, route}) => {
 
   const data = request.requestDetail;
 
+  const constructor = () => {
+    if (constructorHasRun) {
+      return;
+    } else {
+      setCities(cityOfVN);
+      setConstructorHasRun(true);
+    }
+  };
+
+  constructor();
+
   const cancelRequestTrigger = (token, requestId, cancelReason) => {
     if (cancelReason !== '') {
       dispatch(cancelRequest(token, requestId, cancelReason));
       setModalVisible(false);
+    } else {
+      setCancelReasonError('Cần có lí do hủy');
     }
   };
 
@@ -85,6 +104,13 @@ const RequestDetailView = ({navigation, route}) => {
     }
   }
 
+  let city = data.city ? cities.find((x) => x.Id === '0' + data.city).Name : '';
+  let district = data.city
+    ? cities
+        .find((x) => x.Id === '0' + data.city)
+        .Districts.find((x) => x.Id === '00' + data.district).Name
+    : '';
+
   return (
     <ScrollView
       style={[
@@ -107,7 +133,7 @@ const RequestDetailView = ({navigation, route}) => {
                   fontWeight: 'bold',
                   marginBottom: calcScale(10),
                 }}>
-                Lí do:
+                Lí do: <Text style={{color: 'red'}}>*</Text>
               </Text>
               <TextInput
                 multiline={true}
@@ -121,6 +147,9 @@ const RequestDetailView = ({navigation, route}) => {
                   width: calcScale(340),
                 }}
               />
+              {cancelReasonError !== '' && cancelReason === '' ? (
+                <Text style={{color: 'red'}}>{cancelReasonError}</Text>
+              ) : null}
             </View>
             <View style={styles.row}>
               <PTButton
@@ -240,7 +269,7 @@ const RequestDetailView = ({navigation, route}) => {
                   fontSize: calcScale(16),
                   marginBottom: calcScale(10),
                 }}>
-                {data.estimate_price}.000 VND
+                {data.estimate_price}0 VND
               </Text>
               <Text>(Tiền công chưa bao gồm chi phí vật tư thay thế)</Text>
             </View>
@@ -329,7 +358,7 @@ const RequestDetailView = ({navigation, route}) => {
                   {user.name} | {user.phoneNumber}
                 </Text>
                 <Text style={{fontSize: calcScale(18)}}>
-                  {data.address + ', ' + data.district + ', ' + data.city}
+                  {data.address + ', ' + district + ', ' + city}
                 </Text>
               </View>
             </View>

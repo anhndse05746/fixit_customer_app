@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {listAllRequest} from '../../../store/request';
+import {cityOfVN} from '../../../utils/cityOfVietNam';
 import {calcScale} from '../../../utils/dimension';
 import commonStyles from '../Styles';
 import ListEmptyComponent from './ListEmpty';
@@ -17,8 +18,22 @@ const CancelTabView = ({navigation}) => {
   const request = useSelector((state) => state.request);
   const user = useSelector((state) => state.user);
 
+  const [constructorHasRun, setConstructorHasRun] = React.useState(false);
+  const [cities, setCities] = React.useState([]);
+
   const canceledData = request.canceledRequest;
   let isLoading = request.isLoading;
+
+  const constructor = () => {
+    if (constructorHasRun) {
+      return;
+    } else {
+      setCities(cityOfVN);
+      setConstructorHasRun(true);
+    }
+  };
+
+  constructor();
 
   //Dispatch
   const dispatch = useDispatch();
@@ -38,6 +53,9 @@ const CancelTabView = ({navigation}) => {
       }`;
     }
 
+    const city = cities.find((x) => x.Id === '0' + item.city);
+    const district = city.Districts.find((x) => x.Id === '00' + item.district);
+
     return (
       <TouchableOpacity
         style={styles.ticketContainer}
@@ -53,7 +71,7 @@ const CancelTabView = ({navigation}) => {
               {schedule_time} - {item.serviceName}
             </Text>
             <Text style={[styles.textBold, styles.textTitle]}>
-              {`${item.address}, ${item.district}, ${item.city}`}
+              {`${item.address}, ${district.Name}, ${city.Name}`}
             </Text>
           </View>
         </View>

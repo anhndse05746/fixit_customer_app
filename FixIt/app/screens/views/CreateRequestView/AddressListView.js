@@ -2,6 +2,7 @@ import React from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
+import {cityOfVN} from '../../../utils/cityOfVietNam';
 import {calcScale} from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
@@ -12,6 +13,7 @@ const AddressListView = ({navigation, route}) => {
   let selectedId = route.params.selectedId;
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
+  const [cities, setCities] = React.useState([]);
   const [addressSelected, setAddressSelected] = React.useState([]);
   const [select, setSelect] = React.useState(-1);
 
@@ -20,6 +22,7 @@ const AddressListView = ({navigation, route}) => {
       return;
     } else {
       setSelect(selectedId);
+      setCities(cityOfVN);
       setConstructorHasRun(true);
     }
   };
@@ -27,6 +30,8 @@ const AddressListView = ({navigation, route}) => {
   constructor();
 
   const renderItem = ({item, index}) => {
+    const city = cities.find((x) => x.Id === '0' + item.city);
+    const district = city.Districts.find((x) => x.Id === '00' + item.district);
     return (
       <TouchableOpacity
         onPress={() => {
@@ -36,14 +41,15 @@ const AddressListView = ({navigation, route}) => {
           borderBottomColor: '#ccc',
           borderBottomWidth: 1,
           paddingBottom: calcScale(10),
-        }}>
+        }}
+        key={index.toString()}>
         <View style={[styles.row, {marginTop: calcScale(20)}]}>
           <View style={{marginLeft: calcScale(20)}}>
             <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
               Địa chỉ
             </Text>
             <Text style={{fontSize: calcScale(18)}}>
-              {item.address}, {item.district}, {item.city}
+              {item.address}, {district.Name}, {city.Name}
             </Text>
           </View>
           <View
@@ -65,11 +71,13 @@ const AddressListView = ({navigation, route}) => {
   };
 
   const getDataAndNavigate = () => {
+    const address = [];
     addressList.map((item, index) => {
       if (item.id === select) {
-        addressSelected.push(item);
+        address.push(item);
       }
     });
+    setAddressSelected(address);
     navigation.navigate('CreateRequestView', {address: addressSelected});
   };
 

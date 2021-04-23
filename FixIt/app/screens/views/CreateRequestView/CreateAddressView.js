@@ -22,9 +22,9 @@ import {Picker} from '@react-native-picker/picker';
 const CreateAddressView = ({navigation}) => {
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
   const [cities, setCities] = React.useState([]);
-  const [selectedCity, setSelectedCity] = React.useState('');
+  const [selectedCity, setSelectedCity] = React.useState(0);
   const [selectedCityIndex, setSelectedCityIndex] = React.useState(0);
-  const [selectedDistrict, setSelectedDistrict] = React.useState('');
+  const [selectedDistrict, setSelectedDistrict] = React.useState(0);
   const [address, setAddress] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
 
@@ -52,7 +52,11 @@ const CreateAddressView = ({navigation}) => {
   }, [message]);
 
   const validateThenNavigate = () => {
-    if (address === '') {
+    if (selectedCity === 0) {
+      setErrorMessage(' không được để trống');
+    } else if (selectedDistrict === 0) {
+      setErrorMessage(' không được để trống');
+    } else if (address === '') {
       setErrorMessage(' không được để trống');
     } else {
       setErrorMessage('');
@@ -91,12 +95,15 @@ const CreateAddressView = ({navigation}) => {
                   return (
                     <Picker.Item
                       label={city.Name}
-                      value={city.Name}
+                      value={city.Id}
                       key={city.Id}
                     />
                   );
                 })}
               </Picker>
+              {errorMessage !== '' && selectedCity === 0 ? (
+                <Text style={{color: 'red'}}>Thành phố {errorMessage}</Text>
+              ) : null}
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
@@ -112,17 +119,20 @@ const CreateAddressView = ({navigation}) => {
                       return (
                         <Picker.Item
                           label={district.Name}
-                          value={district.Name}
+                          value={district.Id}
                           key={district.Id}
                         />
                       );
                     })
                   : null}
               </Picker>
+              {errorMessage !== '' && selectedDistrict === 0 ? (
+                <Text style={{color: 'red'}}>Quận/Huyện {errorMessage}</Text>
+              ) : null}
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Địa chỉ<Text style={{color: 'red'}}>*</Text>
+                Địa chỉ <Text style={{color: 'red'}}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
