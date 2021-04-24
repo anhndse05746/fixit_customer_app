@@ -30,8 +30,8 @@ const AddressListView = ({navigation, route}) => {
   constructor();
 
   const renderItem = ({item, index}) => {
-    const city = cities.find((x) => x.Id === '0' + item.city);
-    const district = city.Districts.find((x) => x.Id === '00' + item.district);
+    const city = cities.find((x) => x.Id == item.city);
+    const district = city.Districts.find((x) => x.Id == item.district);
     return (
       <TouchableOpacity
         onPress={() => {
@@ -71,13 +71,11 @@ const AddressListView = ({navigation, route}) => {
   };
 
   const getDataAndNavigate = () => {
-    const address = [];
     addressList.map((item, index) => {
       if (item.id === select) {
-        address.push(item);
+        addressSelected.push(item);
       }
     });
-    setAddressSelected(address);
     navigation.navigate('CreateRequestView', {address: addressSelected});
   };
 

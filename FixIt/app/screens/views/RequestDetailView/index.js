@@ -104,11 +104,11 @@ const RequestDetailView = ({navigation, route}) => {
     }
   }
 
-  let city = data.city ? cities.find((x) => x.Id === '0' + data.city).Name : '';
+  let city = data.city ? cities.find((x) => x.Id == data.city).Name : '';
   let district = data.city
     ? cities
-        .find((x) => x.Id === '0' + data.city)
-        .Districts.find((x) => x.Id === '00' + data.district).Name
+        .find((x) => x.Id == data.city)
+        .Districts.find((x) => x.Id == data.district).Name
     : '';
 
   return (
@@ -269,7 +269,7 @@ const RequestDetailView = ({navigation, route}) => {
                   fontSize: calcScale(16),
                   marginBottom: calcScale(10),
                 }}>
-                {data.estimate_price}0 VND
+                {data.estimate_price} VND
               </Text>
               <Text>(Tiền công chưa bao gồm chi phí vật tư thay thế)</Text>
             </View>

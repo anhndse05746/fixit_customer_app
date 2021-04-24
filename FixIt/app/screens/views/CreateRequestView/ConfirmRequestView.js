@@ -9,6 +9,7 @@ import {
   clearMessage,
   listAllRequest,
 } from '../../../store/request';
+import {cityOfVN} from '../../../utils/cityOfVietNam';
 
 const ConfirmRequestView = ({navigation, route}) => {
   const user = useSelector((state) => state.user);
@@ -18,6 +19,7 @@ const ConfirmRequestView = ({navigation, route}) => {
   const data = route.params.requestData;
   const {address, service, issues} = data;
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
+  const [cities, setCities] = React.useState([]);
   const [estimate_fix_duration, setEstimate_fix_duration] = React.useState(0);
   const [estimate_price, setEstimate_price] = React.useState(0);
 
@@ -55,11 +57,19 @@ const ConfirmRequestView = ({navigation, route}) => {
       });
       setEstimate_price(price);
       setEstimate_fix_duration(time);
+      setCities(cityOfVN);
       setConstructorHasRun(true);
     }
   };
 
   constructor();
+
+  let city = address ? cities.find((x) => x.Id === address[0].city).Name : '';
+  let district = address
+    ? cities
+        .find((x) => x.Id === address[0].city)
+        .Districts.find((x) => x.Id === address[0].district).Name
+    : '';
 
   useEffect(() => {
     if (message != '') {
@@ -153,7 +163,7 @@ const ConfirmRequestView = ({navigation, route}) => {
               fontSize: calcScale(16),
               marginBottom: calcScale(10),
             }}>
-            {estimate_price}.000 VND
+            {estimate_price} VND
           </Text>
         </View>
         <View style={styles.innerFormContainer}>
@@ -190,7 +200,7 @@ const ConfirmRequestView = ({navigation, route}) => {
             <Text
               style={{
                 fontSize: calcScale(18),
-              }}>{`${address[0].address}, ${address[0].district}, ${address[0].city}`}</Text>
+              }}>{`${address[0].address}, ${district}, ${city}`}</Text>
           </View>
         </View>
         <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>

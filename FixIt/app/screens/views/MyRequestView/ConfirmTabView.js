@@ -53,8 +53,8 @@ const ConfirmTabView = ({navigation}) => {
       }`;
     }
 
-    const city = cities.find((x) => x.Id === '0' + item.city);
-    const district = city.Districts.find((x) => x.Id === '00' + item.district);
+    const city = cities.find((x) => x.Id == item.city);
+    const district = city.Districts.find((x) => x.Id == item.district);
 
     return (
       <TouchableOpacity

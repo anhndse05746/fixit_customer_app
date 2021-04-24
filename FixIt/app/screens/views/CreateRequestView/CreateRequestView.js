@@ -62,16 +62,14 @@ const CreateRequestView = ({navigation, route}) => {
     }
   };
 
-  let city = address
-    ? cities.find((x) => x.Id === '0' + address[0].city).Name
-    : '';
+  constructor();
+
+  let city = address ? cities.find((x) => x.Id == address[0].city).Name : '';
   let district = address
     ? cities
-        .find((x) => x.Id === '0' + address[0].city)
-        .Districts.find((x) => x.Id === '00' + address[0].district).Name
+        .find((x) => x.Id == address[0].city)
+        .Districts.find((x) => x.Id == address[0].district).Name
     : '';
-
-  constructor();
 
   const toggleCheckbox = (index) => {
     const checkboxData = [...issues];
