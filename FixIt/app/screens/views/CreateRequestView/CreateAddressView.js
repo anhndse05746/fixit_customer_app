@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -8,18 +8,18 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { Input } from 'react-native-elements';
+import {Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearMessage, createAddress } from '../../../store/user';
-import { cityOfVN } from '../../../utils/cityOfVietNam';
+import {useDispatch, useSelector} from 'react-redux';
+import {clearMessage, createAddress} from '../../../store/user';
+import {cityOfVN} from '../../../utils/cityOfVietNam';
 import constants from '../../../utils/constants';
-import { calcScale } from '../../../utils/dimension';
+import {calcScale} from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import CommonStyles from '../Styles';
-import { Picker } from '@react-native-picker/picker';
+import {Picker} from '@react-native-picker/picker';
 
-const CreateAddressView = ({ navigation }) => {
+const CreateAddressView = ({navigation}) => {
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
   const [cities, setCities] = React.useState([]);
   const [selectedCity, setSelectedCity] = React.useState(0);
@@ -40,11 +40,11 @@ const CreateAddressView = ({ navigation }) => {
   constructor();
 
   const dispatch = useDispatch();
-  const { userId, token, message } = useSelector((state) => state.user);
+  const {userId, token, message} = useSelector((state) => state.user);
 
   useEffect(() => {
     if (message === constants.CREATE_ADDRESS_SUCCESSFULLY) {
-      dispatch({ type: clearMessage.type, payload: '' });
+      dispatch({type: clearMessage.type, payload: ''});
       navigation.navigate('AddressListView', {
         selectedId: -1,
       });
@@ -61,7 +61,13 @@ const CreateAddressView = ({ navigation }) => {
     } else {
       setErrorMessage('');
       dispatch(
-        createAddress(userId, token, parseInt(selectedCity), parseInt(selectedDistrict), address),
+        createAddress(
+          userId,
+          token,
+          parseInt(selectedCity),
+          parseInt(selectedDistrict),
+          address,
+        ),
       );
     }
   };
@@ -75,7 +81,7 @@ const CreateAddressView = ({ navigation }) => {
           <Text
             style={[
               styles.textRegular,
-              { marginTop: calcScale(15), fontSize: calcScale(22) },
+              {marginTop: calcScale(15), fontSize: calcScale(22)},
             ]}>
             Vui lòng điền những thông tin sau
           </Text>
@@ -83,7 +89,7 @@ const CreateAddressView = ({ navigation }) => {
           <View style={styles.formContainer}>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Tỉnh/Thành phố <Text style={{ color: 'red' }}>*</Text>
+                Tỉnh/Thành phố <Text style={{color: 'red'}}>*</Text>
               </Text>
               <Picker
                 selectedValue={selectedCity}
@@ -102,37 +108,38 @@ const CreateAddressView = ({ navigation }) => {
                 })}
               </Picker>
               {errorMessage !== '' && selectedCity === 0 ? (
-                <Text style={{ color: 'red' }}>Thành phố {errorMessage}</Text>
+                <Text style={{color: 'red'}}>Thành phố {errorMessage}</Text>
               ) : null}
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Quận/Huyện <Text style={{ color: 'red' }}>*</Text>
+                Quận/Huyện <Text style={{color: 'red'}}>*</Text>
               </Text>
               <Picker
                 selectedValue={selectedDistrict}
                 onValueChange={(itemValue, itemIndex) => {
                   setSelectedDistrict(itemValue);
                 }}>
+                <Picker.Item label={''} value={0} />
                 {cities.length > 0
                   ? cities[selectedCityIndex].Districts.map((district) => {
-                    return (
-                      <Picker.Item
-                        label={district.Name}
-                        value={district.Id}
-                        key={district.Id}
-                      />
-                    );
-                  })
+                      return (
+                        <Picker.Item
+                          label={district.Name}
+                          value={district.Id}
+                          key={district.Id}
+                        />
+                      );
+                    })
                   : null}
               </Picker>
               {errorMessage !== '' && selectedDistrict === 0 ? (
-                <Text style={{ color: 'red' }}>Quận/Huyện {errorMessage}</Text>
+                <Text style={{color: 'red'}}>Quận/Huyện {errorMessage}</Text>
               ) : null}
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Địa chỉ <Text style={{ color: 'red' }}>*</Text>
+                Địa chỉ <Text style={{color: 'red'}}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -156,7 +163,7 @@ const CreateAddressView = ({ navigation }) => {
               />
             </View>
           </View>
-          <View style={{ alignItems: 'center' }}>
+          <View style={{alignItems: 'center'}}>
             <PTButton
               title="Xác nhận"
               onPress={() => validateThenNavigate()}

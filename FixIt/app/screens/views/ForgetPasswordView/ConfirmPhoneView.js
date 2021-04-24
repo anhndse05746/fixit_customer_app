@@ -33,7 +33,7 @@ const ConfirmPhoneView = ({route, navigation}) => {
       navigation.navigate('ResetPasswordView', {phone: route.params.phone});
     } catch (error) {
       console.log(error);
-      alert(JSON.stringify(error));
+      alert('Mã OTP không đúng');
     }
   };
 

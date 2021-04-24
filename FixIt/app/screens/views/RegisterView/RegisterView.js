@@ -72,6 +72,7 @@ const RegisterView = ({navigation}) => {
     } else {
       setErrorMessage('');
       setErrorPhone(false);
+      setMatchedPassword(false);
       dispatch(checkRegisteredUser(phone));
     }
   };
