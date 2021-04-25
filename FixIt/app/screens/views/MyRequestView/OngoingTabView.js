@@ -82,7 +82,9 @@ const OngoingTabview = ({navigation}) => {
           </View>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Giá ước tính:</Text>
-            <Text style={styles.textBold}>{item.estimate_price} VND</Text>
+            <Text style={styles.textBold}>
+              {item.estimate_price.split('.')[0]} VND
+            </Text>
           </View>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Trạng thái:</Text>

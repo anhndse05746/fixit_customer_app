@@ -215,7 +215,7 @@ const RequestDetailView = ({navigation, route}) => {
                       fontSize: calcScale(16),
                       marginBottom: calcScale(10),
                     }}>
-                    + {item.issue.name} - {item.estimate_price}0đ
+                    + {item.issue.name} - {item.estimate_price.split('.')[0]}0đ
                   </Text>
                 );
               })}
@@ -268,7 +268,7 @@ const RequestDetailView = ({navigation, route}) => {
                   fontSize: calcScale(16),
                   marginBottom: calcScale(10),
                 }}>
-                {data.estimate_price} VND
+                {data.estimate_price.split('.')[0]} VND
               </Text>
               <Text>(Tiền công chưa bao gồm chi phí vật tư thay thế)</Text>
             </View>

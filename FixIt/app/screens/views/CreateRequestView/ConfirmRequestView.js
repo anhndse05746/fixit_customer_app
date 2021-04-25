@@ -108,7 +108,7 @@ const ConfirmRequestView = ({navigation, route}) => {
                   fontSize: calcScale(16),
                   marginBottom: calcScale(10),
                 }}>
-                + {item.title} - {item.estimate_price}0đ
+                + {item.title} - {item.estimate_price.split('.')[0]} VND
               </Text>
             );
           })}
@@ -162,7 +162,7 @@ const ConfirmRequestView = ({navigation, route}) => {
               fontSize: calcScale(16),
               marginBottom: calcScale(10),
             }}>
-            {estimate_price} VND
+            {estimate_price.split('.')[0]} VND
           </Text>
         </View>
         <View style={styles.innerFormContainer}>

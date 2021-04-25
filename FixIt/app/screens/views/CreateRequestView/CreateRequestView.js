@@ -36,7 +36,7 @@ const CreateRequestView = ({navigation, route}) => {
       checked: false,
       title: 'Khác',
       estimate_fix_duration: 0,
-      estimate_price: 0,
+      estimate_price: '0.0',
     },
   ]);
   const [errorMessage, setErrorMessage] = React.useState('');
@@ -140,7 +140,7 @@ const CreateRequestView = ({navigation, route}) => {
                           justifyContent: 'space-between',
                         }}>
                         <Text>{item.title}</Text>
-                        <Text> - {item.estimate_price}0đ</Text>
+                        <Text> - {item.estimate_price.split('.')[0]} VND</Text>
                       </Text>
                     }
                     checked={item.checked}
