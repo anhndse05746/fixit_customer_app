@@ -27,7 +27,7 @@ const CreateRequestView = ({navigation, route}) => {
   const address = route.params.address;
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
-  const [cities, setCities] = React.useState([]);
+  const [cities, setCities] = React.useState(cityOfVN);
   const [description, setDescription] = React.useState('');
   const [date, setDate] = React.useState(new Date());
   const [issues, setIssues] = React.useState([
@@ -57,7 +57,6 @@ const CreateRequestView = ({navigation, route}) => {
         };
         issues.unshift(checkBox);
       });
-      setCities(cityOfVN);
       setConstructorHasRun(true);
     }
   };
@@ -100,6 +99,7 @@ const CreateRequestView = ({navigation, route}) => {
       };
       setErrorMessage('');
       setErrorCheckbox('');
+      console.log(requestData);
       navigation.navigate('ConfirmRequestView', {requestData: requestData});
     }
   };

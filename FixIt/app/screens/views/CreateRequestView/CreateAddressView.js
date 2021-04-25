@@ -21,7 +21,7 @@ import {Picker} from '@react-native-picker/picker';
 
 const CreateAddressView = ({navigation}) => {
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
-  const [cities, setCities] = React.useState([]);
+  const [cities, setCities] = React.useState(cityOfVN);
   const [selectedCity, setSelectedCity] = React.useState(0);
   const [selectedCityIndex, setSelectedCityIndex] = React.useState(0);
   const [selectedDistrict, setSelectedDistrict] = React.useState(0);
@@ -32,7 +32,6 @@ const CreateAddressView = ({navigation}) => {
     if (constructorHasRun) {
       return;
     } else {
-      setCities(cityOfVN);
       setConstructorHasRun(true);
     }
   };
@@ -45,6 +44,7 @@ const CreateAddressView = ({navigation}) => {
   useEffect(() => {
     if (message === constants.CREATE_ADDRESS_SUCCESSFULLY) {
       dispatch({type: clearMessage.type, payload: ''});
+      alert('Tạo địa chỉ thành công');
       navigation.navigate('AddressListView', {
         selectedId: -1,
       });

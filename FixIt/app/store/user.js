@@ -134,14 +134,15 @@ export const changePassword = (phone, token, old_password, new_password) =>
     onError: userChangePasswordFail.type,
   });
 
-export const updateUser = (phone, token, name, email) =>
+export const updateUser = (id, phone, token, name, email) =>
   apiCallBegan({
     url: '/api/updateUser',
     headers: {
       Authorization: token,
     },
     data: {
-      phone_number: phone,
+      user_id: id,
+      phone: phone,
       role_id: constants.ROLE_CUSTOMER,
       name: name,
       email: email,

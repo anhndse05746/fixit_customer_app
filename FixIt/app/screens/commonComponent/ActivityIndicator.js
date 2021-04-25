@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const PortalActivityIndicator = ({theme, absolute, ...props}) => (
+const FIActivityIndicator = ({theme, absolute, ...props}) => (
   <ActivityIndicator
     style={[styles.indicator, absolute && styles.absolute]}
     color="#9ca2a8"
@@ -26,14 +26,14 @@ const PortalActivityIndicator = ({theme, absolute, ...props}) => (
   />
 );
 
-PortalActivityIndicator.propTypes = {
+FIActivityIndicator.propTypes = {
   theme: PropTypes.string,
   absolute: PropTypes.bool,
   props: PropTypes.object,
 };
 
-PortalActivityIndicator.defaultProps = {
+FIActivityIndicator.defaultProps = {
   theme: 'light',
 };
 
-export default PortalActivityIndicator;
+export default FIActivityIndicator;

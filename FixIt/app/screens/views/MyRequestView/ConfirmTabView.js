@@ -19,7 +19,7 @@ const ConfirmTabView = ({navigation}) => {
   const user = useSelector((state) => state.user);
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
-  const [cities, setCities] = React.useState([]);
+  const [cities, setCities] = React.useState(cityOfVN);
 
   const confirmData = request.completeRequest;
   let isLoading = request.isLoading;
@@ -28,7 +28,6 @@ const ConfirmTabView = ({navigation}) => {
     if (constructorHasRun) {
       return;
     } else {
-      setCities(cityOfVN);
       setConstructorHasRun(true);
     }
   };

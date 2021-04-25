@@ -17,6 +17,7 @@ import RequestDetailView from '../views/RequestDetailView';
 import ServiceListView from '../views/ServiceView/ServiceListView';
 import {useDispatch, useSelector} from 'react-redux';
 import {listAllRequest} from '../../store/request';
+import BillDetailView from '../views/RequestDetailView/BillDetailView';
 const InsideTabBottom = createBottomTabNavigator();
 
 const InsideTabBottomNavigator = () => {
@@ -192,6 +193,15 @@ const MyRequestStackNavigator = () => {
               </TouchableHighlight>
             );
           },
+          headerTitleStyle: {color: '#fff'},
+          headerTintColor: '#fff',
+        })}
+      />
+      <MyRequestStack.Screen
+        name="BillDetailView"
+        component={BillDetailView}
+        options={({route}) => ({
+          title: 'Chi tiết hóa đơn',
           headerTitleStyle: {color: '#fff'},
           headerTintColor: '#fff',
         })}

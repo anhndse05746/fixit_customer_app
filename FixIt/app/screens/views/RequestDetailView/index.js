@@ -27,7 +27,7 @@ const RequestDetailView = ({navigation, route}) => {
   const {message} = request;
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
-  const [cities, setCities] = React.useState([]);
+  const [cities, setCities] = React.useState(cityOfVN);
 
   const [modalVisible, setModalVisible] = React.useState(false);
   const [cancelReason, setCancelReason] = React.useState('');
@@ -56,7 +56,6 @@ const RequestDetailView = ({navigation, route}) => {
     if (constructorHasRun) {
       return;
     } else {
-      setCities(cityOfVN);
       setConstructorHasRun(true);
     }
   };

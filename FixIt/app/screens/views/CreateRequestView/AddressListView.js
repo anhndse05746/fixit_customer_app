@@ -13,7 +13,7 @@ const AddressListView = ({navigation, route}) => {
   let selectedId = route.params.selectedId;
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
-  const [cities, setCities] = React.useState([]);
+  const [cities, setCities] = React.useState(cityOfVN);
   const [addressSelected, setAddressSelected] = React.useState([]);
   const [select, setSelect] = React.useState(-1);
 
@@ -22,7 +22,6 @@ const AddressListView = ({navigation, route}) => {
       return;
     } else {
       setSelect(selectedId);
-      setCities(cityOfVN);
       setConstructorHasRun(true);
     }
   };
@@ -76,6 +75,10 @@ const AddressListView = ({navigation, route}) => {
         addressSelected.push(item);
       }
     });
+    if (addressSelected.length == 0) {
+      alert('Bạn phải chọn ít nhất 1 địa chỉ');
+      return;
+    }
     navigation.navigate('CreateRequestView', {address: addressSelected});
   };
 

@@ -1,14 +1,18 @@
-import React, {useEffect} from 'react';
-import {KeyboardAvoidingView, SafeAreaView} from 'react-native';
-import {View} from 'react-native';
-import {StyleSheet, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
+import React, {useEffect} from 'react';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {Avatar, Header, Input} from 'react-native-elements';
-
-import {width, calcScale} from '../../utils/dimension';
-import CommonStyles from './Styles';
+import {useDispatch, useSelector} from 'react-redux';
 import {updateUser} from '../../store/user';
+import {calcScale, width} from '../../utils/dimension';
+import CommonStyles from './Styles';
 
 const MyProfileView = () => {
   const data = useSelector((state) => state.user);
@@ -30,88 +34,101 @@ const MyProfileView = () => {
     } else {
       setHeaderText('Sửa');
       if (name !== data.name || email !== data.email) {
-        dispatch(updateUser(data.phoneNumber, data.token, name, email));
+        console.log(data.phoneNumber, data.token, name, email);
+        dispatch(
+          updateUser(data.id, data.phoneNumber, data.token, name, email),
+        );
       }
     }
   };
+
+  useEffect(() => {
+    console.log(updateUserMessage);
+    if (updateUserMessage) {
+      alert(updateUserMessage);
+    }
+  }, [updateUserMessage]);
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
-      <Header
-        rightComponent={{
-          text: headerText,
-          style: {color: '#fff'},
-          onPress: () => edit(),
-        }}
-        backgroundColor="rgb(242, 85, 44)"
-      />
-      <View style={styles.innerContainer}>
-        <View style={{paddingTop: calcScale(10)}}>
-          {isHasAvatar ? (
-            <Avatar rounded size={calcScale(130)} />
-          ) : (
-            <Avatar
-              rounded
-              size={calcScale(130)}
-              containerStyle={{
-                borderColor: 'rgb(242, 85, 44)',
-                borderWidth: calcScale(2),
-                backgroundColor: '#fff',
-              }}
-              icon={{
-                name: 'user',
-                color: 'rgb(242, 85, 44)',
-                type: 'font-awesome',
-              }}
-            />
-          )}
-        </View>
-        <View style={{paddingTop: calcScale(20)}}>
-          <Text style={[styles.textBold, {textAlign: 'center'}]}>
-            {data.name}
-          </Text>
-          <Text style={[styles.textRegular, {textAlign: 'center'}]}>
-            Khách hàng
-          </Text>
-        </View>
-        <Text>{updateUserMessage}</Text>
-        <View>
-          <Input
-            containerStyle={[styles.input, {width: calcScale(width)}]}
-            inputContainerStyle={{borderBottomWidth: 0}}
-            placeholder="Name"
-            onChangeText={(name) => setName(name)}
-            value={name}
-            disabled={notEdit}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <>
+          <Header
+            rightComponent={{
+              text: headerText,
+              style: {color: '#fff'},
+              onPress: () => edit(),
+            }}
+            backgroundColor="rgb(242, 85, 44)"
           />
-          <Input
-            containerStyle={[
-              styles.input,
-              {width: calcScale(width), marginTop: calcScale(15)},
-            ]}
-            inputContainerStyle={{borderBottomWidth: 0}}
-            placeholder="Phone"
-            onChangeText={(phone) => setPhone(phone)}
-            value={phone}
-            disabled
-            keyboardType="number-pad"
-          />
-          <Input
-            containerStyle={[
-              styles.input,
-              {width: calcScale(width), marginTop: calcScale(15)},
-            ]}
-            inputContainerStyle={{borderBottomWidth: 0}}
-            placeholder="Email"
-            onChangeText={(email) => setEmail(email)}
-            value={email}
-            disabled={notEdit}
-            keyboardType="email-address"
-          />
-        </View>
-      </View>
+          <View style={styles.innerContainer}>
+            <View style={{paddingTop: calcScale(10)}}>
+              {isHasAvatar ? (
+                <Avatar rounded size={calcScale(130)} />
+              ) : (
+                <Avatar
+                  rounded
+                  size={calcScale(130)}
+                  containerStyle={{
+                    borderColor: 'rgb(242, 85, 44)',
+                    borderWidth: calcScale(2),
+                    backgroundColor: '#fff',
+                  }}
+                  icon={{
+                    name: 'user',
+                    color: 'rgb(242, 85, 44)',
+                    type: 'font-awesome',
+                  }}
+                />
+              )}
+            </View>
+            <View style={{paddingVertical: calcScale(20)}}>
+              <Text style={[styles.textBold, {textAlign: 'center'}]}>
+                {data.name}
+              </Text>
+              <Text style={[styles.textRegular, {textAlign: 'center'}]}>
+                Khách hàng
+              </Text>
+            </View>
+            <View>
+              <Input
+                containerStyle={[styles.input, {width: calcScale(width)}]}
+                inputContainerStyle={{borderBottomWidth: 0}}
+                placeholder="Name"
+                onChangeText={(name) => setName(name)}
+                value={name}
+                disabled={notEdit}
+              />
+              <Input
+                containerStyle={[
+                  styles.input,
+                  {width: calcScale(width), marginTop: calcScale(15)},
+                ]}
+                inputContainerStyle={{borderBottomWidth: 0}}
+                placeholder="Phone"
+                onChangeText={(phone) => setPhone(phone)}
+                value={phone}
+                disabled
+                keyboardType="number-pad"
+              />
+              <Input
+                containerStyle={[
+                  styles.input,
+                  {width: calcScale(width), marginTop: calcScale(15)},
+                ]}
+                inputContainerStyle={{borderBottomWidth: 0}}
+                placeholder="Email"
+                onChangeText={(email) => setEmail(email)}
+                value={email}
+                disabled={notEdit}
+                keyboardType="email-address"
+              />
+            </View>
+          </View>
+        </>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 };

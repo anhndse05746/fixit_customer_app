@@ -19,7 +19,7 @@ const ExecuteTabView = ({navigation}) => {
   const user = useSelector((state) => state.user);
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
-  const [cities, setCities] = React.useState([]);
+  const [cities, setCities] = React.useState(cityOfVN);
 
   const executeData = request.executingRequest;
   let isLoading = request.isLoading;
@@ -28,7 +28,6 @@ const ExecuteTabView = ({navigation}) => {
     if (constructorHasRun) {
       return;
     } else {
-      setCities(cityOfVN);
       setConstructorHasRun(true);
     }
   };

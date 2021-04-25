@@ -19,7 +19,7 @@ const ConfirmRequestView = ({navigation, route}) => {
   const data = route.params.requestData;
   const {address, service, issues} = data;
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
-  const [cities, setCities] = React.useState([]);
+  const [cities, setCities] = React.useState(cityOfVN);
   const [estimate_fix_duration, setEstimate_fix_duration] = React.useState(0);
   const [estimate_price, setEstimate_price] = React.useState(0);
 
@@ -57,18 +57,17 @@ const ConfirmRequestView = ({navigation, route}) => {
       });
       setEstimate_price(price);
       setEstimate_fix_duration(time);
-      setCities(cityOfVN);
       setConstructorHasRun(true);
     }
   };
 
   constructor();
 
-  let city = address ? cities.find((x) => x.Id === address[0].city).Name : '';
+  let city = address ? cities.find((x) => x.Id == address[0].city).Name : '';
   let district = address
     ? cities
-        .find((x) => x.Id === address[0].city)
-        .Districts.find((x) => x.Id === address[0].district).Name
+        .find((x) => x.Id == address[0].city)
+        .Districts.find((x) => x.Id == address[0].district).Name
     : '';
 
   useEffect(() => {
