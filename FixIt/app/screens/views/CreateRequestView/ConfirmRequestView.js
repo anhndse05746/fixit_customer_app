@@ -55,6 +55,7 @@ const ConfirmRequestView = ({navigation, route}) => {
         price += parseFloat(issue.estimate_price);
         time += issue.estimate_fix_duration;
       });
+      console.log(price);
       setEstimate_price(price);
       setEstimate_fix_duration(time);
       setConstructorHasRun(true);
@@ -162,7 +163,7 @@ const ConfirmRequestView = ({navigation, route}) => {
               fontSize: calcScale(16),
               marginBottom: calcScale(10),
             }}>
-            {estimate_price.split('.')[0]} VND
+            {estimate_price} VND
           </Text>
         </View>
         <View style={styles.innerFormContainer}>

@@ -208,6 +208,7 @@ const RequestDetailView = ({navigation, route}) => {
                 </Text>
               )}
               {data.request_issues.map((item, index) => {
+                console.log(item);
                 return (
                   <Text
                     key={index.toString()}
@@ -215,7 +216,8 @@ const RequestDetailView = ({navigation, route}) => {
                       fontSize: calcScale(16),
                       marginBottom: calcScale(10),
                     }}>
-                    + {item.issue.name} - {item.estimate_price.split('.')[0]}0đ
+                    + {item.issue.name} -{' '}
+                    {item.issue.estimate_price.split('.')[0]} VND
                   </Text>
                 );
               })}
