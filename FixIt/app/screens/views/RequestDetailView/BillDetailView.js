@@ -17,105 +17,36 @@ import CommonStyles from '../Styles';
 
 const BillDetailView = ({navigation, route}) => {
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
-  const [billData, setBillData] = React.useState([]);
+  const requestData = route.params.requestData;
+  const invoiceData = route.params.invoiceData;
+
   const dispatch = useDispatch();
   const request = useSelector((state) => state.request);
   const user = useSelector((state) => state.user);
-  const [requestData, setRequestData] = React.useState([]);
   const {message} = request;
 
   const constructor = () => {
     if (constructorHasRun) {
       return;
     } else {
-      // setBillData(route.params.billData);
       setConstructorHasRun(true);
     }
   };
 
   constructor();
 
-  const getRequestIssues = (requestId, billData) => {
-    const a = [];
-    for (let i = 1; i < billData.length; i++) {
-      if (billData[i].data.issueId > 0) {
-        a.push({
-          request_id: requestId,
-          issues_id: billData[i].data.issueId,
-        });
-      }
-    }
-    return a;
-  };
-
-  let other_cost = 0;
-  let cost_of_supplies = 0;
-  const CalculateTotalPrice = (billData) => {
-    let total = 0;
-    for (let i = 1; i < billData.length; i++) {
-      total += parseInt(billData[i].data.price);
-      if (billData[i].data.issueId == -1) {
-        other_cost = billData[i].data.price;
-      } else if (billData[i].data.issueId == -2) {
-        cost_of_supplies = billData[i].data.price;
-      }
-    }
-    return total;
-  };
-
-  const totalPrice = CalculateTotalPrice(billData);
-  const request_issues = getRequestIssues(requestData.id, billData);
-
-  console.log(
-    `User Token: ${user.token} - request Id: ${
-      requestData.id
-    } - Total Price ${totalPrice} - request Issue: ${JSON.stringify(
-      request_issues,
-    )}`,
-  );
-
-  const [realPrice, setRealPrice] = React.useState(totalPrice);
-
   const renderColums = ({item, index}) => {
     return (
-      <>
-        {index === 0 ? (
-          <View style={styles.row}>
-            <Text
-              style={[
-                styles.textBold,
-                {flexBasis: '70%', fontSize: calcScale(24)},
-              ]}>
-              {item.data.issue}
-            </Text>
-            <Text style={[styles.textBold, {fontSize: calcScale(24)}]}>
-              {item.data.price}
-            </Text>
-          </View>
-        ) : item.data.issueId < 0 ? (
-          <View style={styles.row}>
-            <Text style={[styles.textBold, {flexBasis: '70%'}]}>
-              {item.data.issue}
-            </Text>
-            <Text style={styles.textRegular}>{item.data.price} VND</Text>
-          </View>
-        ) : (
-          <View style={styles.row}>
-            <Text style={[styles.textRegular, {flexBasis: '70%'}]}>
-              {item.data.issue}
-            </Text>
-            <Text style={styles.textRegular}>{item.data.price} VND</Text>
-          </View>
-        )}
-      </>
+      <View style={styles.row}>
+        <Text style={[styles.textRegular, {flexBasis: '70%'}]}>
+          {item.issue.name}
+        </Text>
+        <Text style={styles.textRegular}>
+          {item.issue.estimate_price.split('.')[0]} VND
+        </Text>
+      </View>
     );
   };
-
-  React.useEffect(() => {
-    if (totalPrice) {
-      setRealPrice(totalPrice);
-    }
-  }, []);
 
   return (
     <KeyboardAvoidingView
@@ -127,9 +58,23 @@ const BillDetailView = ({navigation, route}) => {
             Các chi phí cần thanh toán
           </Text>
           <FlatList
-            data={billData}
+            data={requestData}
+            ListHeaderComponent={
+              <View style={styles.row}>
+                <Text
+                  style={[
+                    styles.textBold,
+                    {flexBasis: '70%', fontSize: calcScale(24)},
+                  ]}>
+                  Công việc thực hiện
+                </Text>
+                <Text style={[styles.textBold, {fontSize: calcScale(24)}]}>
+                  Đơn giá
+                </Text>
+              </View>
+            }
             renderItem={renderColums}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.issue.id.toString()}
           />
           <View
             style={{
@@ -147,7 +92,9 @@ const BillDetailView = ({navigation, route}) => {
               ]}>
               Tổng tiền
             </Text>
-            <Text style={styles.textRegular}>{totalPrice} VND</Text>
+            <Text style={styles.textRegular}>
+              {invoiceData.total_price} VND
+            </Text>
           </View>
           <View style={styles.row}>
             <Text
@@ -157,7 +104,9 @@ const BillDetailView = ({navigation, route}) => {
               ]}>
               Tiền thu thực tế
             </Text>
-            <Text style={styles.textRegular}>{realPrice} VND</Text>
+            <Text style={styles.textRegular}>
+              {invoiceData.actual_proceeds} VND
+            </Text>
           </View>
         </View>
       </TouchableWithoutFeedback>

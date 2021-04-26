@@ -92,13 +92,20 @@ const RequestDetailView = ({navigation, route}) => {
         <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
           <PTButton
             title="Xem hoá đơn"
-            onPress={() => {}}
+            onPress={() =>
+              navigation.navigate('BillDetailView', {
+                requestData: data.request_issues,
+                invoiceData: data.invoice,
+              })
+            }
             style={styles.button}
             color="#fff"
           />
         </View>
       );
     } else if (requestStatus == 6) {
+      myRequestButton = null;
+    } else {
       myRequestButton = null;
     }
   }
