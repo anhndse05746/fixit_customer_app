@@ -16,6 +16,7 @@ const user = createSlice({
     message: '',
     updateUserMessage: '',
     addressList: [],
+    is_active: false,
   },
   reducers: {
     usersRequested: (users, action) => {
@@ -33,6 +34,7 @@ const user = createSlice({
       users.email = action.payload.email;
       users.token = action.payload.token;
       users.addressList = action.payload.address_list;
+      users.is_active = action.payload.is_active;
       users.message = LOGGED_IN;
       users.loading = false;
     },

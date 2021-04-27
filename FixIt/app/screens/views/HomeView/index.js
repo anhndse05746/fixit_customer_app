@@ -41,9 +41,16 @@ const HomeView = () => {
         ListHeaderComponent={
           <View style={{marginVertical: calcScale(20)}}>
             <Text style={styles.textBold}>Hi, {data.name}!</Text>
-            <Text style={styles.textRegular}>
-              Hôm nay bạn cần sửa chữa gì không?
-            </Text>
+            {data.is_active ? (
+              <Text style={styles.textRegular}>
+                Hôm nay bạn cần sửa chữa gì không?
+              </Text>
+            ) : (
+              <Text style={styles.textRegular}>
+                Tài khoản của bạn hiện đang bị khóa nên không thể tạo yêu cầu.
+                Vui lòng liên hệ quản trị viên để được hỗ trộ.
+              </Text>
+            )}
           </View>
         }
       />

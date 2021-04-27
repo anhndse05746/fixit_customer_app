@@ -66,6 +66,7 @@ const LoginView = ({navigation}) => {
           email: data.email,
           token: data.token,
           address_list: data.addressList,
+          is_active: data.is_active,
         };
         userPreferences.setObjectAsync(USER_KEY, userData);
       }

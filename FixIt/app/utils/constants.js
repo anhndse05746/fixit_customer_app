@@ -7,7 +7,7 @@ module.exports = Object.freeze({
 
   ROLE_CUSTOMER: 3,
 
-  LOGIN_FAIL_MESSAGE: 'Sai tên tài khoản hoặc mật khẩu',
+  LOGIN_FAIL_MESSAGE: 'Sai số điện thoại hoặc mật khẩu',
   REGISTER_SUCCESSFULLY: 'Đăng ký thành công',
   PHONE_NUMBER_REGISTERED: 'Số điện thoại đã được sử dụng',
   PHONE_NUMBER_IS_NOT_REGISTERED: 'Số điện thoại chưa được đăng ký',
@@ -20,7 +20,7 @@ module.exports = Object.freeze({
   CREATE_ADDRESS_SUCCESSFULLY: 'Tạo địa chỉ thành công',
   DUPLICATE_ADDRESS: 'Địa chỉ này đã được đăng ký',
 
-  CANCEL_REQUEST_SUCCESSFULLY: "Huỷ yêu cầu thành công",
+  CANCEL_REQUEST_SUCCESSFULLY: 'Huỷ yêu cầu thành công',
 
   // Đang tìm thợ
   STATUS_REQUEST_FINDING: 1,
