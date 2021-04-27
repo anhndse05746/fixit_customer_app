@@ -1,6 +1,6 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
-import {apiCallBegan} from './apiActions';
+import { apiCallBegan } from './apiActions';
 import constants from '../utils/constants';
 
 const noti = createSlice({
@@ -18,7 +18,11 @@ const noti = createSlice({
     },
     getNotiListSuccess: (noti, action) => {
       console.log(action);
-      noti.notificationList = action.payload;
+      if (noti.notificationList.length == 0) {
+        noti.notificationList = action.payload;
+      } else {
+        noti.notificationList = noti.notificationList.concat(action.payload);
+      }
       noti.loading = false;
     },
     getNotiListFail: (noti, action) => {
@@ -30,7 +34,7 @@ const noti = createSlice({
 
 export default noti.reducer;
 
-export const {onStart, getNotiListSuccess, getNotiListFail} = noti.actions;
+export const { onStart, getNotiListSuccess, getNotiListFail } = noti.actions;
 
 export const getNotificationList = (token, user_id, page) =>
   apiCallBegan({
