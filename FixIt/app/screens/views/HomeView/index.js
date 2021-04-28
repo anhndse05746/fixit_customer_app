@@ -29,31 +29,34 @@ const HomeView = () => {
   return (
     <SafeAreaView style={styles.container}>
       <HeaderBar navigation={navigation} />
-      <FlatList
-        data={majorsList}
-        style={styles.serviceContainer}
-        renderItem={(item) => (
-          <ServiceItem navigation={navigation} item={item} />
-        )}
-        numColumns={2}
-        columnWrapperStyle={{flex: 1, justifyContent: 'space-evenly'}}
-        keyExtractor={(item) => item.id}
-        ListHeaderComponent={
-          <View style={{marginVertical: calcScale(20)}}>
-            <Text style={styles.textBold}>Hi, {data.name}!</Text>
-            {data.is_active ? (
+      {data.is_active ? (
+        <FlatList
+          data={majorsList}
+          style={styles.serviceContainer}
+          renderItem={(item) => (
+            <ServiceItem navigation={navigation} item={item} />
+          )}
+          numColumns={2}
+          columnWrapperStyle={{flex: 1, justifyContent: 'space-evenly'}}
+          keyExtractor={(item) => item.id}
+          ListHeaderComponent={
+            <View style={{marginVertical: calcScale(20)}}>
+              <Text style={styles.textBold}>Hi, {data.name}!</Text>
               <Text style={styles.textRegular}>
                 Hôm nay bạn cần sửa chữa gì không?
               </Text>
-            ) : (
-              <Text style={styles.textRegular}>
-                Tài khoản của bạn hiện đang bị khóa nên không thể tạo yêu cầu.
-                Vui lòng liên hệ quản trị viên để được hỗ trộ.
-              </Text>
-            )}
-          </View>
-        }
-      />
+            </View>
+          }
+        />
+      ) : (
+        <View style={{paddingRight: calcScale(20)}}>
+          <Text style={styles.textBold}>Hi, {data.name}!</Text>
+          <Text style={styles.textRegular}>
+            Tài khoản của bạn hiện đang bị khóa nên không thể tạo yêu cầu. Vui
+            lòng liên hệ quản trị viên để được hỗ trộ.
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
