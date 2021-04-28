@@ -49,7 +49,7 @@ const HomeView = () => {
           }
         />
       ) : (
-        <View style={{paddingRight: calcScale(20)}}>
+        <View style={{paddingRight: calcScale(20), marginVertical: calcScale(20)}}>
           <Text style={styles.textBold}>Hi, {data.name}!</Text>
           <Text style={styles.textRegular}>
             Tài khoản của bạn hiện đang bị khóa nên không thể tạo yêu cầu. Vui
