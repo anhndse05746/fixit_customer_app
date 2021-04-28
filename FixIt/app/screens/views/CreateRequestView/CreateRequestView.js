@@ -87,8 +87,8 @@ const CreateRequestView = ({navigation, route}) => {
       setAddressError('Bạn cần chọn địa chỉ');
     } else if (issuesData.length === 0) {
       setErrorCheckbox('Bạn cần bọn vấn đề gặp phải');
-    } else if (date === '') {
-      setErrorCheckbox(' không được để trống');
+    } else if ((date.getHours() < new Date().getHours()) && (date.getMinutes() < new Date().getMinutes())) {
+      setErrorMessage(' không thể chọn thời gian trong quá khứ');
     } else {
       const requestData = {
         service: data,

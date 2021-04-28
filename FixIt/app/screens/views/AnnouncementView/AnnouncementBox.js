@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, Text } from 'react-native';
-import { ListItem } from 'react-native-elements';
-import { Avatar } from 'react-native-paper';
-import { calcScale } from '../../../utils/dimension';
+import React, {useEffect} from 'react';
+import {StyleSheet, Text} from 'react-native';
+import {ListItem} from 'react-native-elements';
+import {Avatar} from 'react-native-paper';
+import {calcScale} from '../../../utils/dimension';
 
-const AnnouncementBox = ({ item, navigation }) => {
+const AnnouncementBox = ({item, navigation}) => {
   const [checkRead, setCheckRead] = React.useState(false);
 
   useEffect(() => {
@@ -21,9 +21,15 @@ const AnnouncementBox = ({ item, navigation }) => {
     <ListItem
       containerStyle={{
         backgroundColor: !checkRead ? 'rgb(255, 224, 216)' : '#fff',
-        borderWidth: 1, borderColor: 'black'
+        borderWidth: 1,
+        borderColor: 'black',
       }}
-      onPress={() => { navigation.navigate('MyRequestStackNavigator', { screen: 'RequestDetailView', params: { requestId: item.request_id } }) }}>
+      onPress={() => {
+        navigation.navigate('MyRequestStackNavigator', {
+          screen: 'RequestDetailView',
+          params: {requestId: item.request_id},
+        });
+      }}>
       {/*  */}
       {/* <Avatar.Text size={calcScale(65)} label={item.metionUser.charAt(0)} /> */}
       <ListItem.Content>

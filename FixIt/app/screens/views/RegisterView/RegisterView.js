@@ -20,6 +20,7 @@ import {checkRegisteredUser} from '../../../store/register';
 import {useReducer} from 'react';
 
 const RegisterView = ({navigation}) => {
+  const [constructorHasRun, setConstructorHasRun] = React.useState(false);
   const [fullName, setFullName] = React.useState('');
   const [nationId, setNationId] = React.useState('');
   const [email, setEmail] = React.useState('');
@@ -31,10 +32,25 @@ const RegisterView = ({navigation}) => {
   const [checked, setChecked] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [errorPhone, setErrorPhone] = React.useState(false);
+  const [errorMatchedPassword, setErrorMatchedPassword] = React.useState('');
   const [matchedPassword, setMatchedPassword] = React.useState(false);
 
   const {isRegistered, message} = useSelector((state) => state.register);
   const dispatch = useDispatch();
+
+  const constructor = () => {
+    if (constructorHasRun) {
+      return;
+    } else {
+      setErrorMessage('');
+      setErrorMatchedPassword('');
+      setErrorPhone(false);
+      setMatchedPassword(false);
+      setConstructorHasRun(true);
+    }
+  };
+
+  constructor();
 
   useEffect(() => {
     const user = {
@@ -68,9 +84,10 @@ const RegisterView = ({navigation}) => {
       password !== repassword
     ) {
       setMatchedPassword(true);
-      setErrorMessage(' không khớp với mật khẩu');
+      setErrorMatchedPassword(' không khớp với mật khẩu');
     } else {
       setErrorMessage('');
+      setErrorMatchedPassword('');
       setErrorPhone(false);
       setMatchedPassword(false);
       dispatch(checkRegisteredUser(phone));
@@ -264,8 +281,12 @@ const RegisterView = ({navigation}) => {
                 }
                 value={repassword}
                 errorMessage={
-                  (errorMessage !== '' && repassword === '') || matchedPassword
-                    ? 'Nhập lại mật khẩu' + errorMessage
+                  (errorMessage !== '' && repassword === '') ||
+                  (matchedPassword && errorMatchedPassword !== '')
+                    ? 'Nhập lại mật khẩu' +
+                      (errorMessage === ''
+                        ? errorMatchedPassword
+                        : errorMessage)
                     : ''
                 }
               />

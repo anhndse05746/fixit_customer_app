@@ -305,14 +305,18 @@ const RequestDetailView = ({navigation, route}) => {
                   fontWeight: 'bold',
                   marginBottom: calcScale(10),
                 }}>
-                Thời gian
+                Thời gian hẹn
               </Text>
               <Text
                 style={{
                   fontSize: calcScale(18),
                   marginBottom: calcScale(10),
                 }}>
-                {data.schedule_time ? data.schedule_time.toString() : ''}
+                {`${
+                  data.schedule_time.split('T')[1].split('.')[0].split(':')[0]
+                }:${
+                  data.schedule_time.split('T')[1].split('.')[0].split(':')[1]
+                }, ${data.schedule_time.split('T')[0]}`}
               </Text>
             </View>
             <View style={styles.innerFormContainer}>

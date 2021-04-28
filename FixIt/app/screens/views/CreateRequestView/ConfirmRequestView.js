@@ -173,14 +173,14 @@ const ConfirmRequestView = ({navigation, route}) => {
               fontWeight: 'bold',
               marginBottom: calcScale(10),
             }}>
-            Thời gian
+            Thời gian hẹn
           </Text>
           <Text
             style={{
               fontSize: calcScale(18),
               marginBottom: calcScale(10),
             }}>
-            {data.date.toString()}
+            {data.date.toLocaleString()}
           </Text>
         </View>
         <View
