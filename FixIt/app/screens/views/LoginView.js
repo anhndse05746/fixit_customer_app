@@ -110,14 +110,15 @@ const LoginView = ({navigation}) => {
               containerStyle={styles.input}
               inputContainerStyle={{borderBottomWidth: 0}}
               placeholder="Số điện thoại"
-              onChangeText={(username) => setUsername(username)}
+              onChangeText={(username) => setUsername(username.trim())}
               keyboardType="number-pad"
+              value={username}
             />
             <Input
               containerStyle={styles.input}
               inputContainerStyle={{borderBottomWidth: 0}}
               placeholder="Mật khẩu"
-              onChangeText={(password) => setPassword(password)}
+              onChangeText={(password) => setPassword(password.trim())}
               secureTextEntry={secure}
               rightIcon={
                 password != '' ? (
@@ -129,6 +130,7 @@ const LoginView = ({navigation}) => {
                   />
                 ) : null
               }
+              value={password}
             />
             <TouchableOpacity
               onPress={() => navigation.navigate('ForgetPasswordView')}>

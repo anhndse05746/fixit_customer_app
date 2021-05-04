@@ -24,6 +24,7 @@ const RequestDetailView = ({navigation, route}) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const request = useSelector((state) => state.request);
+  const requestId = route.params.requestId;
   const {message} = request;
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
@@ -35,8 +36,8 @@ const RequestDetailView = ({navigation, route}) => {
 
   useEffect(() => {
     //console.log(request.onGoingRequests)
-    dispatch(getRequestDetail(user.token, route.params.requestId));
-  }, []);
+    dispatch(getRequestDetail(user.token, requestId));
+  }, [requestId]);
 
   useEffect(() => {
     console.log(message);

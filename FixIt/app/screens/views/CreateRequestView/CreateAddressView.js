@@ -143,7 +143,7 @@ const CreateAddressView = ({navigation}) => {
               </Text>
               <Input
                 containerStyle={styles.input}
-                onChangeText={(address) => setAddress(address)}
+                onChangeText={(address) => setAddress(address.trim())}
                 rightIcon={
                   address != '' ? (
                     <Icon
