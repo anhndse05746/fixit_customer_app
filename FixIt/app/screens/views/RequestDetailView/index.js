@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -8,8 +8,8 @@ import {
   TextInput,
   Modal,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { calcScale } from '../../../utils/dimension';
+import {useDispatch, useSelector} from 'react-redux';
+import {calcScale} from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
 import {
@@ -18,14 +18,14 @@ import {
   listAllRequest,
 } from '../../../store/request';
 import constants from '../../../utils/constants';
-import { cityOfVN } from '../../../utils/cityOfVietNam';
+import {cityOfVN} from '../../../utils/cityOfVietNam';
 
-const RequestDetailView = ({ navigation, route }) => {
+const RequestDetailView = ({navigation, route}) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const request = useSelector((state) => state.request);
   const requestId = route.params.requestId;
-  const { message } = request;
+  const {message} = request;
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
   const [cities, setCities] = React.useState(cityOfVN);
@@ -64,7 +64,7 @@ const RequestDetailView = ({ navigation, route }) => {
   constructor();
 
   const cancelRequestTrigger = (token, requestId, cancelReason) => {
-    if (cancelReason !== '') {
+    if (cancelReason.trim() !== '') {
       dispatch(cancelRequest(token, requestId, cancelReason));
       setModalVisible(false);
     } else {
@@ -79,7 +79,7 @@ const RequestDetailView = ({ navigation, route }) => {
     requestStatus = data.request_statuses[0].status_id;
     if (requestStatus == 2 || requestStatus == 1) {
       myRequestButton = (
-        <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
+        <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
           <PTButton
             title="Hủy yêu cầu"
             onPress={() => setModalVisible(true)}
@@ -90,7 +90,7 @@ const RequestDetailView = ({ navigation, route }) => {
       );
     } else if (requestStatus == 4) {
       myRequestButton = (
-        <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
+        <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
           <PTButton
             title="Xem hoá đơn"
             onPress={() =>
@@ -114,15 +114,15 @@ const RequestDetailView = ({ navigation, route }) => {
   let city = data.city ? cities.find((x) => x.Id == data.city).Name : '';
   let district = data.city
     ? cities
-      .find((x) => x.Id == data.city)
-      .Districts.find((x) => x.Id == data.district).Name
+        .find((x) => x.Id == data.city)
+        .Districts.find((x) => x.Id == data.district).Name
     : '';
 
   return (
     <ScrollView
       style={[
         styles.container,
-        modalVisible ? { backgroundColor: 'rgba(0,0,0,0.5)' } : '',
+        modalVisible ? {backgroundColor: 'rgba(0,0,0,0.5)'} : '',
       ]}>
       <Modal
         animationType="slide"
@@ -140,7 +140,7 @@ const RequestDetailView = ({ navigation, route }) => {
                   fontWeight: 'bold',
                   marginBottom: calcScale(10),
                 }}>
-                Lí do: <Text style={{ color: 'red' }}>*</Text>
+                Lí do: <Text style={{color: 'red'}}>*</Text>
               </Text>
               <TextInput
                 multiline={true}
@@ -155,14 +155,14 @@ const RequestDetailView = ({ navigation, route }) => {
                 }}
               />
               {cancelReasonError !== '' && cancelReason === '' ? (
-                <Text style={{ color: 'red' }}>{cancelReasonError}</Text>
+                <Text style={{color: 'red'}}>{cancelReasonError}</Text>
               ) : null}
             </View>
             <View style={styles.row}>
               <PTButton
                 title="Không hủy"
                 color="#fff"
-                style={[styles.button, { backgroundColor: '#ccc', width: '45%' }]}
+                style={[styles.button, {backgroundColor: '#ccc', width: '45%'}]}
                 onPress={() => {
                   setModalVisible(false);
                   setCancelReason('');
@@ -173,7 +173,7 @@ const RequestDetailView = ({ navigation, route }) => {
                 color="#fff"
                 style={[
                   styles.button,
-                  { width: '45%', marginLeft: calcScale(20) },
+                  {width: '45%', marginLeft: calcScale(20)},
                 ]}
                 onPress={() =>
                   cancelRequestTrigger(user.token, data.id, cancelReason)
@@ -313,7 +313,15 @@ const RequestDetailView = ({ navigation, route }) => {
                   fontSize: calcScale(18),
                   marginBottom: calcScale(10),
                 }}>
+<<<<<<< HEAD
                 {`${data.schedule_time}`}
+=======
+                {`${
+                  data.schedule_time.split('T')[1].split('.')[0].split(':')[0]
+                }:${
+                  data.schedule_time.split('T')[1].split('.')[0].split(':')[1]
+                }, ${data.schedule_time.split('T')[0]}`}
+>>>>>>> 235fb590cf84a78162cafd894f48946c75af69c2
               </Text>
             </View>
             <View style={styles.innerFormContainer}>
@@ -351,8 +359,7 @@ const RequestDetailView = ({ navigation, route }) => {
                 {data.request_statuses[0].status.name}
               </Text>
             </View>
-            {data.Repairer.id != 1 ?
-
+            {data.Repairer.id != 1 ? (
               <View style={styles.innerFormContainer}>
                 <Text
                   style={{
@@ -361,7 +368,7 @@ const RequestDetailView = ({ navigation, route }) => {
                     marginBottom: calcScale(10),
                   }}>
                   Thợ nhận yêu cầu:
-              </Text>
+                </Text>
                 <Text
                   style={{
                     fontSize: calcScale(18),
@@ -369,7 +376,8 @@ const RequestDetailView = ({ navigation, route }) => {
                   }}>
                   {user.name} | {user.phoneNumber}
                 </Text>
-              </View> : null}
+              </View>
+            ) : null}
             <View
               style={{
                 borderTopColor: '#ccc',
@@ -377,12 +385,12 @@ const RequestDetailView = ({ navigation, route }) => {
                 paddingTop: calcScale(10),
                 //marginTop: calcScale(20),
               }}>
-              <View style={{ marginLeft: calcScale(20) }}>
-                <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
+              <View style={{marginLeft: calcScale(20)}}>
+                <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
                   Địa chỉ: {data.address + ', ' + district + ', ' + city}
                 </Text>
                 <Text
-                  style={{ fontSize: calcScale(18), marginTop: calcScale(5) }}>
+                  style={{fontSize: calcScale(18), marginTop: calcScale(5)}}>
                   {user.name} | {user.phoneNumber}
                 </Text>
               </View>
@@ -394,7 +402,7 @@ const RequestDetailView = ({ navigation, route }) => {
         <ActivityIndicator
           size="small"
           color="#3368f3"
-          style={{ marginTop: calcScale(10) }}
+          style={{marginTop: calcScale(10)}}
         />
       )}
     </ScrollView>

@@ -29,7 +29,10 @@ const CreateRequestView = ({navigation, route}) => {
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
   const [cities, setCities] = React.useState(cityOfVN);
   const [description, setDescription] = React.useState('');
-  const [date, setDate] = React.useState(new Date());
+  let dateData = new Date(); // (GMT+0)
+  const myTimeZone = 7;
+  // dateData.setTime(dateData.getTime() + myTimeZone * 60 * 60 * 1000);
+  const [date, setDate] = React.useState(dateData);
   const [issues, setIssues] = React.useState([
     {
       id: -1,
@@ -96,7 +99,7 @@ const CreateRequestView = ({navigation, route}) => {
       const requestData = {
         service: data,
         address: address,
-        description: description,
+        description: description.trim(),
         date: date,
         issues: issuesData,
       };
@@ -133,7 +136,6 @@ const CreateRequestView = ({navigation, route}) => {
                 Vấn đề đang gặp phải
               </Text>
               {issues.map((item, index) => {
-                console.log('item: ' + JSON.stringify(item));
                 return (
                   <CheckBox
                     title={
@@ -167,9 +169,7 @@ const CreateRequestView = ({navigation, route}) => {
               <TextInput
                 multiline={true}
                 numberOfLines={4}
-                onChangeText={(description) =>
-                  setDescription(description.trim())
-                }
+                onChangeText={(description) => setDescription(description)}
                 value={description}
                 style={{
                   borderColor: '#000',
@@ -194,6 +194,7 @@ const CreateRequestView = ({navigation, route}) => {
                 minimumDate={new Date()}
                 onDateChange={(date) => {
                   setDate(date);
+                  console.log(date);
                 }}
               />
               {errorMessage !== '' && date === '' ? (

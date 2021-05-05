@@ -56,7 +56,7 @@ const CreateAddressView = ({navigation}) => {
       setErrorMessage(' không được để trống');
     } else if (selectedDistrict === 0) {
       setErrorMessage(' không được để trống');
-    } else if (address === '') {
+    } else if (address.trim() === '') {
       setErrorMessage(' không được để trống');
     } else {
       setErrorMessage('');
@@ -66,7 +66,7 @@ const CreateAddressView = ({navigation}) => {
           token,
           parseInt(selectedCity),
           parseInt(selectedDistrict),
-          address,
+          address.trim(),
         ),
       );
     }
@@ -143,7 +143,7 @@ const CreateAddressView = ({navigation}) => {
               </Text>
               <Input
                 containerStyle={styles.input}
-                onChangeText={(address) => setAddress(address.trim())}
+                onChangeText={(address) => setAddress(address)}
                 rightIcon={
                   address != '' ? (
                     <Icon
