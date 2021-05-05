@@ -26,6 +26,7 @@ const MyProfileView = () => {
   const [name, setName] = React.useState(data.name);
   const [phone, setPhone] = React.useState(data.phoneNumber);
   const [email, setEmail] = React.useState(data.email);
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const edit = () => {
     setNotEdit(!notEdit);
@@ -34,10 +35,21 @@ const MyProfileView = () => {
     } else {
       setHeaderText('Sửa');
       if (name !== data.name || email !== data.email) {
-        console.log(data.phoneNumber, data.token, name, email);
-        dispatch(
-          updateUser(data.id, data.phoneNumber, data.token, name, email),
-        );
+        console.log(data.phoneNumber, data.token, name.trim(), email.trim());
+        if (name.trim() !== '') {
+          setErrorMessage(' không được để trống');
+        } else {
+          setErrorMessage('');
+          dispatch(
+            updateUser(
+              data.id,
+              data.phoneNumber,
+              data.token,
+              name.trim(),
+              email.trim(),
+            ),
+          );
+        }
       }
     }
   };
@@ -97,9 +109,14 @@ const MyProfileView = () => {
                 containerStyle={[styles.input, {width: calcScale(width)}]}
                 inputContainerStyle={{borderBottomWidth: 0}}
                 placeholder="Name"
-                onChangeText={(name) => setName(name.trim())}
+                onChangeText={(name) => setName(name)}
                 value={name}
                 disabled={notEdit}
+                errorMessage={
+                  errorMessage !== '' && name === ''
+                    ? 'Họ và tên' + errorMessage
+                    : ''
+                }
               />
               <Input
                 containerStyle={[
@@ -108,7 +125,7 @@ const MyProfileView = () => {
                 ]}
                 inputContainerStyle={{borderBottomWidth: 0}}
                 placeholder="Phone"
-                onChangeText={(phone) => setPhone(phone.trim())}
+                onChangeText={(phone) => setPhone(phone)}
                 value={phone}
                 disabled
                 keyboardType="number-pad"
@@ -120,7 +137,7 @@ const MyProfileView = () => {
                 ]}
                 inputContainerStyle={{borderBottomWidth: 0}}
                 placeholder="Email"
-                onChangeText={(email) => setEmail(email.trim())}
+                onChangeText={(email) => setEmail(email)}
                 value={email}
                 disabled={notEdit}
                 keyboardType="email-address"
