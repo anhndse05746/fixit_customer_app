@@ -1,15 +1,15 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {StatusBar} from 'react-native';
-import {connect} from 'react-redux';
+import { StatusBar } from 'react-native';
+import { connect } from 'react-redux';
 import Navigation from './libs/Navigation';
 import userPreferences from './libs/UserPreferences';
 import DrawerInside from './screens/stacks/DrawerStack';
 import OutsideStackNavigator from './screens/stacks/OutsideStack';
-import {EncryptionKey_TOKEN_KEY, TOKEN_KEY} from './utils/constants';
-import {getActiveRouteName} from './utils/navigation';
+import { EncryptionKey_TOKEN_KEY, TOKEN_KEY } from './utils/constants';
+import { getActiveRouteName } from './utils/navigation';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -31,7 +31,7 @@ const App = () => {
         Navigation.routeNameRef.current = currentRouteName;
       }}>
       <StatusBar hidden />
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <>
           <Stack.Screen name="OutsideStack" component={OutsideStackNavigator} />
           <Stack.Screen name="DrawerInside" component={DrawerInside} />
