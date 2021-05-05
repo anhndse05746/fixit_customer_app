@@ -91,7 +91,7 @@ const ChangePasswordView = ({route, navigation}) => {
               <Input
                 containerStyle={styles.input}
                 placeholder="nguyenvana123"
-                onChangeText={(password) => setOldPassword(password)}
+                onChangeText={(password) => setOldPassword(password.trim())}
                 secureTextEntry={oldSecure}
                 rightIcon={
                   oldPassword != '' ? (
@@ -127,7 +127,7 @@ const ChangePasswordView = ({route, navigation}) => {
               <Input
                 containerStyle={styles.input}
                 placeholder="nguyenvana123"
-                onChangeText={(password) => setPassword(password)}
+                onChangeText={(password) => setPassword(password.trim())}
                 secureTextEntry={secure}
                 rightIcon={
                   password != '' ? (
@@ -163,7 +163,7 @@ const ChangePasswordView = ({route, navigation}) => {
               <Input
                 containerStyle={styles.input}
                 placeholder="nguyenvana123"
-                onChangeText={(repassword) => setRepassword(repassword)}
+                onChangeText={(repassword) => setRepassword(repassword.trim())}
                 secureTextEntry={resecure}
                 rightIcon={
                   repassword != '' ? (

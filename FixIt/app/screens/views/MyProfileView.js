@@ -97,7 +97,7 @@ const MyProfileView = () => {
                 containerStyle={[styles.input, {width: calcScale(width)}]}
                 inputContainerStyle={{borderBottomWidth: 0}}
                 placeholder="Name"
-                onChangeText={(name) => setName(name)}
+                onChangeText={(name) => setName(name.trim())}
                 value={name}
                 disabled={notEdit}
               />
@@ -108,7 +108,7 @@ const MyProfileView = () => {
                 ]}
                 inputContainerStyle={{borderBottomWidth: 0}}
                 placeholder="Phone"
-                onChangeText={(phone) => setPhone(phone)}
+                onChangeText={(phone) => setPhone(phone.trim())}
                 value={phone}
                 disabled
                 keyboardType="number-pad"
@@ -120,7 +120,7 @@ const MyProfileView = () => {
                 ]}
                 inputContainerStyle={{borderBottomWidth: 0}}
                 placeholder="Email"
-                onChangeText={(email) => setEmail(email)}
+                onChangeText={(email) => setEmail(email.trim())}
                 value={email}
                 disabled={notEdit}
                 keyboardType="email-address"
