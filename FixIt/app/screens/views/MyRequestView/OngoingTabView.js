@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {listAllRequest} from '../../../store/request';
-import {cityOfVN} from '../../../utils/cityOfVietNam';
-import {calcScale} from '../../../utils/dimension';
+import { useDispatch, useSelector } from 'react-redux';
+import { listAllRequest } from '../../../store/request';
+import { cityOfVN } from '../../../utils/cityOfVietNam';
+import { calcScale } from '../../../utils/dimension';
 import commonStyles from '../Styles';
 import ListEmptyComponent from './ListEmpty';
 
-const OngoingTabview = ({navigation}) => {
+const OngoingTabview = ({ navigation }) => {
   const request = useSelector((state) => state.request);
   const user = useSelector((state) => state.user);
 
@@ -42,15 +42,16 @@ const OngoingTabview = ({navigation}) => {
     dispatch(listAllRequest(user.token, user.userId));
   };
 
-  const renderListTicket = ({item}) => {
-    let schedule_time;
-    if (item.schedule_time) {
-      schedule_time = `${
-        item.schedule_time.split('T')[1].split('.')[0].split(':')[0]
-      }:${item.schedule_time.split('T')[1].split('.')[0].split(':')[1]}, ${
-        item.schedule_time.split('T')[0]
-      }`;
-    }
+  const renderListTicket = ({ item }) => {
+    let schedule_time = item.schedule_time;
+
+    // if (item.schedule_time) {
+    //   schedule_time = `${
+    //     .split('T')[1].split('.')[0].split(':')[0]
+    //   }:${item.schedule_time.split('T')[1].split('.')[0].split(':')[1]}, ${
+    //     item.schedule_time.split('T')[0]
+    //   }`;
+    // }
 
     const city = cities.find((x) => x.Id == item.city);
     const district = city.Districts.find((x) => x.Id == item.district);
@@ -75,7 +76,7 @@ const OngoingTabview = ({navigation}) => {
             </Text>
           </View>
         </View>
-        <View style={[styles.row, {justifyContent: 'space-between'}]}>
+        <View style={[styles.row, { justifyContent: 'space-between' }]}>
           <View style={styles.column}>
             <Text style={styles.textRegular}>Thời gian ước tính:</Text>
             <Text style={styles.textBold}>{item.estimate_time} Phút</Text>

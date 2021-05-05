@@ -313,11 +313,15 @@ const RequestDetailView = ({navigation, route}) => {
                   fontSize: calcScale(18),
                   marginBottom: calcScale(10),
                 }}>
+<<<<<<< HEAD
+                {`${data.schedule_time}`}
+=======
                 {`${
                   data.schedule_time.split('T')[1].split('.')[0].split(':')[0]
                 }:${
                   data.schedule_time.split('T')[1].split('.')[0].split(':')[1]
                 }, ${data.schedule_time.split('T')[0]}`}
+>>>>>>> 235fb590cf84a78162cafd894f48946c75af69c2
               </Text>
             </View>
             <View style={styles.innerFormContainer}>
