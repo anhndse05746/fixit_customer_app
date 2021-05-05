@@ -42,7 +42,6 @@ const ConfirmRequestView = ({ navigation, route }) => {
   };
 
   console.log({ requestData });
-  console.log({ request_issues });
 
   const constructor = () => {
     if (constructorHasRun) {
@@ -55,7 +54,6 @@ const ConfirmRequestView = ({ navigation, route }) => {
         price += parseFloat(issue.estimate_price);
         time += issue.estimate_fix_duration;
       });
-      console.log(price);
       setEstimate_price(price);
       setEstimate_fix_duration(time);
       setConstructorHasRun(true);
@@ -74,7 +72,6 @@ const ConfirmRequestView = ({ navigation, route }) => {
   useEffect(() => {
     if (message != '') {
       dispatch({ type: clearMessage.type });
-      alert(message);
       dispatch(listAllRequest(user.token, user.userId));
       navigation.navigate('HomeView');
     }
