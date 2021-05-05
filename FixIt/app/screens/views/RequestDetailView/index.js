@@ -88,7 +88,7 @@ const RequestDetailView = ({navigation, route}) => {
           />
         </View>
       );
-    } else if (requestStatus == 4) {
+    } else if (requestStatus >= 4) {
       myRequestButton = (
         <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
           <PTButton
@@ -247,41 +247,45 @@ const RequestDetailView = ({navigation, route}) => {
                 {data.description}
               </Text>
             </View>
-            <View style={styles.innerFormContainer}>
-              <Text
-                style={{
-                  fontSize: calcScale(18),
-                  fontWeight: 'bold',
-                  marginBottom: calcScale(10),
-                }}>
-                Thời gian sửa ước tính
-              </Text>
-              <Text
-                style={{
-                  fontSize: calcScale(16),
-                  marginBottom: calcScale(10),
-                }}>
-                {data.estimate_time} Phút
-              </Text>
-            </View>
-            <View style={styles.innerFormContainer}>
-              <Text
-                style={{
-                  fontSize: calcScale(18),
-                  fontWeight: 'bold',
-                  marginBottom: calcScale(10),
-                }}>
-                Tiền công ước tính
-              </Text>
-              <Text
-                style={{
-                  fontSize: calcScale(16),
-                  marginBottom: calcScale(10),
-                }}>
-                {data.estimate_price.split('.')[0]} VND
-              </Text>
-              <Text>(Tiền công chưa bao gồm chi phí vật tư thay thế)</Text>
-            </View>
+            {requestStatus <= 4 ? (
+              <>
+                <View style={styles.innerFormContainer}>
+                  <Text
+                    style={{
+                      fontSize: calcScale(18),
+                      fontWeight: 'bold',
+                      marginBottom: calcScale(10),
+                    }}>
+                    Thời gian sửa ước tính
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: calcScale(16),
+                      marginBottom: calcScale(10),
+                    }}>
+                    {data.estimate_time} Phút
+                  </Text>
+                </View>
+                <View style={styles.innerFormContainer}>
+                  <Text
+                    style={{
+                      fontSize: calcScale(18),
+                      fontWeight: 'bold',
+                      marginBottom: calcScale(10),
+                    }}>
+                    Tiền công ước tính
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: calcScale(16),
+                      marginBottom: calcScale(10),
+                    }}>
+                    {data.estimate_price.split('.')[0]} VND
+                  </Text>
+                  <Text>(Tiền công chưa bao gồm chi phí vật tư thay thế)</Text>
+                </View>
+              </>
+            ) : null}
             <View style={styles.innerFormContainer}>
               <Text
                 style={{

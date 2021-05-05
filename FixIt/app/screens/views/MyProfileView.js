@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {
   Keyboard,
@@ -13,11 +12,16 @@ import {useDispatch, useSelector} from 'react-redux';
 import {updateUser} from '../../store/user';
 import {calcScale, width} from '../../utils/dimension';
 import CommonStyles from './Styles';
+import userPreferences from '../../libs/UserPreferences';
+import {
+  TOKEN_KEY,
+  EncryptionKey_TOKEN_KEY,
+  USER_KEY,
+} from '../../utils/constants';
 
 const MyProfileView = () => {
   const data = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const navigation = useNavigation();
   const {updateUserMessage} = data;
 
   const [notEdit, setNotEdit] = React.useState(true);
@@ -36,7 +40,7 @@ const MyProfileView = () => {
       setHeaderText('Sửa');
       if (name !== data.name || email !== data.email) {
         console.log(data.phoneNumber, data.token, name.trim(), email.trim());
-        if (name.trim() !== '') {
+        if (name.trim() === '') {
           setErrorMessage(' không được để trống');
         } else {
           setErrorMessage('');
@@ -57,6 +61,24 @@ const MyProfileView = () => {
   useEffect(() => {
     console.log(updateUserMessage);
     if (updateUserMessage) {
+      if (data) {
+        userPreferences.setEncryptData(
+          TOKEN_KEY,
+          data.token,
+          EncryptionKey_TOKEN_KEY,
+        );
+        const userData = {
+          id: data.userId,
+          phone: data.phoneNumber,
+          name: data.name,
+          roleId: data.roleId,
+          email: data.email,
+          token: data.token,
+          address_list: data.addressList,
+          is_active: data.is_active,
+        };
+        userPreferences.setObjectAsync(USER_KEY, userData);
+      }
       alert(updateUserMessage);
     }
   }, [updateUserMessage]);
