@@ -45,7 +45,7 @@ const OTPView = ({route, navigation}) => {
       dispatch(registerUser(user.phone, user.password, user.name, user.email));
     } catch (error) {
       console.log(error);
-      alert(JSON.stringify(error));
+      alert('Mã OTP không đúng');
     }
   };
   //dispatch(registerUser(user.phone, user.password, user.name, user.email))

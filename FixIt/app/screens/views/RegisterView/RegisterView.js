@@ -20,7 +20,9 @@ import {checkRegisteredUser} from '../../../store/register';
 import {useReducer} from 'react';
 
 const RegisterView = ({navigation}) => {
+  const [constructorHasRun, setConstructorHasRun] = React.useState(false);
   const [fullName, setFullName] = React.useState('');
+  const [nationId, setNationId] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [phone, setPhone] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -29,14 +31,26 @@ const RegisterView = ({navigation}) => {
   const [resecure, setResecure] = React.useState(true);
   const [checked, setChecked] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
+  const [errorPhone, setErrorPhone] = React.useState(false);
+  const [errorMatchedPassword, setErrorMatchedPassword] = React.useState('');
   const [matchedPassword, setMatchedPassword] = React.useState(false);
 
   const {isRegistered, message} = useSelector((state) => state.register);
   const dispatch = useDispatch();
 
-  const checkRegistered = (phone) => {
-    dispatch(checkRegisteredUser(phone));
+  const constructor = () => {
+    if (constructorHasRun) {
+      return;
+    } else {
+      setErrorMessage('');
+      setErrorMatchedPassword('');
+      setErrorPhone(false);
+      setMatchedPassword(false);
+      setConstructorHasRun(true);
+    }
   };
+
+  constructor();
 
   useEffect(() => {
     const user = {
@@ -46,29 +60,37 @@ const RegisterView = ({navigation}) => {
       password: password,
     };
     if (isRegistered == false) {
-      navigateOtpScreen(user);
+      navigation.navigate('OTPView', user);
     }
   }, [isRegistered]);
 
-  const navigateOtpScreen = (user) => {
+  const navigateOtpScreen = () => {
     if (fullName === '') {
-      setErrorMessage(' is required');
+      setErrorMessage(' không được để trống');
+    } else if (nationId === '') {
+      setErrorMessage(' không được để trống');
     } else if (phone === '') {
-      setErrorMessage(' is required');
+      setErrorMessage(' không được để trống');
+    } else if (!/^(84|0[3|5|7|8|9])+([0-9]{8})\b$/.test(phone)) {
+      setErrorPhone(true);
+      setErrorMessage(' không đúng định dạng');
     } else if (password === '') {
-      setErrorMessage(' is required');
+      setErrorMessage(' không được để trống');
     } else if (repassword === '') {
-      setErrorMessage(' is required');
+      setErrorMessage(' không được để trống');
     } else if (
       password !== '' &&
       repassword !== '' &&
       password !== repassword
     ) {
       setMatchedPassword(true);
-      setErrorMessage(' is not matched with Password');
+      setErrorMatchedPassword(' không khớp với mật khẩu');
     } else {
       setErrorMessage('');
-      navigation.navigate('OTPView', user);
+      setErrorMatchedPassword('');
+      setErrorPhone(false);
+      setMatchedPassword(false);
+      dispatch(checkRegisteredUser(phone));
     }
   };
 
@@ -85,13 +107,15 @@ const RegisterView = ({navigation}) => {
             ]}>
             Vui lòng điền những thông tin sau
           </Text>
-          <Text
-            style={[
-              styles.textRegular,
-              {marginTop: calcScale(15), fontSize: calcScale(22)},
-            ]}>
-            {message}
-          </Text>
+          {message ? (
+            <Text
+              style={[
+                styles.textRegular,
+                {marginTop: calcScale(15), fontSize: calcScale(22)},
+              ]}>
+              {message}
+            </Text>
+          ) : null}
           <View style={styles.formContainer}>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
@@ -114,7 +138,32 @@ const RegisterView = ({navigation}) => {
                 value={fullName}
                 errorMessage={
                   errorMessage !== '' && fullName === ''
-                    ? 'Full Name' + errorMessage
+                    ? 'Họ và tên' + errorMessage
+                    : ''
+                }
+              />
+            </View>
+            <View style={styles.column}>
+              <Text style={styles.textRegular}>
+                CMT/CCCD <Text style={{color: 'red'}}>*</Text>
+              </Text>
+              <Input
+                containerStyle={styles.input}
+                onChangeText={(nationId) => setNationId(nationId)}
+                rightIcon={
+                  nationId != '' ? (
+                    <Icon
+                      name="times-circle"
+                      size={calcScale(15)}
+                      color="grey"
+                      onPress={() => setNationId('')}
+                    />
+                  ) : null
+                }
+                value={nationId}
+                errorMessage={
+                  errorMessage !== '' && nationId === ''
+                    ? 'CMT/CCCD' + errorMessage
                     : ''
                 }
               />
@@ -141,7 +190,7 @@ const RegisterView = ({navigation}) => {
             </View>
             <View style={styles.column}>
               <Text style={styles.textRegular}>
-                Phone number <Text style={{color: 'red'}}>*</Text>
+                Số điện thoại <Text style={{color: 'red'}}>*</Text>
               </Text>
               <Input
                 containerStyle={styles.input}
@@ -160,8 +209,8 @@ const RegisterView = ({navigation}) => {
                 value={phone}
                 keyboardType="number-pad"
                 errorMessage={
-                  errorMessage !== '' && phone === ''
-                    ? 'Phone number' + errorMessage
+                  (errorMessage !== '' && phone === '') || errorPhone
+                    ? 'Số điện thoại' + errorMessage
                     : ''
                 }
               />
@@ -197,7 +246,7 @@ const RegisterView = ({navigation}) => {
                 value={password}
                 errorMessage={
                   errorMessage !== '' && password === ''
-                    ? 'Password' + errorMessage
+                    ? 'Mật khẩu' + errorMessage
                     : ''
                 }
               />
@@ -232,8 +281,12 @@ const RegisterView = ({navigation}) => {
                 }
                 value={repassword}
                 errorMessage={
-                  (errorMessage !== '' && repassword === '') || matchedPassword
-                    ? 'Re-enter password' + errorMessage
+                  (errorMessage !== '' && repassword === '') ||
+                  (matchedPassword && errorMatchedPassword !== '')
+                    ? 'Nhập lại mật khẩu' +
+                      (errorMessage === ''
+                        ? errorMatchedPassword
+                        : errorMessage)
                     : ''
                 }
               />
@@ -250,7 +303,7 @@ const RegisterView = ({navigation}) => {
             <PTButton
               title="Tiếp tục"
               onPress={() => {
-                checkRegistered(phone);
+                navigateOtpScreen();
               }}
               style={styles.button}
               color="#fff"

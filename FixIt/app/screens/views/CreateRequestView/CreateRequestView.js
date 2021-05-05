@@ -10,10 +10,11 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import DatePicker from 'react-native-datepicker';
+import DatePicker from 'react-native-date-picker';
 import {CheckBox, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
+import {cityOfVN} from '../../../utils/cityOfVietNam';
 import {calcScale} from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
@@ -26,11 +27,20 @@ const CreateRequestView = ({navigation, route}) => {
   const address = route.params.address;
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
-  const [request, setRequest] = React.useState('');
+  const [cities, setCities] = React.useState(cityOfVN);
   const [description, setDescription] = React.useState('');
   const [date, setDate] = React.useState(new Date());
-  const [issues, setIssues] = React.useState([]);
+  const [issues, setIssues] = React.useState([
+    {
+      id: -1,
+      checked: false,
+      title: 'Khác',
+      estimate_fix_duration: 0,
+      estimate_price: '0.0',
+    },
+  ]);
   const [errorMessage, setErrorMessage] = React.useState('');
+  const [addressError, setAddressError] = React.useState('');
   const [errorCheckbox, setErrorCheckbox] = React.useState('');
 
   const constructor = () => {
@@ -45,13 +55,20 @@ const CreateRequestView = ({navigation, route}) => {
           estimate_fix_duration: issue.estimate_fix_duration,
           estimate_price: issue.estimate_price,
         };
-        issues.push(checkBox);
+        issues.unshift(checkBox);
       });
       setConstructorHasRun(true);
     }
   };
 
   constructor();
+
+  let city = address ? cities.find((x) => x.Id == address[0].city).Name : '';
+  let district = address
+    ? cities
+        .find((x) => x.Id == address[0].city)
+        .Districts.find((x) => x.Id == address[0].district).Name
+    : '';
 
   const toggleCheckbox = (index) => {
     const checkboxData = [...issues];
@@ -66,23 +83,23 @@ const CreateRequestView = ({navigation, route}) => {
         issuesData.push(issue);
       }
     });
-    const requestData = {
-      service: data.name,
-      address: address,
-      request: request,
-      description: description,
-      date: date,
-      issues: issuesData,
-    };
-    if (request === '') {
-      setErrorMessage(' không được để trống');
+    if (address === undefined) {
+      setAddressError('Bạn cần chọn địa chỉ');
     } else if (issuesData.length === 0) {
       setErrorCheckbox('Bạn cần bọn vấn đề gặp phải');
-    } else if (date === '') {
-      setErrorCheckbox(' không được để trống');
+    } else if ((date.getHours() < new Date().getHours()) && (date.getMinutes() < new Date().getMinutes())) {
+      setErrorMessage(' không thể chọn thời gian trong quá khứ');
     } else {
+      const requestData = {
+        service: data,
+        address: address,
+        description: description,
+        date: date,
+        issues: issuesData,
+      };
       setErrorMessage('');
       setErrorCheckbox('');
+      console.log(requestData);
       navigation.navigate('ConfirmRequestView', {requestData: requestData});
     }
   };
@@ -93,51 +110,6 @@ const CreateRequestView = ({navigation, route}) => {
       style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView>
-          <TouchableOpacity
-            onPress={() => {
-              if (address === null || address === undefined) {
-                navigation.navigate('AddressListView', {
-                  selectedId: -1,
-                });
-              } else {
-                navigation.navigate('AddressListView', {
-                  selectedId: address[0].id,
-                });
-              }
-            }}
-            style={{
-              borderBottomColor: '#ccc',
-              borderBottomWidth: 1,
-              paddingBottom: calcScale(10),
-            }}>
-            <View style={[styles.row, {marginTop: calcScale(20)}]}>
-              <View style={{marginLeft: calcScale(20)}}>
-                <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
-                  Địa chỉ
-                </Text>
-                <Text
-                  style={{fontSize: calcScale(18), marginTop: calcScale(5)}}>
-                  {user.name} | {user.phoneNumber}
-                </Text>
-                <Text style={{fontSize: calcScale(18)}}>
-                  {address === null || address === undefined
-                    ? 'Chọn địa chỉ'
-                    : address[0].address +
-                      ',' +
-                      address[0].district +
-                      ',' +
-                      address[0].city}
-                </Text>
-              </View>
-              <View
-                style={{
-                  alignItems: 'center',
-                  marginRight: calcScale(20),
-                }}>
-                <Icon name="chevron-right" size={calcScale(22)} color="#000" />
-              </View>
-            </View>
-          </TouchableOpacity>
           <View style={styles.form}>
             <View style={styles.formHeader}>
               <Text
@@ -155,34 +127,22 @@ const CreateRequestView = ({navigation, route}) => {
                   fontWeight: 'bold',
                   marginBottom: calcScale(10),
                 }}>
-                Yêu cầu
-              </Text>
-              <Input
-                containerStyle={styles.input}
-                inputContainerStyle={{borderBottomWidth: 0}}
-                placeholder=""
-                onChangeText={(request) => setRequest(request)}
-                value={request}
-                errorMessage={
-                  errorMessage !== '' && request === ''
-                    ? 'Yêu cầu' + errorMessage
-                    : ''
-                }
-              />
-            </View>
-            <View style={styles.innerFormContainer}>
-              <Text
-                style={{
-                  fontSize: calcScale(18),
-                  fontWeight: 'bold',
-                  marginBottom: calcScale(10),
-                }}>
                 Vấn đề đang gặp phải
               </Text>
               {issues.map((item, index) => {
+                console.log('item: ' + JSON.stringify(item));
                 return (
                   <CheckBox
-                    title={item.title}
+                    title={
+                      <Text
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text>{item.title}</Text>
+                        <Text> - {item.estimate_price.split('.')[0]} VND</Text>
+                      </Text>
+                    }
                     checked={item.checked}
                     onPress={() => toggleCheckbox(index)}
                     containerStyle={styles.checkBox}
@@ -224,25 +184,9 @@ const CreateRequestView = ({navigation, route}) => {
                 Thời gian
               </Text>
               <DatePicker
-                style={{width: '100%'}}
                 date={date}
-                mode="date"
-                placeholder="select date"
-                format="YYYY-MM-DD"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    left: 0,
-                    top: 4,
-                    marginLeft: 0,
-                  },
-                  dateInput: {
-                    marginLeft: 36,
-                  },
-                  // ... You can check the source to find the other keys.
-                }}
+                mode="datetime"
+                minimumDate={new Date()}
                 onDateChange={(date) => {
                   setDate(date);
                 }}
@@ -251,6 +195,56 @@ const CreateRequestView = ({navigation, route}) => {
                 <Text>Thời gian{errorMessage}</Text>
               ) : null}
             </View>
+            <TouchableOpacity
+              onPress={() => {
+                if (address === null || address === undefined) {
+                  navigation.navigate('AddressListView', {
+                    selectedId: -1,
+                  });
+                } else {
+                  navigation.navigate('AddressListView', {
+                    selectedId: address[0].id,
+                  });
+                }
+              }}
+              style={{
+                borderTopColor: '#ccc',
+                borderTopWidth: 1,
+                paddingBottom: calcScale(10),
+              }}>
+              <View style={[styles.row, {marginTop: calcScale(20)}]}>
+                <View style={{marginLeft: calcScale(20)}}>
+                  <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
+                    Địa chỉ
+                  </Text>
+                  <Text
+                    style={{fontSize: calcScale(18), marginTop: calcScale(5)}}>
+                    {user.name} | {user.phoneNumber}
+                  </Text>
+                  <Text style={{fontSize: calcScale(18)}}>
+                    {address === null || address === undefined
+                      ? 'Chọn địa chỉ'
+                      : address[0].address + ', ' + district + ', ' + city}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    alignItems: 'center',
+                    marginRight: calcScale(20),
+                  }}>
+                  <Icon
+                    name="chevron-right"
+                    size={calcScale(22)}
+                    color="#000"
+                  />
+                </View>
+              </View>
+            </TouchableOpacity>
+            {addressError !== '' && address === undefined ? (
+              <Text style={{marginLeft: calcScale(20), color: 'red'}}>
+                {addressError}
+              </Text>
+            ) : null}
             <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
               <PTButton
                 title="Tiếp tục"

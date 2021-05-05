@@ -1,18 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { calcScale } from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
+import {
+  createRequest,
+  clearMessage,
+  listAllRequest,
+} from '../../../store/request';
+import { cityOfVN } from '../../../utils/cityOfVietNam';
 
 const ConfirmRequestView = ({ navigation, route }) => {
   const user = useSelector((state) => state.user);
-
+  const dispatch = useDispatch();
+  const requestStates = useSelector((state) => state.request);
+  const { message } = requestStates;
   const data = route.params.requestData;
-
+  const { address, service, issues } = data;
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
+  const [cities, setCities] = React.useState(cityOfVN);
   const [estimate_fix_duration, setEstimate_fix_duration] = React.useState(0);
   const [estimate_price, setEstimate_price] = React.useState(0);
+
+  let request_issues = [];
+  for (let i = 0; i < issues.length; i++) {
+    request_issues.push({ issues_id: issues[i].id });
+  }
+
+  const requestData = {
+    customer_id: user.userId,
+    service_id: service.id,
+    schedule_time: data.date.toString(),
+    estimate_time: estimate_fix_duration,
+    estimate_price: estimate_price,
+    description: data.description,
+    address: address[0].address,
+    city: address[0].city,
+    district: address[0].district,
+    request_issues: request_issues,
+  };
+
+  console.log({ requestData });
+  console.log({ request_issues });
 
   const constructor = () => {
     if (constructorHasRun) {
@@ -25,6 +55,7 @@ const ConfirmRequestView = ({ navigation, route }) => {
         price += parseFloat(issue.estimate_price);
         time += issue.estimate_fix_duration;
       });
+      console.log(price);
       setEstimate_price(price);
       setEstimate_fix_duration(time);
       setConstructorHasRun(true);
@@ -33,25 +64,24 @@ const ConfirmRequestView = ({ navigation, route }) => {
 
   constructor();
 
+  let city = address ? cities.find((x) => x.Id == address[0].city).Name : '';
+  let district = address
+    ? cities
+      .find((x) => x.Id == address[0].city)
+      .Districts.find((x) => x.Id == address[0].district).Name
+    : '';
+
+  useEffect(() => {
+    if (message != '') {
+      dispatch({ type: clearMessage.type });
+      alert(message);
+      dispatch(listAllRequest(user.token, user.userId));
+      navigation.navigate('HomeView');
+    }
+  }, [message]);
+
   return (
     <ScrollView style={styles.container}>
-      <View
-        style={{
-          borderBottomColor: '#ccc',
-          borderBottomWidth: 1,
-          paddingBottom: calcScale(10),
-          marginTop: calcScale(20),
-        }}>
-        <View style={{ marginLeft: calcScale(20) }}>
-          <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
-            Địa chỉ
-          </Text>
-          <Text style={{ fontSize: calcScale(18), marginTop: calcScale(5) }}>
-            {user.name} | {user.phoneNumber}
-          </Text>
-          <Text style={{ fontSize: calcScale(18) }}>{data.address}</Text>
-        </View>
-      </View>
       <View style={styles.form}>
         <View style={styles.formHeader}>
           <Text
@@ -59,24 +89,7 @@ const ConfirmRequestView = ({ navigation, route }) => {
               fontSize: calcScale(28),
               fontWeight: 'bold',
             }}>
-            Dịch vụ: {data.service}
-          </Text>
-        </View>
-        <View style={styles.innerFormContainer}>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              fontWeight: 'bold',
-              marginBottom: calcScale(10),
-            }}>
-            Yêu cầu
-          </Text>
-          <Text
-            style={{
-              fontSize: calcScale(16),
-              marginBottom: calcScale(10),
-            }}>
-            {data.request}
+            Dịch vụ: {data.service.name}
           </Text>
         </View>
         <View style={styles.innerFormContainer}>
@@ -96,7 +109,7 @@ const ConfirmRequestView = ({ navigation, route }) => {
                   fontSize: calcScale(16),
                   marginBottom: calcScale(10),
                 }}>
-                + {item.title}
+                + {item.title} - {item.estimate_price.split('.')[0]} VND
               </Text>
             );
           })}
@@ -133,7 +146,7 @@ const ConfirmRequestView = ({ navigation, route }) => {
               fontSize: calcScale(16),
               marginBottom: calcScale(10),
             }}>
-            {estimate_fix_duration}
+            {estimate_fix_duration} Phút
           </Text>
         </View>
         <View style={styles.innerFormContainer}>
@@ -150,7 +163,7 @@ const ConfirmRequestView = ({ navigation, route }) => {
               fontSize: calcScale(16),
               marginBottom: calcScale(10),
             }}>
-            {estimate_price}
+            {estimate_price} VND
           </Text>
         </View>
         <View style={styles.innerFormContainer}>
@@ -160,26 +173,46 @@ const ConfirmRequestView = ({ navigation, route }) => {
               fontWeight: 'bold',
               marginBottom: calcScale(10),
             }}>
-            Thời gian
+            Thời gian hẹn
           </Text>
           <Text
             style={{
               fontSize: calcScale(18),
               marginBottom: calcScale(10),
             }}>
-            {data.date.toString()}
+            {data.date.toLocaleString()}
           </Text>
+        </View>
+        <View
+          style={{
+            borderTopColor: '#ccc',
+            borderTopWidth: 1,
+            paddingTop: calcScale(10),
+            marginBottom: calcScale(20),
+          }}>
+          <View style={{ marginLeft: calcScale(20) }}>
+            <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
+              Địa chỉ
+            </Text>
+            <Text style={{ fontSize: calcScale(18), marginTop: calcScale(5) }}>
+              {user.name} | {user.phoneNumber}
+            </Text>
+            <Text
+              style={{
+                fontSize: calcScale(18),
+              }}>{`${address[0].address}, ${district}, ${city}`}</Text>
+          </View>
         </View>
         <View style={[styles.innerFormContainer, { alignItems: 'center' }]}>
           <PTButton
             title="Xác nhận"
-            onPress={() => { }}
+            onPress={() => dispatch(createRequest(user.token, requestData))}
             style={styles.button}
             color="#fff"
           />
         </View>
       </View>
-    </ScrollView>
+    </ScrollView >
   );
 };
 

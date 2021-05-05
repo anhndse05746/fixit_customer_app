@@ -23,19 +23,13 @@ const HomeView = () => {
   const {majorsList} = useSelector((state) => state.majors);
 
   useEffect(() => {
-    if (majorsList.length == 0) dispatch(loadMajors(token));
+    dispatch(loadMajors(token));
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <HeaderBar navigation={navigation} />
-      <View style={styles.innerContainer}>
-        <Text style={[styles.textBold, {paddingTop: calcScale(80)}]}>
-          Hi, {data.name}!
-        </Text>
-        <Text style={styles.textRegular}>
-          Hôm nay bạn cần sửa chữa gì không?
-        </Text>
+      {data.is_active ? (
         <FlatList
           data={majorsList}
           style={styles.serviceContainer}
@@ -43,10 +37,26 @@ const HomeView = () => {
             <ServiceItem navigation={navigation} item={item} />
           )}
           numColumns={2}
-          columnWrapperStyle={{flex: 1, justifyContent: 'space-around'}}
+          columnWrapperStyle={{flex: 1, justifyContent: 'space-evenly'}}
           keyExtractor={(item) => item.id}
+          ListHeaderComponent={
+            <View style={{marginVertical: calcScale(20)}}>
+              <Text style={styles.textBold}>Hi, {data.name}!</Text>
+              <Text style={styles.textRegular}>
+                Hôm nay bạn cần sửa chữa gì không?
+              </Text>
+            </View>
+          }
         />
-      </View>
+      ) : (
+        <View style={{paddingRight: calcScale(20), marginVertical: calcScale(20)}}>
+          <Text style={styles.textBold}>Hi, {data.name}!</Text>
+          <Text style={styles.textRegular}>
+            Tài khoản của bạn hiện đang bị khóa nên không thể tạo yêu cầu. Vui
+            lòng liên hệ quản trị viên để được hỗ trộ.
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -58,25 +68,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  innerContainer: {
-    justifyContent: 'center',
-    paddingHorizontal: calcScale(20),
-  },
   textBold: {
     ...CommonStyles.textBold,
     fontSize: calcScale(30),
     color: '#000',
     textAlign: 'left',
-    paddingLeft: calcScale(10),
+    paddingLeft: calcScale(20),
   },
   textRegular: {
     ...CommonStyles.textRegular,
     fontSize: calcScale(20),
     color: '#000',
     textAlign: 'left',
-    paddingLeft: calcScale(10),
+    paddingLeft: calcScale(20),
   },
-  serviceContainer: {
-    marginTop: calcScale(20),
-  },
+  serviceContainer: {},
 });

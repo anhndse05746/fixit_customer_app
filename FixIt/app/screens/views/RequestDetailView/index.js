@@ -1,247 +1,389 @@
-import * as React from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {useSelector} from 'react-redux';
+import React, {useEffect} from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+  TextInput,
+  Modal,
+} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {calcScale} from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
+import {
+  getRequestDetail,
+  cancelRequest,
+  listAllRequest,
+} from '../../../store/request';
+import constants from '../../../utils/constants';
+import {cityOfVN} from '../../../utils/cityOfVietNam';
 
 const RequestDetailView = ({navigation, route}) => {
-  const data = {
-    address: 'địa chỉ',
-    service: 'Sửa lò vi sóng',
-    request: 'yêu cầu sửa lò',
-    issues: [
-      {
-        id: 1,
-        name: 'Sửa lò vi sóng không nóng',
-        estimate_fix_duration: 10,
-        estimate_price: 100.0,
-      },
-      {
-        id: 2,
-        name: 'Xử lý rỉ sét bên trong lò vi sóng',
-        estimate_fix_duration: 10,
-        estimate_price: 100.0,
-      },
-      {
-        id: 3,
-        name: 'Thay thế cục sóng, cầu chì lò vi sóng',
-        estimate_fix_duration: 10,
-        estimate_price: 100.0,
-      },
-    ],
-    description: '',
-    date: new Date(),
-    payment: 'Tiên mặt',
-    status: 'Đang tìm thợ',
-  };
-
   const user = useSelector((state) => state.user);
-
-  const requestId = route.params.requestId;
+  const dispatch = useDispatch();
+  const request = useSelector((state) => state.request);
+  const {message} = request;
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
-  const [estimate_fix_duration, setEstimate_fix_duration] = React.useState(0);
-  const [estimate_price, setEstimate_price] = React.useState(0);
+  const [cities, setCities] = React.useState(cityOfVN);
+
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [cancelReason, setCancelReason] = React.useState('');
+  const [cancelReasonError, setCancelReasonError] = React.useState('');
+
+  useEffect(() => {
+    //console.log(request.onGoingRequests)
+    dispatch(getRequestDetail(user.token, route.params.requestId));
+  }, []);
+
+  useEffect(() => {
+    console.log(message);
+    if (message === constants.CANCEL_REQUEST_SUCCESSFULLY) {
+      alert(message);
+      dispatch(listAllRequest(user.token, user.userId));
+      //navigate to home view
+      navigation.navigate(route.params.currentTab);
+    }
+  }, [message]);
+
+  //const data = route.params.requestDetail
+
+  const data = request.requestDetail;
 
   const constructor = () => {
     if (constructorHasRun) {
       return;
     } else {
-      let price = 0;
-      let time = 0;
-      data.issues.map((issue, index) => {
-        price += parseFloat(issue.estimate_price);
-        time += issue.estimate_fix_duration;
-      });
-      setEstimate_price(price);
-      setEstimate_fix_duration(time);
       setConstructorHasRun(true);
     }
   };
 
   constructor();
 
-  return (
-    <ScrollView style={styles.container}>
-      <View
-        style={{
-          borderBottomColor: '#ccc',
-          borderBottomWidth: 1,
-          paddingBottom: calcScale(10),
-          marginTop: calcScale(20),
-        }}>
-        <View style={{marginLeft: calcScale(20)}}>
-          <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
-            Địa chỉ
-          </Text>
-          <Text style={{fontSize: calcScale(18), marginTop: calcScale(5)}}>
-            {user.name} | {user.phoneNumber}
-          </Text>
-          <Text style={{fontSize: calcScale(18)}}>{data.address}</Text>
-        </View>
-      </View>
-      <View style={styles.form}>
-        <View style={styles.formHeader}>
-          <Text
-            style={{
-              fontSize: calcScale(28),
-              fontWeight: 'bold',
-            }}>
-            Dịch vụ: {data.service}
-          </Text>
-        </View>
-        <View style={styles.innerFormContainer}>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              fontWeight: 'bold',
-              marginBottom: calcScale(10),
-            }}>
-            Yêu cầu
-          </Text>
-          <Text
-            style={{
-              fontSize: calcScale(16),
-              marginBottom: calcScale(10),
-            }}>
-            {data.request}
-          </Text>
-        </View>
-        <View style={styles.innerFormContainer}>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              fontWeight: 'bold',
-              marginBottom: calcScale(10),
-            }}>
-            Vấn đề đang gặp phải
-          </Text>
-          {data.issues.map((item, index) => {
-            return (
-              <Text
-                key={item.id.toString()}
-                style={{
-                  fontSize: calcScale(16),
-                  marginBottom: calcScale(10),
-                }}>
-                + {item.name}
-              </Text>
-            );
-          })}
-        </View>
-        <View style={styles.innerFormContainer}>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              fontWeight: 'bold',
-              marginBottom: calcScale(10),
-            }}>
-            Mô tả chi tiết vấn đề gặp phải
-          </Text>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              fontWeight: 'bold',
-              marginBottom: calcScale(10),
-            }}>
-            {data.description}
-          </Text>
-        </View>
-        <View style={styles.innerFormContainer}>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              fontWeight: 'bold',
-              marginBottom: calcScale(10),
-            }}>
-            Thời gian sửa ước tính
-          </Text>
-          <Text
-            style={{
-              fontSize: calcScale(16),
-              marginBottom: calcScale(10),
-            }}>
-            {estimate_fix_duration}
-          </Text>
-        </View>
-        <View style={styles.innerFormContainer}>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              fontWeight: 'bold',
-              marginBottom: calcScale(10),
-            }}>
-            Tiền sửa ước tính
-          </Text>
-          <Text
-            style={{
-              fontSize: calcScale(16),
-              marginBottom: calcScale(10),
-            }}>
-            {estimate_price}
-          </Text>
-        </View>
-        <View style={styles.innerFormContainer}>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              fontWeight: 'bold',
-              marginBottom: calcScale(10),
-            }}>
-            Thời gian
-          </Text>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              marginBottom: calcScale(10),
-            }}>
-            {data.date.toLocaleDateString()}
-          </Text>
-        </View>
-        <View style={styles.innerFormContainer}>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              fontWeight: 'bold',
-              marginBottom: calcScale(10),
-            }}>
-            Hình thức thanh toán
-          </Text>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              marginBottom: calcScale(10),
-            }}>
-            {data.payment}
-          </Text>
-        </View>
-        <View style={styles.innerFormContainer}>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              fontWeight: 'bold',
-              marginBottom: calcScale(10),
-            }}>
-            Trạng thái
-          </Text>
-          <Text
-            style={{
-              fontSize: calcScale(18),
-              marginBottom: calcScale(10),
-            }}>
-            {data.status}
-          </Text>
-        </View>
+  const cancelRequestTrigger = (token, requestId, cancelReason) => {
+    if (cancelReason !== '') {
+      dispatch(cancelRequest(token, requestId, cancelReason));
+      setModalVisible(false);
+    } else {
+      setCancelReasonError('Cần có lí do hủy');
+    }
+  };
+
+  //Get status object of request
+  let requestStatus;
+  let myRequestButton;
+  if (data.request_statuses) {
+    requestStatus = data.request_statuses[0].status_id;
+    if (requestStatus == 2 || requestStatus == 1) {
+      myRequestButton = (
         <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
           <PTButton
-            title="Xác nhận"
-            onPress={() => {}}
+            title="Hủy yêu cầu"
+            onPress={() => setModalVisible(true)}
             style={styles.button}
             color="#fff"
           />
         </View>
-      </View>
+      );
+    } else if (requestStatus == 4) {
+      myRequestButton = (
+        <View style={[styles.innerFormContainer, {alignItems: 'center'}]}>
+          <PTButton
+            title="Xem hoá đơn"
+            onPress={() =>
+              navigation.navigate('BillDetailView', {
+                requestData: data.request_issues,
+                invoiceData: data.invoice,
+              })
+            }
+            style={styles.button}
+            color="#fff"
+          />
+        </View>
+      );
+    } else if (requestStatus == 6) {
+      myRequestButton = null;
+    } else {
+      myRequestButton = null;
+    }
+  }
+
+  let city = data.city ? cities.find((x) => x.Id == data.city).Name : '';
+  let district = data.city
+    ? cities
+        .find((x) => x.Id == data.city)
+        .Districts.find((x) => x.Id == data.district).Name
+    : '';
+
+  return (
+    <ScrollView
+      style={[
+        styles.container,
+        modalVisible ? {backgroundColor: 'rgba(0,0,0,0.5)'} : '',
+      ]}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <View style={styles.innerFormContainer}>
+              <Text
+                style={{
+                  fontSize: calcScale(18),
+                  fontWeight: 'bold',
+                  marginBottom: calcScale(10),
+                }}>
+                Lí do: <Text style={{color: 'red'}}>*</Text>
+              </Text>
+              <TextInput
+                multiline={true}
+                onChangeText={(cancelReason) => setCancelReason(cancelReason)}
+                value={cancelReason}
+                style={{
+                  borderColor: '#000',
+                  borderRadius: calcScale(10),
+                  borderWidth: 1,
+                  backgroundColor: '#fff',
+                  width: calcScale(340),
+                }}
+              />
+              {cancelReasonError !== '' && cancelReason === '' ? (
+                <Text style={{color: 'red'}}>{cancelReasonError}</Text>
+              ) : null}
+            </View>
+            <View style={styles.row}>
+              <PTButton
+                title="Không hủy"
+                color="#fff"
+                style={[styles.button, {backgroundColor: '#ccc', width: '45%'}]}
+                onPress={() => {
+                  setModalVisible(false);
+                  setCancelReason('');
+                }}
+              />
+              <PTButton
+                title="Xác nhận hủy"
+                color="#fff"
+                style={[
+                  styles.button,
+                  {width: '45%', marginLeft: calcScale(20)},
+                ]}
+                onPress={() =>
+                  cancelRequestTrigger(user.token, data.id, cancelReason)
+                }
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+      {data.id ? (
+        <View>
+          <View style={styles.form}>
+            <View style={styles.formHeader}>
+              <Text
+                style={{
+                  fontSize: calcScale(28),
+                  fontWeight: 'bold',
+                }}>
+                Dịch vụ: {data.service.name}
+              </Text>
+            </View>
+            <View style={styles.innerFormContainer}>
+              {requestStatus == 5 ? (
+                <Text
+                  style={{
+                    fontSize: calcScale(18),
+                    fontWeight: 'bold',
+                    marginBottom: calcScale(10),
+                  }}>
+                  Công việc đã thực hiện
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    fontSize: calcScale(18),
+                    fontWeight: 'bold',
+                    marginBottom: calcScale(10),
+                  }}>
+                  Vấn đề đang gặp phải
+                </Text>
+              )}
+              {data.request_issues.map((item, index) => {
+                console.log(item);
+                return (
+                  <Text
+                    key={index.toString()}
+                    style={{
+                      fontSize: calcScale(16),
+                      marginBottom: calcScale(10),
+                    }}>
+                    + {item.issue.name} -{' '}
+                    {item.issue.estimate_price.split('.')[0]} VND
+                  </Text>
+                );
+              })}
+            </View>
+            <View style={styles.innerFormContainer}>
+              <Text
+                style={{
+                  fontSize: calcScale(18),
+                  fontWeight: 'bold',
+                  marginBottom: calcScale(10),
+                }}>
+                Mô tả chi tiết vấn đề gặp phải
+              </Text>
+              <Text
+                style={{
+                  fontSize: calcScale(18),
+                  marginBottom: calcScale(10),
+                }}>
+                {data.description}
+              </Text>
+            </View>
+            <View style={styles.innerFormContainer}>
+              <Text
+                style={{
+                  fontSize: calcScale(18),
+                  fontWeight: 'bold',
+                  marginBottom: calcScale(10),
+                }}>
+                Thời gian sửa ước tính
+              </Text>
+              <Text
+                style={{
+                  fontSize: calcScale(16),
+                  marginBottom: calcScale(10),
+                }}>
+                {data.estimate_time} Phút
+              </Text>
+            </View>
+            <View style={styles.innerFormContainer}>
+              <Text
+                style={{
+                  fontSize: calcScale(18),
+                  fontWeight: 'bold',
+                  marginBottom: calcScale(10),
+                }}>
+                Tiền công ước tính
+              </Text>
+              <Text
+                style={{
+                  fontSize: calcScale(16),
+                  marginBottom: calcScale(10),
+                }}>
+                {data.estimate_price.split('.')[0]} VND
+              </Text>
+              <Text>(Tiền công chưa bao gồm chi phí vật tư thay thế)</Text>
+            </View>
+            <View style={styles.innerFormContainer}>
+              <Text
+                style={{
+                  fontSize: calcScale(18),
+                  fontWeight: 'bold',
+                  marginBottom: calcScale(10),
+                }}>
+                Tiền công tối thiểu
+              </Text>
+              <Text
+                style={{
+                  fontSize: calcScale(16),
+                  marginBottom: calcScale(10),
+                }}>
+                30.000 VND
+              </Text>
+            </View>
+            <View style={styles.innerFormContainer}>
+              <Text
+                style={{
+                  fontSize: calcScale(18),
+                  fontWeight: 'bold',
+                  marginBottom: calcScale(10),
+                }}>
+                Thời gian hẹn
+              </Text>
+              <Text
+                style={{
+                  fontSize: calcScale(18),
+                  marginBottom: calcScale(10),
+                }}>
+                {`${
+                  data.schedule_time.split('T')[1].split('.')[0].split(':')[0]
+                }:${
+                  data.schedule_time.split('T')[1].split('.')[0].split(':')[1]
+                }, ${data.schedule_time.split('T')[0]}`}
+              </Text>
+            </View>
+            <View style={styles.innerFormContainer}>
+              <Text
+                style={{
+                  fontSize: calcScale(18),
+                  fontWeight: 'bold',
+                  marginBottom: calcScale(10),
+                }}>
+                Hình thức thanh toán
+              </Text>
+              <Text
+                style={{
+                  fontSize: calcScale(18),
+                  marginBottom: calcScale(10),
+                }}>
+                {/* {data.payment} */}
+                Tiền mặt
+              </Text>
+            </View>
+            <View style={styles.innerFormContainer}>
+              <Text
+                style={{
+                  fontSize: calcScale(18),
+                  fontWeight: 'bold',
+                  marginBottom: calcScale(10),
+                }}>
+                Trạng thái
+              </Text>
+              <Text
+                style={{
+                  fontSize: calcScale(18),
+                  marginBottom: calcScale(10),
+                }}>
+                {data.request_statuses[0].status.name}
+              </Text>
+            </View>
+            <View
+              style={{
+                borderTopColor: '#ccc',
+                borderTopWidth: 1,
+                paddingTop: calcScale(10),
+                //marginTop: calcScale(20),
+              }}>
+              <View style={{marginLeft: calcScale(20)}}>
+                <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
+                  Địa chỉ
+                </Text>
+                <Text
+                  style={{fontSize: calcScale(18), marginTop: calcScale(5)}}>
+                  {user.name} | {user.phoneNumber}
+                </Text>
+                <Text style={{fontSize: calcScale(18)}}>
+                  {data.address + ', ' + district + ', ' + city}
+                </Text>
+              </View>
+            </View>
+            {myRequestButton}
+          </View>
+        </View>
+      ) : (
+        <ActivityIndicator
+          size="small"
+          color="#3368f3"
+          style={{marginTop: calcScale(10)}}
+        />
+      )}
     </ScrollView>
   );
 };
@@ -285,5 +427,26 @@ const styles = StyleSheet.create({
     height: calcScale(45),
     borderRadius: 10,
     backgroundColor: 'rgb(242, 85, 44)',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });

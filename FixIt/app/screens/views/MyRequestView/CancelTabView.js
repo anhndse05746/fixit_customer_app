@@ -14,14 +14,14 @@ import {calcScale} from '../../../utils/dimension';
 import commonStyles from '../Styles';
 import ListEmptyComponent from './ListEmpty';
 
-const ConfirmTabView = ({navigation}) => {
+const CancelTabView = ({navigation}) => {
   const request = useSelector((state) => state.request);
   const user = useSelector((state) => state.user);
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
   const [cities, setCities] = React.useState(cityOfVN);
 
-  const confirmData = request.completeRequest;
+  const canceledData = request.canceledRequest;
   let isLoading = request.isLoading;
 
   const constructor = () => {
@@ -97,7 +97,7 @@ const ConfirmTabView = ({navigation}) => {
   return (
     <View style={styles.sceneContainer}>
       <FlatList
-        data={confirmData}
+        data={canceledData}
         showsVerticalScrollIndicator={false}
         renderItem={renderListTicket}
         keyExtractor={(item) => item.id.toString()}
@@ -110,7 +110,7 @@ const ConfirmTabView = ({navigation}) => {
   );
 };
 
-export default ConfirmTabView;
+export default CancelTabView;
 
 const styles = StyleSheet.create({
   sceneContainer: {

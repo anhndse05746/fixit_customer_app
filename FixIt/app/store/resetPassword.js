@@ -23,7 +23,11 @@ const reset = createSlice({
                 reset.isReset = true
                 reset.message = constants.RESET_PASSWORD_SUCCESSFULLY
                 reset.loading = false
-            } else {
+            }
+            else if (action.payload == "Old password and new password can't be duplicated") {
+                reset.message = "Mật khẩu đã được sử dụng, vui lòng nhập mật khẩu mới"
+            }
+            else {
                 reset.message = "Đã có lỗi xảy ra. Vui lòng thử lại"
             }
         },

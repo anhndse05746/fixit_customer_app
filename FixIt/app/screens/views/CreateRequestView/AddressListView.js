@@ -1,30 +1,19 @@
-import React, { useEffect } from 'react';
-import {
-  FlatList,
-  Keyboard,
-  KeyboardAvoidingView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
-import DatePicker from 'react-native-datepicker';
-import { CheckBox, Input } from 'react-native-elements';
+import React from 'react';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useSelector } from 'react-redux';
-import { calcScale } from '../../../utils/dimension';
+import {useSelector} from 'react-redux';
+import {cityOfVN} from '../../../utils/cityOfVietNam';
+import {calcScale} from '../../../utils/dimension';
 import PTButton from '../../commonComponent/Button';
 import commonStyles from '../Styles';
 
-const AddressListView = ({ navigation, route }) => {
-  const { addressList } = useSelector(state => state.user)
+const AddressListView = ({navigation, route}) => {
+  const {addressList} = useSelector((state) => state.user);
 
   let selectedId = route.params.selectedId;
 
   const [constructorHasRun, setConstructorHasRun] = React.useState(false);
+  const [cities, setCities] = React.useState(cityOfVN);
   const [addressSelected, setAddressSelected] = React.useState([]);
   const [select, setSelect] = React.useState(-1);
 
@@ -39,7 +28,9 @@ const AddressListView = ({ navigation, route }) => {
 
   constructor();
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({item, index}) => {
+    const city = cities.find((x) => x.Id == item.city);
+    const district = city.Districts.find((x) => x.Id == item.district);
     return (
       <TouchableOpacity
         onPress={() => {
@@ -49,14 +40,15 @@ const AddressListView = ({ navigation, route }) => {
           borderBottomColor: '#ccc',
           borderBottomWidth: 1,
           paddingBottom: calcScale(10),
-        }}>
-        <View style={[styles.row, { marginTop: calcScale(20) }]}>
-          <View style={{ marginLeft: calcScale(20) }}>
-            <Text style={{ fontSize: calcScale(24), fontWeight: 'bold' }}>
+        }}
+        key={index.toString()}>
+        <View style={[styles.row, {marginTop: calcScale(20)}]}>
+          <View style={{marginLeft: calcScale(20)}}>
+            <Text style={{fontSize: calcScale(24), fontWeight: 'bold'}}>
               Địa chỉ
             </Text>
-            <Text style={{ fontSize: calcScale(18) }}>
-              {item.address}, {item.district}, {item.city}
+            <Text style={{fontSize: calcScale(18)}}>
+              {item.address}, {district.Name}, {city.Name}
             </Text>
           </View>
           <View
@@ -83,12 +75,16 @@ const AddressListView = ({ navigation, route }) => {
         addressSelected.push(item);
       }
     });
-    navigation.navigate('CreateRequestView', { address: addressSelected });
+    if (addressSelected.length == 0) {
+      alert('Bạn phải chọn ít nhất 1 địa chỉ');
+      return;
+    }
+    navigation.navigate('CreateRequestView', {address: addressSelected});
   };
 
   const renderFooter = () => {
     return (
-      <View style={{ alignItems: 'center', marginTop: calcScale(20) }}>
+      <View style={{alignItems: 'center', marginTop: calcScale(20)}}>
         <PTButton
           title="Thêm địa chỉ"
           onPress={() => navigation.navigate('CreateAddressView')}
